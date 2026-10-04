@@ -15,6 +15,9 @@ holding one URI record.
 - **While open**, the app keeps the screen on, asks Android to prefer its service for the AID,
   and on Android 15+ stops the phone polling as a reader, so two phones back to back don't both
   act as readers.
+- **Keep the app open when sharing.** Other apps can claim the same NDEF application ID (on
+  Thomas's phone: X and Meshtastic). Android only routes to this app first while it is in the
+  foreground.
 
 ## Build and install
 
@@ -43,4 +46,4 @@ These check the protocol, not the radio. Whether a given phone reads it is only 
 
 | Date | This phone | Other phone | Result |
 | --- | --- | --- | --- |
-| | | | Not tested yet |
+| 2026-10-04 | Nothing A059, Android 16 | — | Installed. Launches with no errors; Android lists the service as the preferred foreground service for the AID, and polling turns off while the app is open (`updateDiscoveryTechnology: pollTech=0x0`). No tap test yet. |
