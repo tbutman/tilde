@@ -47,3 +47,4 @@ These check the protocol, not the radio. Whether a given phone reads it is only 
 | Date | This phone | Other phone | Result |
 | --- | --- | --- | --- |
 | 2026-10-04 | Nothing A059, Android 16 | — | Installed. Launches with no errors; Android lists the service as the preferred foreground service for the AID, and polling turns off while the app is open (`updateDiscoveryTechnology: pollTech=0x0`). No tap test yet. |
+| 2026-10-04 | Nothing A059, Android 16 | iPhone | Works: the iPhone offered to open the link. The app counted 6 complete reads. |
