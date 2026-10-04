@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "~/", the site's mark, inside the adaptive icon's 66dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M33,60 C36,52 41,51 45,55 C49,59 54,58 57,50"
+        android:strokeWidth="6"
+        android:strokeColor="#FFB547"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M76,36 L64,72"
+        android:strokeWidth="6"
+        android:strokeColor="#FFB547"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tap to share</string>
+    <string name="service_description">Shares a link as an NFC tag</string>
+    <string name="aid_description">NFC Forum NDEF tag</string>
+    <string name="title">~/tbutman</string>
+    <string name="toggle">Share over NFC</string>
+    <string name="status_ready">Ready. Hold the back of your phone against theirs.</string>
+    <string name="status_paused">Sharing is paused.</string>
+    <string name="status_nfc_off">NFC is off. Turn it on to share.</string>
+    <string name="status_no_nfc">This phone cannot emulate an NFC tag.</string>
+    <string name="open_nfc_settings">Open NFC settings</string>
+    <string name="url_label">Link</string>
+    <string name="url_invalid">Enter a full link, such as https://tbutman.com/hello</string>
+    <string name="reset">Reset to tbutman.com/hello</string>
+    <string name="qr_description">QR code for the link</string>
+    <string name="qr_hint">No NFC on their phone? They can scan this.</string>
+    <plurals name="reads">
+        <item quantity="one">Read %d time from this phone</item>
+        <item quantity="other">Read %d times from this phone</item>
+    </plurals>
+</resources>
