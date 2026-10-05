@@ -19,8 +19,8 @@
     <string name="mode_contact">Share contact</string>
     <string name="mode_link_hint">A tap opens the link below.</string>
     <plurals name="mode_contact_hint">
-        <item quantity="one">A tap offers to save your contact card (name, title, email, %d phone number, links), then the link. The QR code holds the card too.</item>
-        <item quantity="other">A tap offers to save your contact card (name, title, email, %d phone numbers, links), then the link. The QR code holds the card too.</item>
+        <item quantity="one">A tap offers to save your contact card (name, title, email, %d phone number, links), then the link. The QR code holds a shorter card.</item>
+        <item quantity="other">A tap offers to save your contact card (name, title, email, %d phone numbers, links), then the link. The QR code holds a shorter card.</item>
     </plurals>
     <plurals name="reads">
         <item quantity="one">Read %d time from this phone</item>

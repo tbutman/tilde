@@ -30,8 +30,8 @@ class Prefs(context: Context) {
         else -> Ndef.uriMessage(url)
     }
 
-    /** What the on-screen QR code encodes: the same as a tap, for phones without NFC. */
-    fun qrText(): String = if (mode == MODE_CONTACT) Contact.vcard() else url
+    /** What the on-screen QR code encodes, for phones without NFC: a compact card, or the link. */
+    fun qrText(): String = if (mode == MODE_CONTACT) Contact.vcard(compact = true) else url
 
     /** How many times a reader has read the whole message from this phone. */
     var reads: Int

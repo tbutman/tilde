@@ -42,6 +42,14 @@ class NdefTest {
     }
 
     @Test
+    fun theCompactCardKeepsOnlyTheWebsiteLink() {
+        val card = Contact.vcard(phones, compact = true)
+        assertTrue("item3.URL:https://tbutman.com/" in card)
+        assertTrue("instagram" !in card && "linkedin" !in card)
+        assertTrue("+351 900 000 000" in card)
+    }
+
+    @Test
     fun aReaderGetsTheWholeContactMessageInChunks() {
         val message = Ndef.message(listOf(Ndef.mimeRecord("text/vcard", Contact.vcard(phones).toByteArray()), Ndef.uriRecord("https://tbutman.com/hello")))
         var reads = 0

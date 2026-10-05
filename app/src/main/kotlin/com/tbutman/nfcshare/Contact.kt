@@ -20,8 +20,11 @@ object Contact {
     val phones: List<Pair<String, String>>
         get() = BuildConfig.PHONE_LABELS.zip(BuildConfig.PHONE_NUMBERS)
 
-    /** vCard 3.0, which Android and iOS contacts both import. */
-    fun vcard(phones: List<Pair<String, String>> = this.phones): String {
+    /**
+     * vCard 3.0, which Android and iOS contacts both import. `compact` keeps only the website from
+     * the links, for the on-screen QR code: the full card makes a code too dense to scan easily.
+     */
+    fun vcard(phones: List<Pair<String, String>> = this.phones, compact: Boolean = false): String {
         var item = 0
         val lines = mutableListOf(
             "BEGIN:VCARD",
@@ -36,7 +39,7 @@ object Contact {
             lines += "item$item.TEL;TYPE=CELL:$number"
             lines += "item$item.X-ABLabel:${escape(label)}"
         }
-        for ((label, href) in links) {
+        for ((label, href) in if (compact) links.take(1) else links) {
             item++
             lines += "item$item.URL:$href"
             lines += "item$item.X-ABLabel:${escape(label)}"
