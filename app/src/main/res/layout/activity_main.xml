@@ -16,6 +16,7 @@
         <include android:id="@+id/receive_panel" layout="@layout/panel_receive" android:visibility="gone" />
         <include android:id="@+id/met_panel" layout="@layout/panel_met" android:visibility="gone" />
         <include android:id="@+id/settings_panel" layout="@layout/panel_settings" android:visibility="gone" />
+        <include android:id="@+id/welcome_panel" layout="@layout/panel_welcome" android:visibility="gone" />
 
         <!-- Full-screen confirmation after a completed tap; the other person sees it too. -->
         <LinearLayout

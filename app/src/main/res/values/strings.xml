@@ -13,6 +13,16 @@
     <!-- Share: what the other person sees -->
     <string name="brand_prefix">~/</string>
     <string name="set_up_profile">Set up your profile</string>
+    <string name="welcome_title">Welcome to Tilde</string>
+    <string name="welcome_body">Your business card, on your phone. Hold your phone against someone else\'s and they get your details, or they scan the code on your screen.</string>
+    <string name="welcome_points">• Works with iPhones and Android phones\n• No account, no subscription, no internet\n• Your details stay on this phone until you share them</string>
+    <string name="welcome_card">Your card</string>
+    <string name="welcome_name">Your name</string>
+    <string name="welcome_title_field">What you do, such as Product designer</string>
+    <string name="welcome_phone">Phone number (optional)</string>
+    <string name="welcome_website">Website (optional)</string>
+    <string name="welcome_later">You can change any of this, and add LinkedIn, Instagram and more, under Settings.</string>
+    <string name="welcome_done">Create my card</string>
     <string name="tagline_tap">Tap phones to share</string>
     <string name="tagline_scan">Scan the code to share</string>
     <!-- iPhones only act on links from a tap: the contact card's tap opens its second record, the

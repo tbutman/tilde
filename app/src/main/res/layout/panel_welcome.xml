@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- First launch with an empty profile: a short explanation and the few details a card needs. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Panel">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="@string/brand_prefix"
+            android:textColor="@color/accent"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/welcome_title"
+            android:textColor="@color/text"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            style="@style/Hint"
+            android:layout_marginTop="8dp"
+            android:text="@string/welcome_body"
+            android:textSize="16sp" />
+
+        <TextView
+            style="@style/Hint"
+            android:layout_marginTop="12dp"
+            android:text="@string/welcome_points"
+            android:textColor="@color/text_soft"
+            android:textSize="15sp" />
+
+        <TextView style="@style/Label" android:text="@string/welcome_card" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/welcome_avatar"
+                layout="@layout/view_avatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/welcome_photo"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/photo_add" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/welcome_name"
+            android:labelFor="@id/welcome_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/welcome_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName|textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/welcome_title_field"
+            android:labelFor="@id/welcome_job">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/welcome_job"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_email"
+            android:labelFor="@id/welcome_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/welcome_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/welcome_phone"
+            android:labelFor="@id/welcome_phone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/welcome_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/welcome_website"
+            android:labelFor="@id/welcome_website">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/welcome_website"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            style="@style/Hint"
+            android:layout_marginTop="8dp"
+            android:text="@string/welcome_later" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/welcome_done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:enabled="false"
+            android:text="@string/welcome_done" />
+    </LinearLayout>
+</ScrollView>

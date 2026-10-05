@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.NfcShare" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.Tilde" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/accent</item>
         <item name="colorOnPrimary">@color/bg</item>
         <item name="colorPrimaryContainer">@color/accent_soft</item>
@@ -20,10 +20,10 @@
         <item name="android:windowBackground">@color/bg</item>
         <item name="android:statusBarColor">@color/bg</item>
         <item name="android:navigationBarColor">@color/panel</item>
-        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.NfcShare.BottomSheet</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Tilde.BottomSheet</item>
     </style>
 
-    <style name="ThemeOverlay.NfcShare.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+    <style name="ThemeOverlay.Tilde.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="colorSurfaceContainerLow">@color/panel</item>
     </style>
 </resources>

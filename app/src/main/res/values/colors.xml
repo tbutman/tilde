@@ -7,6 +7,7 @@
     <color name="line">#1F262E</color>
     <color name="line_strong">#2B343E</color>
     <color name="text">#E7EAEE</color>
+    <color name="text_soft">#B6BEC8</color>
     <color name="muted">#A2ABB6</color>
     <color name="dim">#8A94A0</color>
     <color name="accent">#FFB547</color>

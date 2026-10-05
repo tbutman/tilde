@@ -7,7 +7,7 @@ import org.json.JSONObject
 
 /** The app's settings, shared by the screen, the card-emulation service and the tile. */
 class Prefs(context: Context) {
-    val store: SharedPreferences = context.getSharedPreferences("nfc-share", Context.MODE_PRIVATE)
+    val store: SharedPreferences = context.getSharedPreferences("tilde", Context.MODE_PRIVATE)
 
     /**
      * Whose card this is. The first launch seeds it from the build (profile.local.properties, empty
@@ -22,6 +22,11 @@ class Prefs(context: Context) {
     var photoVersion: Int
         get() = store.getInt(KEY_PHOTO_VERSION, 0)
         set(value) = store.edit().putInt(KEY_PHOTO_VERSION, value).apply()
+
+    /** Set once the welcome screen has created a card, so it never comes back. */
+    var welcomed: Boolean
+        get() = store.getBoolean(KEY_WELCOMED, false)
+        set(value) = store.edit().putBoolean(KEY_WELCOMED, value).apply()
 
     var enabled: Boolean
         get() = store.getBoolean(KEY_ENABLED, true)
@@ -151,6 +156,7 @@ class Prefs(context: Context) {
 
         const val KEY_PROFILE = "profile"
         const val KEY_PHOTO_VERSION = "photo_version"
+        const val KEY_WELCOMED = "welcomed"
         const val KEY_ENABLED = "enabled"
         const val KEY_TAB = "tab"
         const val KEY_SHARE = "share"

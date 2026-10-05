@@ -121,6 +121,44 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         setUpReceive()
         setUpMet()
         setUpSettings()
+        setUpWelcome()
+    }
+
+    /** The welcome screen shows on a first launch with nothing in the profile. */
+    private val welcoming: Boolean
+        get() = !prefs.welcomed && !prefs.profile.isSet
+
+    private fun setUpWelcome() {
+        val name = findViewById<TextInputEditText>(R.id.welcome_name)
+        val done = findViewById<MaterialButton>(R.id.welcome_done)
+        name.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: Editable?) {
+                done.isEnabled = !s.isNullOrBlank()
+                bindAvatar(findViewById(R.id.welcome_avatar), Profile(name = s.toString()))
+            }
+        })
+        findViewById<View>(R.id.welcome_photo).setOnClickListener {
+            pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+        done.setOnClickListener {
+            fun text(id: Int) = findViewById<TextInputEditText>(id).text.toString().trim()
+            val phone = text(R.id.welcome_phone)
+            val website = text(R.id.welcome_website).let { if (it.isEmpty() || it.contains("://")) it else "https://$it" }
+            prefs.profile = prefs.profile.copy(
+                name = text(R.id.welcome_name),
+                title = text(R.id.welcome_job),
+                email = text(R.id.welcome_email),
+                website = website,
+                phones = if (phone.isEmpty()) emptyList() else listOf("mobile" to phone),
+            )
+            prefs.share = if (website.isEmpty()) Presets.CONTACT else Presets.WEBSITE
+            prefs.tab = Prefs.TAB_SHARE
+            prefs.welcomed = true
+            // Settings' fields were filled when the screen opened; show the new profile there too.
+            recreate()
+        }
     }
 
     override fun onResume() {
@@ -328,6 +366,9 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     /** Fields save as you type: switching tabs or scanning straight after typing must not lose text. */
     private fun field(id: Int, value: String, save: (String) -> Unit) {
         findViewById<TextInputEditText>(id).apply {
+            // The stored value is the truth. Restoring the view's own copy after a recreate would fire
+            // the watcher below with stale text and overwrite newer settings.
+            isSaveEnabled = false
             setText(value)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -340,6 +381,15 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     // ---- Rendering ----
 
     private fun render() {
+        val welcome = welcoming
+        findViewById<View>(R.id.welcome_panel).visibility = if (welcome) View.VISIBLE else View.GONE
+        nav.visibility = if (welcome) View.GONE else View.VISIBLE
+        if (welcome) {
+            for (panel in panels.values) panel.visibility = View.GONE
+            bindAvatar(findViewById(R.id.welcome_avatar), Profile(name = findViewById<TextInputEditText>(R.id.welcome_name).text.toString()))
+            findViewById<MaterialButton>(R.id.welcome_photo).setText(if (photo != null) R.string.photo_change else R.string.photo_add)
+            return
+        }
         val tab = prefs.tab
         for ((name, panel) in panels) panel.visibility = if (name == tab) View.VISIBLE else View.GONE
         if (nav.selectedItemId != navId(tab)) nav.selectedItemId = navId(tab)
@@ -389,7 +439,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
         findViewById<View>(R.id.qr_card).visibility = if (wifiMissing) View.GONE else View.VISIBLE
         findViewById<View>(R.id.wifi_missing).visibility = if (wifiMissing) View.VISIBLE else View.GONE
-        if (!wifiMissing) findViewById<ImageView>(R.id.qr).setImageBitmap(qrBitmap(prefs.qrText()))
+        if (!wifiMissing) findViewById<ImageView>(R.id.qr).setImageBitmap(prefs.qrText().takeIf { it.isNotEmpty() }?.let(::qrBitmap))
         findViewById<TextView>(R.id.iphone_hint).apply {
             visibility = if (tapping && !preset.iphoneTap && !wifiMissing) View.VISIBLE else View.GONE
             setText(
