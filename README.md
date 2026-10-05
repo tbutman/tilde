@@ -63,7 +63,7 @@ Things worth knowing:
 
 There's a 3D-printable NFC business card designed to go with Tilde: a QR code on the front and an
 NFC tag sealed inside. Print it, then use **Settings → Write a card** to put your link on it. See
-[tbutman/business-card](https://github.com/tbutman/business-card).
+[tbutman/tilde-card](https://github.com/tbutman/tilde-card).
 
 ## Privacy
 
