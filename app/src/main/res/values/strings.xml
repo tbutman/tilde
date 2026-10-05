@@ -134,4 +134,38 @@
         <item quantity="other">Read %d times from this phone</item>
     </plurals>
     <string name="version">Version %1$s</string>
+    <!-- Write a card -->
+    <string name="settings_write">Cards and stickers</string>
+    <string name="settings_write_detail">Put your link on an NFC sticker, or on a printed card with one inside.</string>
+    <string name="write_open">Write a card</string>
+    <string name="write_title">Write a card</string>
+    <string name="write_body">Put your link on an NFC sticker, or on a printed card with one inside. Any phone that taps it opens your link, even when you and Tilde aren\'t there.</string>
+    <string name="write_what">What the card opens</string>
+    <string name="write_picker_title">What should the card open?</string>
+    <string name="write_ready">Hold the card or sticker to the back of your phone</string>
+    <string name="write_ready_detail">Keep it still until your phone buzzes.</string>
+    <string name="write_done">Written</string>
+    <plurals name="write_done_detail">
+        <item quantity="one">Tap it with another phone to try it. To write another card, just hold it to your phone.</item>
+        <item quantity="other">%d cards written. To write another, just hold it to your phone.</item>
+    </plurals>
+    <string name="write_locked">This one can\'t be changed</string>
+    <string name="write_locked_detail">It\'s locked, or it\'s a phone rather than a tag.</string>
+    <string name="write_too_small">Not enough room on this tag</string>
+    <string name="write_too_small_detail">It holds %1$d bytes and this needs %2$d. Choose a link instead, or use an NTAG215 sticker.</string>
+    <string name="write_unsupported">That\'s not a tag Tilde can write</string>
+    <string name="write_unsupported_detail">Use an NFC sticker. Bank, transport and ID cards can\'t be written.</string>
+    <string name="write_failed">Didn\'t finish writing</string>
+    <string name="write_failed_detail">Hold it still against your phone and try again.</string>
+    <string name="write_no_nfc">This phone has no NFC</string>
+    <string name="write_no_nfc_detail">Writing a card needs a phone with NFC.</string>
+    <string name="write_nfc_off">NFC is off</string>
+    <string name="write_nfc_off_detail">Turn it on to write a card.</string>
+    <string name="write_nothing">Nothing to write yet</string>
+    <string name="write_nothing_link">Add this link under Settings, or choose something else.</string>
+    <string name="write_nothing_wifi">Set up guest Wi-Fi under Settings first.</string>
+    <string name="write_note">You can change a card any time by writing it again. Tilde never locks tags.</string>
+    <string name="write_close">Done</string>
+    <string name="write_iphone_contact">iPhone: opens your website instead</string>
+    <string name="write_iphone_wifi">iPhone: can\'t join Wi-Fi from a tag</string>
 </resources>

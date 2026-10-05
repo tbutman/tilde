@@ -76,7 +76,7 @@ class Prefs(context: Context) {
         set(value) = store.edit().putInt(KEY_READS, value).apply()
 
     /** The link a preset carries, with the event tag applied; "" when there's nothing to link to. */
-    fun urlFor(id: String, profile: Profile = this.profile): String {
+    fun urlFor(id: String, profile: Profile = this.profile, event: String = this.event): String {
         val base = when (id) {
             Presets.CUSTOM -> customUrl
             Presets.WHATSAPP -> Profile.whatsappUrl(profile.whatsapp, whatsappGreeting) ?: ""
@@ -95,17 +95,23 @@ class Prefs(context: Context) {
         get() = wifiSsid.isNotBlank() && (wifiOpen || wifiPassword.length >= 8)
 
     /** The NDEF message a tap reads. */
-    fun message(): ByteArray = when (share) {
-        // Android dispatches on the first record, so the card comes first; the link is a fallback
-        // for readers that only act on URLs.
-        Presets.CONTACT -> Ndef.message(
-            listOfNotNull(
-                Ndef.mimeRecord("text/vcard", profile.vcard().toByteArray(Charsets.UTF_8)),
-                url.takeIf { it.isNotEmpty() }?.let { Ndef.uriRecord(it) },
-            ),
-        )
-        Presets.WIFI -> Ndef.message(listOf(Wifi.record(wifiSsid, wifiPassword, wifiOpen)))
-        else -> Ndef.uriMessage(url)
+    fun message(): ByteArray = messageFor(share)
+
+    /** The NDEF message for any option. Written cards pass no event: they outlive it. */
+    fun messageFor(id: String, event: String = this.event): ByteArray {
+        val url = urlFor(id, event = event)
+        return when (id) {
+            // Android dispatches on the first record, so the card comes first; the link is a
+            // fallback for readers that only act on URLs.
+            Presets.CONTACT -> Ndef.message(
+                listOfNotNull(
+                    Ndef.mimeRecord("text/vcard", profile.vcard().toByteArray(Charsets.UTF_8)),
+                    url.takeIf { it.isNotEmpty() }?.let { Ndef.uriRecord(it) },
+                ),
+            )
+            Presets.WIFI -> Ndef.message(listOf(Wifi.record(wifiSsid, wifiPassword, wifiOpen)))
+            else -> Ndef.uriMessage(url)
+        }
     }
 
     /** What the on-screen QR code encodes, for phones without NFC. */

@@ -25,6 +25,8 @@ phone until you share them.
   Add a note so you remember who they were, and export the list as a spreadsheet (CSV).
 - **Events.** Add an event name and the links to your own website carry it, so you can see which
   event a visit came from.
+- **Write a card.** Put your link on an NFC sticker or a printed NFC business card, so it works
+  even when your phone isn't there. Tilde never locks a tag, so you can change it later.
 - **Receive.** Read other people's NFC cards, tags and phones running Tilde.
 
 ## Install
@@ -56,6 +58,12 @@ Things worth knowing:
   iPhone joins by scanning the code. The Share screen tells you when this applies.
 - **The other phone needs NFC switched on.** Most Android phones have it in Quick Settings. iPhones
   read without any setting.
+
+## Print a card to go with it
+
+There's a 3D-printable NFC business card designed to go with Tilde: a QR code on the front and an
+NFC tag sealed inside. Print it, then use **Settings → Write a card** to put your link on it. See
+[tbutman/business-card](https://github.com/tbutman/business-card).
 
 ## Privacy
 

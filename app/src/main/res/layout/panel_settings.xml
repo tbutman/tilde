@@ -387,6 +387,18 @@
             android:layout_marginTop="4dp"
             android:text="@string/wifi_open_settings" />
 
+        <TextView style="@style/Label" android:text="@string/settings_write" />
+
+        <TextView style="@style/Hint" android:text="@string/settings_write_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/write_card"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/write_open" />
+
         <LinearLayout
             android:id="@+id/tile_section"
             android:layout_width="match_parent"

@@ -20,9 +20,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.provider.ContactsContract
 import android.provider.Settings
 import android.text.Editable
@@ -31,7 +28,6 @@ import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.text.format.DateUtils
 import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -43,7 +39,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -64,6 +59,7 @@ import java.util.Calendar
 class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private lateinit var prefs: Prefs
     private var adapter: NfcAdapter? = null
+    private val rows by lazy { PresetRows(this, prefs) }
 
     /**
      * Debug builds only: draw the Share screen as on a phone with NFC switched on, for README
@@ -267,21 +263,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         render()
     }
 
-    private fun buzz() {
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            getSystemService(VibratorManager::class.java).defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            getSystemService(Vibrator::class.java)
-        }
-        vibrator.vibrate(
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                VibrationEffect.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK)
-            } else {
-                VibrationEffect.createWaveform(longArrayOf(0, 40, 80, 40), -1)
-            },
-        )
-    }
+    private fun buzz() = Haptics.buzz(this)
 
     // ---- Set-up ----
 
@@ -366,6 +348,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<View>(R.id.wifi_settings).setOnClickListener { runCatching { startActivity(Intent(Settings.ACTION_WIFI_SETTINGS)) } }
         findViewById<View>(R.id.tile_section).visibility =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.write_card).setOnClickListener { startActivity(Intent(this, WriteActivity::class.java).putExtra("demo", demo)) }
         findViewById<View>(R.id.add_tile).setOnClickListener { requestTile() }
         findViewById<TextView>(R.id.version).text = getString(R.string.version, BuildConfig.VERSION_NAME)
     }
@@ -459,7 +442,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             )
         }
 
-        bindPreset(findViewById(R.id.share_row_content), preset, selected = false)
+        rows.bind(findViewById(R.id.share_row_content), preset, selected = false)
 
         val startOfDay = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
@@ -475,87 +458,17 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         }
     }
 
-    private fun bindPreset(row: View, preset: Presets.Preset, selected: Boolean) {
-        val logo = logoFor(preset.id)
-        row.findViewById<ImageView>(R.id.logo).apply {
-            visibility = if (logo != null) View.VISIBLE else View.GONE
-            logo?.let { setImageResource(it) }
-        }
-        row.findViewById<TextView>(R.id.monogram).apply {
-            visibility = if (logo == null) View.VISIBLE else View.GONE
-            text = preset.monogram
-        }
-        row.findViewById<TextView>(R.id.title).apply {
-            text = preset.label
-            setTextColor(getColor(if (selected) R.color.accent else R.color.text))
-        }
-        row.findViewById<TextView>(R.id.subtitle).text = detail(preset)
-        // Everything works by tap or scan everywhere, so only the exceptions get a note.
-        row.findViewById<TextView>(R.id.note).apply {
-            visibility = if (preset.iphoneTap) View.GONE else View.VISIBLE
-            setText(if (preset.id == Presets.CONTACT && prefs.urlFor(Presets.CONTACT).isNotEmpty()) R.string.iphone_contact_note else R.string.iphone_scan_only)
-        }
-        row.findViewById<ImageView>(R.id.end).apply {
-            setImageResource(if (selected) R.drawable.ic_check else R.drawable.ic_chevron)
-            imageTintList = getColorStateList(if (selected) R.color.accent else R.color.muted)
-        }
-    }
-
-    /** The services' own logos, simple icons for the generic options; the website keeps the ~/ mark. */
-    private fun logoFor(id: String): Int? = when (id) {
-        Presets.WHATSAPP -> R.drawable.ic_brand_whatsapp
-        "linkedin" -> R.drawable.ic_brand_linkedin
-        "github" -> R.drawable.ic_brand_github
-        "instagram" -> R.drawable.ic_brand_instagram
-        "x" -> R.drawable.ic_brand_x
-        Presets.CONTACT -> R.drawable.ic_opt_contact
-        Presets.CUSTOM -> R.drawable.ic_opt_link
-        Presets.WIFI -> R.drawable.ic_opt_wifi
-        else -> null
-    }
-
-    /** What an option opens, in a few words. Never a phone number or the Wi-Fi password. */
-    private fun detail(preset: Presets.Preset): String = when (preset.id) {
-        Presets.CONTACT -> getString(R.string.detail_contact)
-        Presets.WHATSAPP -> getString(R.string.detail_whatsapp)
-        Presets.WIFI -> prefs.wifiSsid.ifBlank { getString(R.string.detail_wifi_missing) }
-        Presets.CUSTOM -> bare(prefs.customUrl)
-        else -> bare(prefs.urlFor(preset.id))
-    }
-
-    private fun bare(url: String) = url.removePrefix("https://").removePrefix("http://").removePrefix("www.").removeSuffix("/")
-
     /** The picker: what a tap shares, with a note under the options iPhones can only scan. */
     private fun showPicker() {
-        val sheet = BottomSheetDialog(this)
-        val list = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(0, dp(8), 0, dp(24))
-        }
-        list.addView(TextView(this).apply {
-            setText(R.string.picker_title)
-            setTextColor(getColor(R.color.text))
-            textSize = 18f
-            setPadding(dp(20), dp(8), dp(20), dp(12))
-        })
-        for (preset in Presets.available(prefs.profile)) {
-            val row = LayoutInflater.from(this).inflate(R.layout.row_preset, list, false)
-            bindPreset(row, preset, selected = preset.id == prefs.share)
-            row.setOnClickListener {
-                prefs.share = preset.id
-                sheet.dismiss()
-                val needsSetup = preset.id == Presets.WIFI && !prefs.wifiReady
-                if (needsSetup) {
-                    Snackbar.make(nav, R.string.picker_needs_setup, Snackbar.LENGTH_LONG)
-                        .setAnchorView(nav)
-                        .setAction(R.string.open_settings) { nav.selectedItemId = R.id.nav_settings }
-                        .show()
-                }
+        rows.showPicker(R.string.picker_title, prefs.share) { preset ->
+            prefs.share = preset.id
+            if (preset.id == Presets.WIFI && !prefs.wifiReady) {
+                Snackbar.make(nav, R.string.picker_needs_setup, Snackbar.LENGTH_LONG)
+                    .setAnchorView(nav)
+                    .setAction(R.string.open_settings) { nav.selectedItemId = R.id.nav_settings }
+                    .show()
             }
-            list.addView(row)
         }
-        sheet.setContentView(list)
-        sheet.show()
     }
 
     /** The photo if there is one, otherwise the initials, in a circle. */
