@@ -64,6 +64,13 @@ import java.util.Calendar
 class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private lateinit var prefs: Prefs
     private var adapter: NfcAdapter? = null
+
+    /**
+     * Debug builds only: draw the Share screen as on a phone with NFC switched on, for README
+     * screenshots taken on the emulator (which has no NFC). `adb shell am start -n
+     * com.tbutman.tilde/.MainActivity --ez demo true`
+     */
+    private val demo by lazy { BuildConfig.DEBUG && intent.getBooleanExtra("demo", false) }
     private val service by lazy { ComponentName(this, NdefHceService::class.java) }
     private val main = Handler(Looper.getMainLooper())
     private var lastReads = 0
@@ -419,15 +426,16 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         val available = Presets.available(profile)
         if (available.none { it.id == prefs.share }) prefs.share = available.first().id
         val nfc = adapter
-        val canEmulate = nfc != null && packageManager.hasSystemFeature("android.hardware.nfc.hce")
-        val tapping = canEmulate && nfc!!.isEnabled && prefs.enabled
+        val canEmulate = demo || nfc != null && packageManager.hasSystemFeature("android.hardware.nfc.hce")
+        val nfcOn = demo || nfc?.isEnabled == true
+        val tapping = canEmulate && nfcOn && prefs.enabled
         val preset = Presets.find(prefs.share)
         val wifiMissing = preset.id == Presets.WIFI && !prefs.wifiReady
 
         findViewById<TextView>(R.id.state).apply {
             val (label, colour) = when {
                 !canEmulate -> R.string.state_no_nfc to R.color.muted
-                !nfc!!.isEnabled -> R.string.state_nfc_off to R.color.accent
+                !nfcOn -> R.string.state_nfc_off to R.color.accent
                 !prefs.enabled -> R.string.state_paused to R.color.muted
                 else -> R.string.state_ready to R.color.ok
             }
@@ -435,7 +443,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             setTextColor(getColor(colour))
         }
         findViewById<TextView>(R.id.tagline).setText(if (tapping) R.string.tagline_tap else R.string.tagline_scan)
-        findViewById<View>(R.id.nfc_settings).visibility = if (nfc != null && !nfc.isEnabled) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.nfc_settings).visibility = if (nfc != null && !nfcOn) View.VISIBLE else View.GONE
 
         findViewById<View>(R.id.qr_card).visibility = if (wifiMissing) View.GONE else View.VISIBLE
         findViewById<View>(R.id.wifi_missing).visibility = if (wifiMissing) View.VISIBLE else View.GONE

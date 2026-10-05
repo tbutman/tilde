@@ -2,10 +2,18 @@ plugins {
     id("com.android.application")
 }
 
+import java.util.Properties
+
 // Everything personal (name, links, phone numbers) comes from profile.local.properties, which git
-// ignores, and only seeds the profile on first launch; after that the profile is edited in the app.
-// A build without the file starts with an empty profile. See profile.example.properties.
+// ignores, and only seeds the profile on first launch of a debug build; after that the profile is
+// edited in the app. Release builds always start empty. See profile.example.properties.
 val profileSeed: String = rootProject.file("profile.local.properties").takeIf { it.exists() }?.readText() ?: ""
+
+// Release signing: environment variables in CI, otherwise keystore.properties (git-ignored) next to
+// this project. Without either, assembleRelease still works and leaves the APK unsigned.
+val keystoreFile = rootProject.file("keystore.properties")
+val keystore = Properties().apply { if (keystoreFile.exists()) keystoreFile.reader().use(::load) }
+fun signing(key: String): String? = System.getenv("TILDE_" + key.uppercase()) ?: keystore.getProperty(key)
 
 fun javaString(value: String) =
     "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "").replace("\n", "\\n") + "\""
@@ -18,9 +26,33 @@ android {
         applicationId = "com.tbutman.tilde"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
-        versionName = "2.2"
-        buildConfigField("String", "PROFILE_SEED", javaString(profileSeed))
+        versionCode = 10
+        versionName = "1.0.0"
+    }
+
+    signingConfigs {
+        val storeFile = signing("store_file")
+        if (storeFile != null) {
+            create("release") {
+                this.storeFile = rootProject.file(storeFile)
+                storePassword = signing("store_password")
+                keyAlias = signing("key_alias")
+                keyPassword = signing("key_password")
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField("String", "PROFILE_SEED", javaString(profileSeed))
+        }
+        release {
+            buildConfigField("String", "PROFILE_SEED", "\"\"")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            signingConfig = signingConfigs.findByName("release")
+        }
     }
 
     buildFeatures {
