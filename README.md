@@ -4,7 +4,7 @@
 your website, contact details, WhatsApp or LinkedIn, just as if you'd handed them an NFC business
 card. Or they scan the code on your screen.
 
-**Free and open source** (MIT licence). No account, sign-up, subscription, payment or ads, and no
+**Free and open source** (MIT licence). Website: [tbutman.com/tilde](https://tbutman.com/tilde). No account, sign-up, subscription, payment or ads, and no
 internet: Tilde can't go online, and your details stay on your phone until you share them.
 
 <p>
