@@ -1,6 +1,21 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
 }
+
+// Phone numbers for the "Share contact" mode come from contact.local.properties, which git ignores,
+// so they never land in the repository. Without the file the contact card simply has no numbers.
+val phones: List<Pair<String, String>> = Properties().run {
+    val file = rootProject.file("contact.local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+    generateSequence(1) { it + 1 }
+        .map { (getProperty("phone.$it.label") ?: "") to (getProperty("phone.$it.number") ?: "") }
+        .takeWhile { it.second.isNotBlank() }
+        .toList()
+}
+
+fun javaString(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 
 android {
     namespace = "com.tbutman.nfcshare"
@@ -10,8 +25,14 @@ android {
         applicationId = "com.tbutman.nfcshare"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
+        buildConfigField("String[]", "PHONE_LABELS", "{" + phones.joinToString(",") { javaString(it.first) } + "}")
+        buildConfigField("String[]", "PHONE_NUMBERS", "{" + phones.joinToString(",") { javaString(it.second) } + "}")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     compileOptions {

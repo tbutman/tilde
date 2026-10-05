@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RadioGroup
 import android.widget.Switch
 import android.widget.TextView
 import com.google.zxing.BarcodeFormat
@@ -35,6 +36,8 @@ class MainActivity : Activity() {
     private lateinit var qr: ImageView
     private lateinit var reads: TextView
     private lateinit var nfcSettings: Button
+    private lateinit var mode: RadioGroup
+    private lateinit var modeHint: TextView
 
     private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> render() }
 
@@ -50,6 +53,12 @@ class MainActivity : Activity() {
         qr = findViewById(R.id.qr)
         reads = findViewById(R.id.reads)
         nfcSettings = findViewById(R.id.nfc_settings)
+        mode = findViewById(R.id.mode)
+        modeHint = findViewById(R.id.mode_hint)
+
+        mode.setOnCheckedChangeListener { _, id ->
+            prefs.mode = if (id == R.id.mode_contact) Prefs.MODE_CONTACT else Prefs.MODE_LINK
+        }
 
         toggle.setOnCheckedChangeListener { _, checked -> prefs.enabled = checked }
         urlField.setText(prefs.url)
@@ -115,7 +124,11 @@ class MainActivity : Activity() {
         )
         nfcSettings.visibility = if (nfc != null && !nfc.isEnabled) View.VISIBLE else View.GONE
         reads.text = resources.getQuantityString(R.plurals.reads, prefs.reads, prefs.reads)
-        qr.setImageBitmap(qrBitmap(prefs.url))
+        val contact = prefs.mode == Prefs.MODE_CONTACT
+        val checked = if (contact) R.id.mode_contact else R.id.mode_link
+        if (mode.checkedRadioButtonId != checked) mode.check(checked)
+        modeHint.text = if (contact) resources.getQuantityString(R.plurals.mode_contact_hint, Contact.phones.size, Contact.phones.size) else getString(R.string.mode_link_hint)
+        qr.setImageBitmap(qrBitmap(prefs.qrText()))
     }
 
     private fun qrBitmap(text: String): Bitmap {

@@ -15,6 +15,24 @@ class Prefs(context: Context) {
         get() = store.getString(KEY_URL, DEFAULT_URL) ?: DEFAULT_URL
         set(value) = store.edit().putString(KEY_URL, value).apply()
 
+    /** "link" shares the URL; "contact" shares the contact card, then the URL. */
+    var mode: String
+        get() = store.getString(KEY_MODE, MODE_LINK) ?: MODE_LINK
+        set(value) = store.edit().putString(KEY_MODE, value).apply()
+
+    /** The NDEF message a tap reads in the current mode. */
+    fun message(): ByteArray = when (mode) {
+        // Android dispatches on the first record, so the card comes first; the link is a fallback
+        // for readers that only act on URLs.
+        MODE_CONTACT -> Ndef.message(
+            listOf(Ndef.mimeRecord("text/vcard", Contact.vcard().toByteArray(Charsets.UTF_8)), Ndef.uriRecord(url)),
+        )
+        else -> Ndef.uriMessage(url)
+    }
+
+    /** What the on-screen QR code encodes: the same as a tap, for phones without NFC. */
+    fun qrText(): String = if (mode == MODE_CONTACT) Contact.vcard() else url
+
     /** How many times a reader has read the whole message from this phone. */
     var reads: Int
         get() = store.getInt(KEY_READS, 0)
@@ -25,5 +43,8 @@ class Prefs(context: Context) {
         const val KEY_ENABLED = "enabled"
         const val KEY_URL = "url"
         const val KEY_READS = "reads"
+        const val KEY_MODE = "mode"
+        const val MODE_LINK = "link"
+        const val MODE_CONTACT = "contact"
     }
 }

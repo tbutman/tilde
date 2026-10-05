@@ -8,8 +8,14 @@ It uses Host Card Emulation: Android routes readers that select the NFC Forum ND
 (AID `D2760000850101`) to `NdefHceService`, which answers as a read-only NFC Forum Type 4 Tag
 holding one URI record.
 
-- **Screen:** an on/off switch, the link (editable), a QR code fallback for phones with NFC off,
-  and a count of how many times a reader has read the link from this phone.
+- **Screen:** an on/off switch, a choice of what to share, the link (editable), a QR code fallback
+  for phones with NFC off, and a count of how many times a reader has read the tag.
+- **Share link** (the default) sends one URI record. **Share contact** sends a vCard (name, title,
+  email, phone numbers, website and socials), then the link as a second record: Android offers to
+  save the contact, and readers that only act on links still get the page. The on-screen QR code
+  then holds the vCard too. The phone numbers are only ever shared in person: they come from
+  `contact.local.properties`, which git ignores (copy `contact.example.properties`), and are built
+  into the app through `BuildConfig`.
 - **Permissions:** only `NFC`. There is no network access, no analytics and no AndroidX; the one
   library is ZXing core, for the QR code.
 - **While open**, the app keeps the screen on, asks Android to prefer its service for the AID,
