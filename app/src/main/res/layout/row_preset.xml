@@ -41,8 +41,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/muted"
             android:textSize="13sp" />
+
+        <!-- Only for the exceptions: what doesn't work everywhere. -->
+        <TextView
+            android:id="@+id/note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/iphone_scan_only"
+            android:textColor="@color/accent"
+            android:textSize="13sp"
+            android:visibility="gone" />
     </LinearLayout>
 
     <ImageView

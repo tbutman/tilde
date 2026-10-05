@@ -21,8 +21,10 @@
     <string name="state_paused">Paused</string>
     <string name="state_nfc_off">NFC off</string>
     <string name="state_no_nfc">No NFC</string>
-    <string name="compat_both">Android and iPhone: tap or scan</string>
-    <string name="compat_scan">Android: tap or scan · iPhone: scan</string>
+    <string name="iphone_scan_only">iPhone: scan the code</string>
+    <string name="detail_contact">Name, title, email, phone numbers and links</string>
+    <string name="detail_whatsapp">Opens a chat with me</string>
+    <string name="detail_wifi_missing">Not set up yet</string>
     <string name="qr_description">QR code for what a tap shares</string>
     <string name="wifi_missing">Add the Wi-Fi name and password in Settings to share it.</string>
     <string name="open_settings">Open settings</string>

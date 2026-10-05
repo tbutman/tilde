@@ -355,14 +355,27 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             text = preset.label
             setTextColor(getColor(if (selected) R.color.accent else R.color.text))
         }
-        row.findViewById<TextView>(R.id.subtitle).setText(if (preset.iphoneTap) R.string.compat_both else R.string.compat_scan)
+        row.findViewById<TextView>(R.id.subtitle).text = detail(preset)
+        // Everything works by tap or scan everywhere, so only the exceptions get a note.
+        row.findViewById<View>(R.id.note).visibility = if (preset.iphoneTap) View.GONE else View.VISIBLE
         row.findViewById<ImageView>(R.id.end).apply {
             setImageResource(if (selected) R.drawable.ic_check else R.drawable.ic_chevron)
             imageTintList = getColorStateList(if (selected) R.color.accent else R.color.muted)
         }
     }
 
-    /** The picker: what a tap shares, with what works on Android and iPhone under each. */
+    /** What an option opens, in a few words. Never a phone number or the Wi-Fi password. */
+    private fun detail(preset: Presets.Preset): String = when (preset.id) {
+        Presets.CONTACT -> getString(R.string.detail_contact)
+        Presets.WHATSAPP -> getString(R.string.detail_whatsapp)
+        Presets.WIFI -> prefs.wifiSsid.ifBlank { getString(R.string.detail_wifi_missing) }
+        Presets.CUSTOM -> bare(prefs.customUrl)
+        else -> bare(Presets.withEvent(preset.url ?: Prefs.DEFAULT_URL, prefs.event))
+    }
+
+    private fun bare(url: String) = url.removePrefix("https://").removePrefix("http://").removePrefix("www.").removeSuffix("/")
+
+    /** The picker: what a tap shares, with a note under the options iPhones can only scan. */
     private fun showPicker() {
         val sheet = BottomSheetDialog(this)
         val list = LinearLayout(this).apply {
