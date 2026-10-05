@@ -8,15 +8,24 @@ It uses Host Card Emulation: Android routes readers that select the NFC Forum ND
 (AID `D2760000850101`) to `NdefHceService`, which answers as a read-only NFC Forum Type 4 Tag
 holding one URI record.
 
-- **Screen:** an on/off switch, a choice of what to share, the link (editable), a QR code fallback
-  for phones with NFC off, and a count of how many times a reader has read the tag.
-- **Share link** (the default) sends one URI record. **Share contact** sends a vCard (name, title,
-  email, phone numbers, website and socials), then the link as a second record: Android offers to
-  save the contact, and readers that only act on links still get the page. The on-screen QR code
-  then holds the vCard too. The phone numbers are only ever shared in person: they come from
+- **Share or Receive.** Share answers taps as a tag. Receive turns the phone into a reader for
+  NFC tags, NFC business cards and other phones running this app, keeping the last 20 things read
+  with Open, Save contact (Android's new-contact screen, filled in) and Copy actions.
+- **What a tap shares:** `tbutman.com/hello`, the contact card, LinkedIn, GitHub, Instagram, X, a
+  custom link, or guest Wi-Fi. An optional **event tag** adds `?event=<tag>` to tbutman.com links
+  only, so the site's access log shows which event a visit came from.
+- **Contact card** sends a vCard (name, title, email, phone numbers, website and socials), then
+  the link as a second record. Android offers to save the contact; iPhones skip the card and open
+  the link (tested 5 October 2026). The on-screen QR code holds a shorter card, which iPhone
+  cameras import fully.
+- **Guest Wi-Fi** sends the Wi-Fi Alliance's NFC credential record, which Android offers to join;
+  the QR code uses the `WIFI:` format that iPhone and Android cameras both join. The name and
+  password are stored only in the app's private settings.
+- **Feedback:** when a reader finishes reading, the phone double-buzzes and shows "Sent ✓".
+- **Quick Settings tile:** "Add to Quick Settings" asks Android to add a tile that opens the app. The phone numbers are only ever shared in person: they come from
   `contact.local.properties`, which git ignores (copy `contact.example.properties`), and are built
   into the app through `BuildConfig`.
-- **Permissions:** only `NFC`. There is no network access, no analytics and no AndroidX; the one
+- **Permissions:** `NFC` and `VIBRATE`. There is no network access, no analytics and no AndroidX; the one
   library is ZXing core, for the QR code.
 - **While open**, the app keeps the screen on, asks Android to prefer its service for the AID,
   and on Android 15+ stops the phone polling as a reader, so two phones back to back don't both

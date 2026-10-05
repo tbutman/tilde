@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quick Settings tile icon: NFC waves. Tiles are tinted by the system, so one colour. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path android:fillColor="#FFFFFFFF" android:pathData="M6,12m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M10,8.5C11.2,9.4 11.8,10.6 11.8,12S11.2,14.6 10,15.5M13,6C15,7.5 16,9.6 16,12S15,16.5 13,18M16,3.5C18.8,5.6 20.2,8.6 20.2,12S18.8,18.4 16,20.5"
+        android:strokeWidth="2"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round" />
+</vector>
