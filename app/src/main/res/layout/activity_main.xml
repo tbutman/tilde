@@ -42,6 +42,15 @@
                 android:minHeight="48dp"
                 android:text="@string/tab_receive"
                 android:textColor="@color/text" />
+
+            <RadioButton
+                android:id="@+id/tab_met"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:text="@string/tab_met"
+                android:textColor="@color/text" />
         </RadioGroup>
 
         <TextView
@@ -53,19 +62,39 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/sent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@color/accent"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="@string/sent"
-            android:textColor="@color/bg"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/sent"
+                android:textColor="@color/bg"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/sent_note"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/met_add_note"
+                android:textAllCaps="false"
+                android:textColor="@color/bg"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/nfc_settings"
@@ -223,6 +252,55 @@
                 android:text="@string/add_tile"
                 android:textAllCaps="false"
                 android:textColor="@color/accent" />
+        </LinearLayout>
+
+        <!-- Met: who this phone has shared with, for following up. -->
+        <LinearLayout
+            android:id="@+id/met_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/met_add"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/met_add_someone"
+                    android:textAllCaps="false"
+                    android:textColor="@color/accent" />
+
+                <Button
+                    android:id="@+id/met_export"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/met_export"
+                    android:textAllCaps="false"
+                    android:textColor="@color/accent" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/met_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/met_empty"
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/met_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </LinearLayout>
 
         <!-- Receive: this phone reads other tags and phones. -->

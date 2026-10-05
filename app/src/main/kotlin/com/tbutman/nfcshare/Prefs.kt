@@ -13,7 +13,7 @@ class Prefs(context: Context) {
         get() = store.getBoolean(KEY_ENABLED, true)
         set(value) = store.edit().putBoolean(KEY_ENABLED, value).apply()
 
-    /** "share" answers taps as a tag; "receive" reads other tags and phones. */
+    /** "share" and "met" answer taps as a tag; "receive" reads other tags and phones. */
     var tab: String
         get() = store.getString(KEY_TAB, TAB_SHARE) ?: TAB_SHARE
         set(value) = store.edit().putString(KEY_TAB, value).apply()
@@ -84,6 +84,21 @@ class Prefs(context: Context) {
         else -> url
     }
 
+    /** People met: one entry per completed tap or manual entry, newest first. Only on this phone. */
+    var met: List<Meeting>
+        get() = runCatching {
+            val array = JSONArray(store.getString(KEY_MET, "[]"))
+            (0 until array.length()).map { i ->
+                val o = array.getJSONObject(i)
+                Meeting(o.getLong("time"), o.optString("event"), o.optString("shared"), o.optString("note"))
+            }
+        }.getOrDefault(emptyList())
+        set(value) {
+            val array = JSONArray()
+            value.forEach { m -> array.put(JSONObject().put("time", m.time).put("event", m.event).put("shared", m.shared).put("note", m.note)) }
+            store.edit().putString(KEY_MET, array.toString()).apply()
+        }
+
     /** Things Receive mode has read, newest first; at most HISTORY_SIZE. */
     var received: List<Received>
         get() = runCatching {
@@ -105,6 +120,7 @@ class Prefs(context: Context) {
         const val DEFAULT_URL = "https://tbutman.com/hello"
         const val TAB_SHARE = "share"
         const val TAB_RECEIVE = "receive"
+        const val TAB_MET = "met"
         const val HISTORY_SIZE = 20
 
         const val KEY_ENABLED = "enabled"
@@ -117,5 +133,6 @@ class Prefs(context: Context) {
         const val KEY_WIFI_OPEN = "wifi_open"
         const val KEY_READS = "reads"
         const val KEY_RECEIVED = "received"
+        const val KEY_MET = "met"
     }
 }

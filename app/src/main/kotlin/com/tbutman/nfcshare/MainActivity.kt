@@ -1,6 +1,7 @@
 package com.tbutman.nfcshare
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.StatusBarManager
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -28,6 +29,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.provider.ContactsContract
 import android.provider.Settings
+import android.text.InputType
+import android.text.format.DateUtils
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -55,7 +58,10 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
 
     private lateinit var tabs: RadioGroup
     private lateinit var status: TextView
-    private lateinit var sent: TextView
+    private lateinit var sent: View
+    private lateinit var metPanel: View
+    private lateinit var metEmpty: View
+    private lateinit var metList: LinearLayout
     private lateinit var nfcSettings: Button
     private lateinit var sharePanel: View
     private lateinit var receivePanel: View
@@ -92,6 +98,9 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         tabs = findViewById(R.id.tabs)
         status = findViewById(R.id.status)
         sent = findViewById(R.id.sent)
+        metPanel = findViewById(R.id.met_panel)
+        metEmpty = findViewById(R.id.met_empty)
+        metList = findViewById(R.id.met_list)
         nfcSettings = findViewById(R.id.nfc_settings)
         sharePanel = findViewById(R.id.share_panel)
         receivePanel = findViewById(R.id.receive_panel)
@@ -126,7 +135,11 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
             group.findViewById<View>(id)?.tag?.let { prefs.share = it as String }
         }
         tabs.setOnCheckedChangeListener { _, id ->
-            prefs.tab = if (id == R.id.tab_receive) Prefs.TAB_RECEIVE else Prefs.TAB_SHARE
+            prefs.tab = when (id) {
+                R.id.tab_receive -> Prefs.TAB_RECEIVE
+                R.id.tab_met -> Prefs.TAB_MET
+                else -> Prefs.TAB_SHARE
+            }
             applyNfcMode()
         }
         toggle.setOnCheckedChangeListener { _, checked -> prefs.enabled = checked }
@@ -152,6 +165,14 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         nfcSettings.setOnClickListener { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }
         addTile.setOnClickListener { requestTile() }
         findViewById<Button>(R.id.clear_received).setOnClickListener { prefs.received = emptyList() }
+        findViewById<Button>(R.id.sent_note).setOnClickListener {
+            sent.visibility = View.GONE
+            prefs.met.firstOrNull()?.let { editNote(it) }
+        }
+        findViewById<Button>(R.id.met_add).setOnClickListener {
+            editNote(Meeting(System.currentTimeMillis(), prefs.event, getString(R.string.met_manual), ""), isNew = true)
+        }
+        findViewById<Button>(R.id.met_export).setOnClickListener { export() }
     }
 
     override fun onResume() {
@@ -211,6 +232,10 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
                 Toast.makeText(this, R.string.received_nothing, Toast.LENGTH_SHORT).show()
             } else {
                 prefs.received = items + prefs.received
+                // Someone handed over their card: that's a person met too.
+                items.firstOrNull { it.kind == Received.CONTACT }?.let { card ->
+                    prefs.met = MetLog.add(prefs.met, Meeting(System.currentTimeMillis(), prefs.event, MetLog.RECEIVED, card.title))
+                }
                 buzz()
             }
         }
@@ -223,7 +248,8 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
             buzz()
             sent.visibility = View.VISIBLE
             main.removeCallbacksAndMessages(SENT_TOKEN)
-            main.postAtTime({ sent.visibility = View.GONE }, SENT_TOKEN, SystemClock.uptimeMillis() + 2500)
+            // Long enough to reach for "Add a note".
+            main.postAtTime({ sent.visibility = View.GONE }, SENT_TOKEN, SystemClock.uptimeMillis() + 8000)
         }
         lastReads = now
         render()
@@ -269,18 +295,25 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         val nfc = adapter
         val canEmulate = packageManager.hasSystemFeature("android.hardware.nfc.hce")
         val receiving = prefs.tab == Prefs.TAB_RECEIVE
+        val meeting = prefs.tab == Prefs.TAB_MET
         val share = prefs.share
 
-        val tab = if (receiving) R.id.tab_receive else R.id.tab_share
+        val tab = when {
+            receiving -> R.id.tab_receive
+            meeting -> R.id.tab_met
+            else -> R.id.tab_share
+        }
         if (tabs.checkedRadioButtonId != tab) tabs.check(tab)
-        sharePanel.visibility = if (receiving) View.GONE else View.VISIBLE
+        sharePanel.visibility = if (!receiving && !meeting) View.VISIBLE else View.GONE
         receivePanel.visibility = if (receiving) View.VISIBLE else View.GONE
+        metPanel.visibility = if (meeting) View.VISIBLE else View.GONE
 
         status.text = getString(
             when {
                 nfc == null || !canEmulate -> R.string.status_no_nfc
                 !nfc.isEnabled -> R.string.status_nfc_off
                 receiving -> R.string.status_receive
+                meeting -> R.string.status_met
                 !prefs.enabled -> R.string.status_paused
                 share == Presets.WIFI && !prefs.wifiReady -> R.string.status_wifi_incomplete
                 else -> R.string.status_ready
@@ -288,7 +321,11 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         )
         nfcSettings.visibility = if (nfc != null && !nfc.isEnabled) View.VISIBLE else View.GONE
 
-        if (receiving) renderReceived() else renderShare(share)
+        when {
+            receiving -> renderReceived()
+            meeting -> renderMet()
+            else -> renderShare(share)
+        }
     }
 
     private fun renderShare(share: String) {
@@ -349,6 +386,75 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
             row.addView(actions)
             receivedList.addView(row)
         }
+    }
+
+    private fun renderMet() {
+        val log = prefs.met
+        metEmpty.visibility = if (log.isEmpty()) View.VISIBLE else View.GONE
+        metList.removeAllViews()
+        val pad = (12 * resources.displayMetrics.density).toInt()
+        for (entry in log) {
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(0, pad, 0, pad)
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { editNote(entry) }
+            }
+            val whenText = DateUtils.formatDateTime(
+                this, entry.time,
+                DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_ABBREV_MONTH,
+            )
+            row.addView(TextView(this).apply {
+                text = entry.note.ifEmpty { getString(R.string.met_no_note) }
+                setTextColor(getColor(if (entry.note.isEmpty()) R.color.muted else R.color.text))
+                textSize = 17f
+            })
+            row.addView(TextView(this).apply {
+                text = listOf(whenText, entry.event, entry.shared).filter { it.isNotEmpty() }.joinToString(" · ")
+                setTextColor(getColor(R.color.muted))
+                typeface = android.graphics.Typeface.MONOSPACE
+                textSize = 12f
+            })
+            metList.addView(row)
+        }
+    }
+
+    /** Edit a note, or with `isNew` add a person by hand (QR scans can't be detected). */
+    private fun editNote(entry: Meeting, isNew: Boolean = false) {
+        val field = EditText(this).apply {
+            setText(entry.note)
+            hint = getString(R.string.met_note_hint)
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            minLines = 2
+            setSelection(text.length)
+        }
+        val pad = (20 * resources.displayMetrics.density).toInt()
+        val frame = LinearLayout(this).apply {
+            setPadding(pad, pad / 2, pad, 0)
+            addView(field, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(R.string.met_note_title)
+            .setView(frame)
+            .setPositiveButton(R.string.met_save) { _, _ ->
+                val note = field.text.toString().trim()
+                prefs.met = if (isNew) MetLog.add(prefs.met, entry.copy(note = note)) else MetLog.withNote(prefs.met, entry.time, note)
+            }
+            .setNegativeButton(R.string.met_cancel, null)
+        if (!isNew) dialog.setNeutralButton(R.string.met_delete) { _, _ -> prefs.met = MetLog.without(prefs.met, entry.time) }
+        dialog.show()
+        field.requestFocus()
+    }
+
+    /** Hands the log to email, notes or a spreadsheet app as CSV text. */
+    private fun export() {
+        val send = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.met_export_subject))
+            putExtra(Intent.EXTRA_TEXT, MetLog.csv(prefs.met))
+        }
+        startActivity(Intent.createChooser(send, getString(R.string.met_export)))
     }
 
     private fun open(uri: String) {
