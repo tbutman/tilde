@@ -34,6 +34,11 @@ class Prefs(context: Context) {
         get() = store.getString(KEY_EVENT, "") ?: ""
         set(value) = store.edit().putString(KEY_EVENT, value).apply()
 
+    /** Text typed into the WhatsApp chat for them to send or not; blank for an empty chat. */
+    var whatsappGreeting: String
+        get() = store.getString(KEY_WHATSAPP_GREETING, Contact.WHATSAPP_GREETING) ?: Contact.WHATSAPP_GREETING
+        set(value) = store.edit().putString(KEY_WHATSAPP_GREETING, value).apply()
+
     var wifiSsid: String
         get() = store.getString(KEY_WIFI_SSID, "") ?: ""
         set(value) = store.edit().putString(KEY_WIFI_SSID, value).apply()
@@ -57,7 +62,7 @@ class Prefs(context: Context) {
             val preset = Presets.find(share)
             val base = when (preset.id) {
                 Presets.CUSTOM -> customUrl
-                Presets.WHATSAPP -> Contact.whatsappUrl ?: DEFAULT_URL
+                Presets.WHATSAPP -> Contact.whatsappUrl(greeting = whatsappGreeting) ?: DEFAULT_URL
                 Presets.CONTACT, Presets.WIFI -> DEFAULT_URL
                 else -> preset.url ?: DEFAULT_URL
             }
@@ -129,6 +134,7 @@ class Prefs(context: Context) {
         const val KEY_SHARE = "share"
         const val KEY_URL = "url"
         const val KEY_EVENT = "event"
+        const val KEY_WHATSAPP_GREETING = "whatsapp_greeting"
         const val KEY_WIFI_SSID = "wifi_ssid"
         const val KEY_WIFI_PASSWORD = "wifi_password"
         const val KEY_WIFI_OPEN = "wifi_open"

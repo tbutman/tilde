@@ -158,6 +158,26 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/whatsapp_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Label"
+                    android:labelFor="@id/whatsapp_greeting"
+                    android:text="@string/whatsapp_greeting_label" />
+
+                <EditText
+                    android:id="@+id/whatsapp_greeting"
+                    style="@style/Field"
+                    android:hint="@string/whatsapp_greeting_hint"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapSentences" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/event_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

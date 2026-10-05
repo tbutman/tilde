@@ -18,9 +18,10 @@ holding one URI record.
   the link as a second record. Android offers to save the contact; iPhones skip the card and open
   the link (tested 5 October 2026). The on-screen QR code holds a shorter card, which iPhone
   cameras import fully.
-- **WhatsApp** sends a `https://wa.me/<number>` click-to-chat link with a pre-filled greeting
-  ("Hi Thomas, nice to meet you! I'm "), so they add their name and send; iPhones open it from a
-  tap too. The number is `whatsapp.number` in `contact.local.properties`; without it the preset
+- **WhatsApp** sends a `https://wa.me/<number>` click-to-chat link; iPhones open it from a tap
+  too. "Hi Thomas" is typed into the chat but never sent: they choose, and if they leave it stays
+  as a draft. The text is editable in the app, and blank opens an empty chat. WhatsApp has no
+  "add contact" link (it reads the phone's contacts), so to be saved, share the contact card. The number is `whatsapp.number` in `contact.local.properties`; without it the preset
   is hidden.
 - **Guest Wi-Fi** sends the Wi-Fi Alliance's NFC credential record, which Android offers to join;
   the QR code uses the `WIFI:` format that iPhone and Android cameras both join. The name and

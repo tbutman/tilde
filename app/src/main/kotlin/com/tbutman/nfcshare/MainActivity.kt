@@ -70,6 +70,8 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
     private lateinit var shareHint: TextView
     private lateinit var customRow: View
     private lateinit var urlField: EditText
+    private lateinit var whatsappRow: View
+    private lateinit var whatsappGreeting: EditText
     private lateinit var eventRow: View
     private lateinit var eventField: EditText
     private lateinit var wifiRows: View
@@ -109,6 +111,8 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         shareHint = findViewById(R.id.share_hint)
         customRow = findViewById(R.id.custom_row)
         urlField = findViewById(R.id.url)
+        whatsappRow = findViewById(R.id.whatsapp_row)
+        whatsappGreeting = findViewById(R.id.whatsapp_greeting)
         eventRow = findViewById(R.id.event_row)
         eventField = findViewById(R.id.event)
         wifiRows = findViewById(R.id.wifi_rows)
@@ -146,6 +150,7 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
 
         urlField.setText(prefs.customUrl)
         eventField.setText(prefs.event)
+        whatsappGreeting.setText(prefs.whatsappGreeting)
         wifiSsid.setText(prefs.wifiSsid)
         wifiPassword.setText(prefs.wifiPassword)
         wifiOpen.isChecked = prefs.wifiOpen
@@ -157,6 +162,7 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
             false
         }
         onChange(eventField) { prefs.event = it }
+        onChange(whatsappGreeting, trim = false) { prefs.whatsappGreeting = it }
         // Wi-Fi names and passwords can start or end with a space, so they stay exactly as typed.
         onChange(wifiSsid, trim = false) { prefs.wifiSsid = it }
         onChange(wifiPassword, trim = false) { prefs.wifiPassword = it }
@@ -335,6 +341,7 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
             if (button.tag == share && !button.isChecked) button.isChecked = true
         }
         customRow.visibility = if (share == Presets.CUSTOM) View.VISIBLE else View.GONE
+        whatsappRow.visibility = if (share == Presets.WHATSAPP) View.VISIBLE else View.GONE
         wifiRows.visibility = if (share == Presets.WIFI) View.VISIBLE else View.GONE
         // Event tags only go on tbutman.com links, so hide the field where they can't apply.
         eventRow.visibility = if (share == Presets.WIFI || share == Presets.WHATSAPP) View.GONE else View.VISIBLE

@@ -71,11 +71,10 @@ class FeaturesTest {
     @Test
     fun whatsappLinksUseDigitsOnlyAndAPrefilledGreeting() {
         // A made-up number: the real one lives only in contact.local.properties.
-        assertEquals(
-            "https://wa.me/351900000000?text=Hi%20Thomas%2C%20nice%20to%20meet%20you%21%20I%27m%20",
-            Contact.whatsappUrl("+351 900 000 000"),
-        )
-        assertEquals(null, Contact.whatsappUrl(""))
-        assertEquals(null, Contact.whatsappUrl("+351"))
+        assertEquals("https://wa.me/351900000000?text=Hi%20Thomas", Contact.whatsappUrl("+351 900 000 000"))
+        assertEquals("https://wa.me/351900000000?text=Ol%C3%A1%2C%20Thomas%21", Contact.whatsappUrl("+351 900 000 000", "Olá, Thomas!"))
+        assertEquals("https://wa.me/351900000000", Contact.whatsappUrl("+351 900 000 000", "  "))
+        assertEquals(null, Contact.whatsappUrl("", "Hi"))
+        assertEquals(null, Contact.whatsappUrl("+351", "Hi"))
     }
 }

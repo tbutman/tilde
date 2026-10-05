@@ -20,17 +20,23 @@ object Contact {
     val phones: List<Pair<String, String>>
         get() = BuildConfig.PHONE_LABELS.zip(BuildConfig.PHONE_NUMBERS)
 
-    /** Pre-filled so the other person only adds their name and sends: then Thomas has their number too. */
-    const val WHATSAPP_GREETING = "Hi Thomas, nice to meet you! I'm "
+    /**
+     * The default text typed (never sent) into the chat: short and neutral, so it doesn't speak for
+     * them, and it stays as a draft if they leave without sending. Editable in the app.
+     */
+    const val WHATSAPP_GREETING = "Hi Thomas"
 
-    /** WhatsApp click-to-chat link for the configured number, or null when none is set. */
-    val whatsappUrl: String?
-        get() = whatsappUrl(BuildConfig.WHATSAPP_NUMBER)
+    val hasWhatsapp: Boolean
+        get() = whatsappUrl(BuildConfig.WHATSAPP_NUMBER, "") != null
 
-    /** wa.me wants the international number as digits only: no +, spaces or dashes. */
-    fun whatsappUrl(number: String, greeting: String = WHATSAPP_GREETING): String? {
+    /**
+     * WhatsApp click-to-chat link, or null for a missing number. wa.me wants the international
+     * number as digits only (no +, spaces or dashes); a blank greeting opens an empty chat.
+     */
+    fun whatsappUrl(number: String = BuildConfig.WHATSAPP_NUMBER, greeting: String = WHATSAPP_GREETING): String? {
         val digits = number.filter { it.isDigit() }
         if (digits.length < 8) return null
+        if (greeting.isBlank()) return "https://wa.me/$digits"
         val text = java.net.URLEncoder.encode(greeting, "UTF-8").replace("+", "%20")
         return "https://wa.me/$digits?text=$text"
     }

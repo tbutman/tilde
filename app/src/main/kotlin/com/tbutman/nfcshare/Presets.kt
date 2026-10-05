@@ -26,7 +26,7 @@ object Presets {
 
     /** What the screen offers: WhatsApp only when a number is configured. */
     val available: List<Preset>
-        get() = all.filter { it.id != WHATSAPP || Contact.whatsappUrl != null }
+        get() = all.filter { it.id != WHATSAPP || Contact.hasWhatsapp }
 
     fun find(id: String) = all.firstOrNull { it.id == id } ?: all.first()
 
