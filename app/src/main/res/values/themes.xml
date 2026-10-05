@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.NfcShare" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowBackground">@color/bg</item>
+    <style name="Theme.NfcShare" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorOnPrimary">@color/bg</item>
+        <item name="colorPrimaryContainer">@color/accent_soft</item>
+        <item name="colorOnPrimaryContainer">@color/accent</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryContainer">@color/accent_soft</item>
+        <item name="colorOnSecondaryContainer">@color/accent</item>
+        <item name="colorSurface">@color/bg</item>
+        <item name="colorSurfaceContainer">@color/panel</item>
+        <item name="colorSurfaceContainerLow">@color/panel</item>
+        <item name="colorSurfaceContainerHigh">@color/panel_raised</item>
+        <item name="colorOnSurface">@color/text</item>
+        <item name="colorOnSurfaceVariant">@color/muted</item>
+        <item name="colorOutline">@color/line_strong</item>
+        <item name="colorOutlineVariant">@color/line</item>
         <item name="android:colorBackground">@color/bg</item>
-        <item name="android:colorAccent">@color/accent</item>
-        <item name="android:colorPrimary">@color/bg</item>
+        <item name="android:windowBackground">@color/bg</item>
         <item name="android:statusBarColor">@color/bg</item>
-        <item name="android:navigationBarColor">@color/bg</item>
-        <item name="android:textColorPrimary">@color/text</item>
-        <item name="android:textColorSecondary">@color/muted</item>
+        <item name="android:navigationBarColor">@color/panel</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.NfcShare.BottomSheet</item>
+    </style>
+
+    <style name="ThemeOverlay.NfcShare.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="colorSurfaceContainerLow">@color/panel</item>
     </style>
 </resources>

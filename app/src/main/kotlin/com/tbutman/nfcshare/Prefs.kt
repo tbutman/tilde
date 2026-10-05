@@ -127,6 +127,7 @@ class Prefs(context: Context) {
         const val TAB_SHARE = "share"
         const val TAB_RECEIVE = "receive"
         const val TAB_MET = "met"
+        const val TAB_SETTINGS = "settings"
         const val HISTORY_SIZE = 20
 
         const val KEY_ENABLED = "enabled"

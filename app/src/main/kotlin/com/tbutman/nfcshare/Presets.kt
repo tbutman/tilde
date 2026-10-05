@@ -10,18 +10,23 @@ object Presets {
     const val WIFI = "wifi"
     const val WHATSAPP = "whatsapp"
 
-    class Preset(val id: String, val label: String, val url: String? = null)
+    /**
+     * `iphoneTap`: whether an iPhone acts on a tap. iPhones only act on links when they read a tag
+     * in the background, so a contact card or Wi-Fi network reaches them by scanning the QR code.
+     * Android phones handle every preset by tap or scan.
+     */
+    class Preset(val id: String, val label: String, val url: String? = null, val monogram: String, val iphoneTap: Boolean = true)
 
     val all = listOf(
-        Preset(HELLO, "tbutman.com/hello", Prefs.DEFAULT_URL),
-        Preset(CONTACT, "Contact card"),
-        Preset(WHATSAPP, "WhatsApp"),
-        Preset("linkedin", "LinkedIn", "https://www.linkedin.com/in/thomasbutman"),
-        Preset("github", "GitHub", "https://github.com/tbutman"),
-        Preset("instagram", "Instagram", "https://www.instagram.com/t.butman/"),
-        Preset("x", "X", "https://x.com/tbutman"),
-        Preset(CUSTOM, "Custom link"),
-        Preset(WIFI, "Guest Wi-Fi"),
+        Preset(HELLO, "tbutman.com/hello", Prefs.DEFAULT_URL, "~/"),
+        Preset(CONTACT, "Contact card", monogram = "+", iphoneTap = false),
+        Preset(WHATSAPP, "WhatsApp", monogram = "wa"),
+        Preset("linkedin", "LinkedIn", "https://www.linkedin.com/in/thomasbutman", "in"),
+        Preset("github", "GitHub", "https://github.com/tbutman", "gh"),
+        Preset("instagram", "Instagram", "https://www.instagram.com/t.butman/", "ig"),
+        Preset("x", "X", "https://x.com/tbutman", "X"),
+        Preset(CUSTOM, "Custom link", monogram = "↗"),
+        Preset(WIFI, "Guest Wi-Fi", monogram = "wi", iphoneTap = false),
     )
 
     /** What the screen offers: WhatsApp only when a number is configured. */

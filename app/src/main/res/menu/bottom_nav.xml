@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_share" android:icon="@drawable/ic_nav_share" android:title="@string/tab_share" />
+    <item android:id="@+id/nav_receive" android:icon="@drawable/ic_nav_receive" android:title="@string/tab_receive" />
+    <item android:id="@+id/nav_met" android:icon="@drawable/ic_nav_met" android:title="@string/tab_met" />
+    <item android:id="@+id/nav_settings" android:icon="@drawable/ic_nav_settings" android:title="@string/tab_settings" />
+</menu>

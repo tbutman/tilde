@@ -3,63 +3,94 @@
     <string name="app_name">Tap to share</string>
     <string name="service_description">Shares a link, contact card or Wi-Fi network as an NFC tag</string>
     <string name="aid_description">NFC Forum NDEF tag</string>
-    <string name="title">~/tbutman</string>
+    <string name="tile_label">Tap to share</string>
+
     <string name="tab_share">Share</string>
     <string name="tab_receive">Receive</string>
     <string name="tab_met">Met</string>
-    <string name="status_met">People you have shared with. Taps still share while you are here.</string>
-    <string name="met_add_note">Add a note</string>
-    <string name="met_add_someone">Add someone</string>
-    <string name="met_export">Export</string>
-    <string name="met_empty">Nobody yet. Every completed tap lands here with the time, event tag and what you shared. QR scans can\'t be detected, so add those with Add someone.</string>
-    <string name="met_note_title">Who was it?</string>
-    <string name="met_note_hint">e.g. Jane, React dev at Acme, wants to talk about payments</string>
-    <string name="met_save">Save</string>
-    <string name="met_delete">Delete</string>
-    <string name="met_cancel">Cancel</string>
-    <string name="met_no_note">No note yet. Tap to add one.</string>
-    <string name="met_manual">added by hand</string>
-    <string name="met_export_subject">People I met (Tap to share)</string>
-    <string name="toggle">Share over NFC</string>
-    <string name="status_ready">Ready. Hold the back of your phone against theirs.</string>
-    <string name="status_paused">Sharing is paused.</string>
-    <string name="status_wifi_incomplete">Enter the Wi-Fi name and password to share it.</string>
-    <string name="status_receive">Hold an NFC tag or another phone to the back of yours.</string>
-    <string name="status_nfc_off">NFC is off. Turn it on to share.</string>
-    <string name="status_no_nfc">This phone cannot emulate an NFC tag.</string>
-    <string name="sent">Sent ✓</string>
-    <string name="open_nfc_settings">Open NFC settings</string>
-    <string name="what_label">What a tap shares</string>
-    <string name="url_label">Link</string>
-    <string name="url_invalid">Enter a full link, such as https://tbutman.com/hello</string>
-    <string name="event_label">Event tag (optional)</string>
-    <string name="event_hint">e.g. lisbon-js</string>
-    <string name="wifi_ssid_label">Network name</string>
-    <string name="wifi_password_label">Password</string>
-    <string name="wifi_open">Open network (no password)</string>
-    <string name="hint_link">A tap opens %1$s.</string>
-    <string name="hint_whatsapp">A tap or scan opens a WhatsApp chat with your Portuguese number, with the message below typed in but not sent: they choose whether to send it. To save you as a contact instead, use Contact card.</string>
-    <string name="whatsapp_greeting_label">WhatsApp message (optional)</string>
-    <string name="whatsapp_greeting_hint">Leave empty to open an empty chat</string>
-    <string name="hint_wifi">A tap offers Android phones the network. iPhones can join by scanning the QR code. The password stays on this phone.</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Share: what the other person sees -->
+    <string name="brand_prefix">~/</string>
+    <string name="brand_name">tbutman</string>
+    <string name="your_name">Thomas Butman</string>
+    <string name="tagline_tap">Tap your phone to mine, or scan the code</string>
+    <string name="tagline_scan">Scan the code with your camera</string>
+    <string name="iphone_hint">On an iPhone? Scan the code.</string>
+    <string name="state_ready">Ready</string>
+    <string name="state_paused">Paused</string>
+    <string name="state_nfc_off">NFC off</string>
+    <string name="state_no_nfc">No NFC</string>
+    <string name="compat_both">Android and iPhone: tap or scan</string>
+    <string name="compat_scan">Android: tap or scan · iPhone: scan</string>
     <string name="qr_description">QR code for what a tap shares</string>
-    <string name="qr_hint">No NFC on their phone? They can scan this.</string>
-    <string name="add_tile">Add to Quick Settings</string>
-    <string name="tile_label">Tap to share</string>
+    <string name="wifi_missing">Add the Wi-Fi name and password in Settings to share it.</string>
+    <string name="open_settings">Open settings</string>
+    <string name="open_nfc_settings">Turn on NFC</string>
+    <string name="meta_event">Event: %1$s</string>
+    <plurals name="meta_sent_today">
+        <item quantity="one">%d sent today</item>
+        <item quantity="other">%d sent today</item>
+    </plurals>
+    <string name="sent">Sent</string>
+    <string name="sent_detail">It\'s on their phone.</string>
+    <string name="done">Done</string>
+
+    <!-- Picker -->
+    <string name="picker_title">What should a tap share?</string>
+    <string name="picker_needs_setup">Set it up in Settings first.</string>
+
+    <!-- Receive -->
+    <string name="receive_title">Hold an NFC tag or another phone to the back of yours.</string>
+    <string name="receive_detail">Tags, NFC business cards and Android phones running this app all work. iPhones can\'t send this way.</string>
     <string name="received_label">Received</string>
-    <string name="received_empty">Nothing yet. Tags, NFC business cards and phones running this app all work.</string>
+    <string name="received_empty">Nothing yet.</string>
     <string name="received_nothing">That tag has no readable content.</string>
     <string name="clear_received">Clear history</string>
     <string name="action_open">Open</string>
     <string name="action_save_contact">Save contact</string>
     <string name="action_copy">Copy</string>
     <string name="copied">Copied</string>
-    <plurals name="hint_contact">
-        <item quantity="one">A tap offers to save your contact card (name, title, email, %d phone number, links), then the link. The QR code holds a shorter card.</item>
-        <item quantity="other">A tap offers to save your contact card (name, title, email, %d phone numbers, links), then the link. The QR code holds a shorter card.</item>
-    </plurals>
+
+    <!-- Met -->
+    <string name="met_title">People you\'ve shared with</string>
+    <string name="met_detail">Every completed tap lands here with the time, event and what you shared. QR scans can\'t be detected, so add those yourself. Stored only on this phone.</string>
+    <string name="met_add_note">Add a note</string>
+    <string name="met_add_someone">Add someone</string>
+    <string name="met_export">Export</string>
+    <string name="met_empty">Nobody yet.</string>
+    <string name="met_note_title">Who was it?</string>
+    <string name="met_note_hint">Jane, React dev at Acme, wants to talk about payments</string>
+    <string name="met_save">Save</string>
+    <string name="met_delete">Delete</string>
+    <string name="met_cancel">Cancel</string>
+    <string name="met_no_note">No note yet. Tap to add one.</string>
+    <string name="met_manual">added by hand</string>
+    <string name="met_export_subject">People I met (Tap to share)</string>
+
+    <!-- Settings -->
+    <string name="settings_sharing">Sharing</string>
+    <string name="toggle">Share over NFC</string>
+    <string name="toggle_detail">Off: taps do nothing, the QR code still works.</string>
+    <string name="settings_event">Event tag</string>
+    <string name="event_hint">lisbon-js</string>
+    <string name="event_detail">Added to tbutman.com links as ?event=, so the site\'s log shows which event a visit came from.</string>
+    <string name="settings_whatsapp">WhatsApp message</string>
+    <string name="whatsapp_greeting_hint">Hi Thomas</string>
+    <string name="whatsapp_detail">Typed into the chat, never sent. Leave empty for an empty chat.</string>
+    <string name="settings_custom">Custom link</string>
+    <string name="url_invalid">Enter a full link, such as https://tbutman.com/hello</string>
+    <string name="settings_wifi">Guest Wi-Fi</string>
+    <string name="wifi_ssid_label">Network name</string>
+    <string name="wifi_password_label">Password</string>
+    <string name="wifi_open">Open network (no password)</string>
+    <string name="wifi_detail">Stored only on this phone. Never shown on the Share screen.</string>
+    <string name="settings_shortcuts">Shortcuts</string>
+    <string name="add_tile">Add to Quick Settings</string>
+    <string name="settings_about">About</string>
     <plurals name="reads">
         <item quantity="one">Read %d time from this phone</item>
         <item quantity="other">Read %d times from this phone</item>
     </plurals>
+    <string name="version">Version %1$s</string>
 </resources>

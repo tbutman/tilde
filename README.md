@@ -8,6 +8,12 @@ It uses Host Card Emulation: Android routes readers that select the NFC Forum ND
 (AID `D2760000850101`) to `NdefHceService`, which answers as a read-only NFC Forum Type 4 Tag
 holding one URI record.
 
+- **Layout:** four tabs in a bottom toolbar. **Share** is what the other person sees: the name, a
+  large QR code (at full screen brightness), and one line saying what a tap shares and whether it
+  works by tap or scan on Android and iPhone. Tapping that line opens the picker. **Settings**
+  holds everything else (sharing on/off, event tag, WhatsApp message, custom link, guest Wi-Fi,
+  Quick Settings tile), so none of it is on show. A completed tap fills the screen with "Sent"
+  and offers "Add a note".
 - **Share or Receive.** Share answers taps as a tag. Receive turns the phone into a reader for
   NFC tags, NFC business cards and other phones running this app, keeping the last 20 things read
   with Open, Save contact (Android's new-contact screen, filled in) and Copy actions.
@@ -30,8 +36,8 @@ holding one URI record.
 - **Quick Settings tile:** "Add to Quick Settings" asks Android to add a tile that opens the app. The phone numbers are only ever shared in person: they come from
   `contact.local.properties`, which git ignores (copy `contact.example.properties`), and are built
   into the app through `BuildConfig`.
-- **Permissions:** `NFC` and `VIBRATE`. There is no network access, no analytics and no AndroidX; the one
-  library is ZXing core, for the QR code.
+- **Permissions:** `NFC` and `VIBRATE`. No network access and no analytics. Libraries: Material
+  Components (with AppCompat) for the interface, and ZXing core for the QR code.
 - **While open**, the app keeps the screen on, asks Android to prefer its service for the AID,
   and on Android 15+ stops the phone polling as a reader, so two phones back to back don't both
   act as readers.

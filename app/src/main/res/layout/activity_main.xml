@@ -1,363 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:text="@string/title"
-            android:textColor="@color/accent"
-            android:textSize="16sp" />
+        <include android:id="@+id/share_panel" layout="@layout/panel_share" />
+        <include android:id="@+id/receive_panel" layout="@layout/panel_receive" android:visibility="gone" />
+        <include android:id="@+id/met_panel" layout="@layout/panel_met" android:visibility="gone" />
+        <include android:id="@+id/settings_panel" layout="@layout/panel_settings" android:visibility="gone" />
 
-        <RadioGroup
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/tab_share"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="48dp"
-                android:text="@string/tab_share"
-                android:textColor="@color/text" />
-
-            <RadioButton
-                android:id="@+id/tab_receive"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="48dp"
-                android:text="@string/tab_receive"
-                android:textColor="@color/text" />
-
-            <RadioButton
-                android:id="@+id/tab_met"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="48dp"
-                android:text="@string/tab_met"
-                android:textColor="@color/text" />
-        </RadioGroup>
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textColor="@color/text"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
+        <!-- Full-screen confirmation after a completed tap; the other person sees it too. -->
         <LinearLayout
             android:id="@+id/sent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@color/accent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="8dp"
+            android:layout_height="match_parent"
+            android:background="@color/sent_scrim"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
             android:visibility="gone">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:text="@string/sent"
-                android:textColor="@color/bg"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/sent_note"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/met_add_note"
-                android:textAllCaps="false"
-                android:textColor="@color/bg"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/nfc_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/open_nfc_settings"
-            android:visibility="gone" />
-
-        <!-- Share: this phone answers taps as an NFC tag. -->
-        <LinearLayout
-            android:id="@+id/share_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Switch
-                android:id="@+id/toggle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:minHeight="48dp"
-                android:text="@string/toggle"
-                android:textColor="@color/text"
-                android:textSize="18sp" />
-
-            <TextView
-                style="@style/Label"
-                android:text="@string/what_label" />
-
-            <RadioGroup
-                android:id="@+id/presets"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/share_hint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/muted"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:id="@+id/custom_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/Label"
-                    android:labelFor="@id/url"
-                    android:text="@string/url_label" />
-
-                <EditText
-                    android:id="@+id/url"
-                    style="@style/Field"
-                    android:importantForAutofill="no"
-                    android:imeOptions="actionDone"
-                    android:inputType="textUri" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/whatsapp_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/Label"
-                    android:labelFor="@id/whatsapp_greeting"
-                    android:text="@string/whatsapp_greeting_label" />
-
-                <EditText
-                    android:id="@+id/whatsapp_greeting"
-                    style="@style/Field"
-                    android:hint="@string/whatsapp_greeting_hint"
-                    android:imeOptions="actionDone"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapSentences" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/event_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/Label"
-                    android:labelFor="@id/event"
-                    android:text="@string/event_label" />
-
-                <EditText
-                    android:id="@+id/event"
-                    style="@style/Field"
-                    android:importantForAutofill="no"
-                    android:hint="@string/event_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="text" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/wifi_rows"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/Label"
-                    android:labelFor="@id/wifi_ssid"
-                    android:text="@string/wifi_ssid_label" />
-
-                <EditText
-                    android:id="@+id/wifi_ssid"
-                    style="@style/Field"
-                    android:importantForAutofill="no"
-                    android:imeOptions="actionNext"
-                    android:inputType="text" />
-
-                <TextView
-                    style="@style/Label"
-                    android:labelFor="@id/wifi_password"
-                    android:text="@string/wifi_password_label" />
-
-                <EditText
-                    android:id="@+id/wifi_password"
-                    style="@style/Field"
-                    android:importantForAutofill="no"
-                    android:imeOptions="actionDone"
-                    android:inputType="textVisiblePassword" />
-
-                <CheckBox
-                    android:id="@+id/wifi_open"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:text="@string/wifi_open"
-                    android:textColor="@color/text" />
-            </LinearLayout>
 
             <ImageView
-                android:id="@+id/qr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/qr_description"
-                android:scaleType="fitCenter" />
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:background="@drawable/bg_check"
+                android:importantForAccessibility="no"
+                android:padding="22dp"
+                android:src="@drawable/ic_check"
+                app:tint="@color/bg" />
 
             <TextView
-                android:id="@+id/qr_hint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/qr_hint"
-                android:textColor="@color/muted"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/reads"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:fontFamily="monospace"
-                android:textColor="@color/muted"
-                android:textSize="13sp" />
+                android:text="@string/sent"
+                android:textColor="@color/text"
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/add_tile"
-                style="?android:attr/borderlessButtonStyle"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/add_tile"
-                android:textAllCaps="false"
-                android:textColor="@color/accent" />
-        </LinearLayout>
-
-        <!-- Met: who this phone has shared with, for following up. -->
-        <LinearLayout
-            android:id="@+id/met_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/met_add"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/met_add_someone"
-                    android:textAllCaps="false"
-                    android:textColor="@color/accent" />
-
-                <Button
-                    android:id="@+id/met_export"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/met_export"
-                    android:textAllCaps="false"
-                    android:textColor="@color/accent" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/met_empty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/met_empty"
+                android:layout_marginTop="4dp"
+                android:text="@string/sent_detail"
                 android:textColor="@color/muted"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
-            <LinearLayout
-                android:id="@+id/met_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </LinearLayout>
-
-        <!-- Receive: this phone reads other tags and phones. -->
-        <LinearLayout
-            android:id="@+id/receive_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                style="@style/Label"
-                android:text="@string/received_label" />
-
-            <TextView
-                android:id="@+id/received_empty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/received_empty"
-                android:textColor="@color/muted"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:id="@+id/received_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <Button
-                android:id="@+id/clear_received"
-                style="?android:attr/borderlessButtonStyle"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sent_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/clear_received"
-                android:textAllCaps="false"
-                android:textColor="@color/accent" />
+                android:layout_marginTop="32dp"
+                android:text="@string/met_add_note" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sent_done"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/done" />
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/panel"
+        app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav" />
+</LinearLayout>

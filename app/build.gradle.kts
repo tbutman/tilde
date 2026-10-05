@@ -27,8 +27,8 @@ android {
         applicationId = "com.tbutman.nfcshare"
         minSdk = 26
         targetSdk = 36
-        versionCode = 6
-        versionName = "1.5"
+        versionCode = 7
+        versionName = "2.0"
         buildConfigField("String[]", "PHONE_LABELS", "{" + phones.joinToString(",") { javaString(it.first) } + "}")
         buildConfigField("String", "WHATSAPP_NUMBER", javaString(whatsapp))
         buildConfigField("String[]", "PHONE_NUMBERS", "{" + phones.joinToString(",") { javaString(it.second) } + "}")
@@ -45,6 +45,9 @@ android {
 }
 
 dependencies {
+    // Material 3: bottom navigation, bottom sheet, switches and text fields that behave natively.
+    implementation("com.google.android.material:material:1.14.0")
+    implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("com.google.zxing:core:3.5.4")
     testImplementation("junit:junit:4.13.2")
 }

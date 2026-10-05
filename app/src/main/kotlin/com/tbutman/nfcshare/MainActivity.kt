@@ -1,7 +1,5 @@
 package com.tbutman.nfcshare
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.app.StatusBarManager
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -25,30 +23,43 @@ import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.text.Editable
-import android.text.TextWatcher
 import android.provider.ContactsContract
 import android.provider.Settings
+import android.text.Editable
 import android.text.InputType
+import android.text.SpannableStringBuilder
+import android.text.TextWatcher
 import android.text.format.DateUtils
+import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+import java.util.Calendar
 
-class MainActivity : Activity(), NfcAdapter.ReaderCallback {
+/**
+ * One screen, four tabs. Share is what the other person looks at (name, QR code, what a tap
+ * shares), so everything only Thomas needs lives in Settings, Met and the picker sheet.
+ */
+class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private lateinit var prefs: Prefs
     private var adapter: NfcAdapter? = null
     private val service by lazy { ComponentName(this, NdefHceService::class.java) }
@@ -56,34 +67,9 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
     private var lastReads = 0
     private var resumed = false
 
-    private lateinit var tabs: RadioGroup
-    private lateinit var status: TextView
+    private lateinit var nav: BottomNavigationView
+    private lateinit var panels: Map<String, View>
     private lateinit var sent: View
-    private lateinit var metPanel: View
-    private lateinit var metEmpty: View
-    private lateinit var metList: LinearLayout
-    private lateinit var nfcSettings: Button
-    private lateinit var sharePanel: View
-    private lateinit var receivePanel: View
-    private lateinit var toggle: Switch
-    private lateinit var presets: RadioGroup
-    private lateinit var shareHint: TextView
-    private lateinit var customRow: View
-    private lateinit var urlField: EditText
-    private lateinit var whatsappRow: View
-    private lateinit var whatsappGreeting: EditText
-    private lateinit var eventRow: View
-    private lateinit var eventField: EditText
-    private lateinit var wifiRows: View
-    private lateinit var wifiSsid: EditText
-    private lateinit var wifiPassword: EditText
-    private lateinit var wifiOpen: CheckBox
-    private lateinit var qr: ImageView
-    private lateinit var qrHint: View
-    private lateinit var reads: TextView
-    private lateinit var addTile: Button
-    private lateinit var receivedEmpty: View
-    private lateinit var receivedList: LinearLayout
 
     private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         // The card-emulation service writes the read count; everything else is this screen's own.
@@ -97,88 +83,31 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         adapter = NfcAdapter.getDefaultAdapter(this)
         lastReads = prefs.reads
 
-        tabs = findViewById(R.id.tabs)
-        status = findViewById(R.id.status)
+        nav = findViewById(R.id.nav)
         sent = findViewById(R.id.sent)
-        metPanel = findViewById(R.id.met_panel)
-        metEmpty = findViewById(R.id.met_empty)
-        metList = findViewById(R.id.met_list)
-        nfcSettings = findViewById(R.id.nfc_settings)
-        sharePanel = findViewById(R.id.share_panel)
-        receivePanel = findViewById(R.id.receive_panel)
-        toggle = findViewById(R.id.toggle)
-        presets = findViewById(R.id.presets)
-        shareHint = findViewById(R.id.share_hint)
-        customRow = findViewById(R.id.custom_row)
-        urlField = findViewById(R.id.url)
-        whatsappRow = findViewById(R.id.whatsapp_row)
-        whatsappGreeting = findViewById(R.id.whatsapp_greeting)
-        eventRow = findViewById(R.id.event_row)
-        eventField = findViewById(R.id.event)
-        wifiRows = findViewById(R.id.wifi_rows)
-        wifiSsid = findViewById(R.id.wifi_ssid)
-        wifiPassword = findViewById(R.id.wifi_password)
-        wifiOpen = findViewById(R.id.wifi_open)
-        qr = findViewById(R.id.qr)
-        qrHint = findViewById(R.id.qr_hint)
-        reads = findViewById(R.id.reads)
-        addTile = findViewById(R.id.add_tile)
-        receivedEmpty = findViewById(R.id.received_empty)
-        receivedList = findViewById(R.id.received_list)
-
-        for (preset in Presets.available) {
-            presets.addView(RadioButton(this).apply {
-                id = View.generateViewId()
-                tag = preset.id
-                text = preset.label
-                minHeight = (48 * resources.displayMetrics.density).toInt()
-                setTextColor(getColor(R.color.text))
-            })
-        }
-        presets.setOnCheckedChangeListener { group, id ->
-            group.findViewById<View>(id)?.tag?.let { prefs.share = it as String }
-        }
-        tabs.setOnCheckedChangeListener { _, id ->
-            prefs.tab = when (id) {
-                R.id.tab_receive -> Prefs.TAB_RECEIVE
-                R.id.tab_met -> Prefs.TAB_MET
+        panels = mapOf(
+            Prefs.TAB_SHARE to findViewById(R.id.share_panel),
+            Prefs.TAB_RECEIVE to findViewById(R.id.receive_panel),
+            Prefs.TAB_MET to findViewById(R.id.met_panel),
+            Prefs.TAB_SETTINGS to findViewById(R.id.settings_panel),
+        )
+        nav.selectedItemId = navId(prefs.tab)
+        nav.setOnItemSelectedListener { item ->
+            prefs.tab = when (item.itemId) {
+                R.id.nav_receive -> Prefs.TAB_RECEIVE
+                R.id.nav_met -> Prefs.TAB_MET
+                R.id.nav_settings -> Prefs.TAB_SETTINGS
                 else -> Prefs.TAB_SHARE
             }
             applyNfcMode()
+            applyBrightness()
+            true
         }
-        toggle.setOnCheckedChangeListener { _, checked -> prefs.enabled = checked }
 
-        urlField.setText(prefs.customUrl)
-        eventField.setText(prefs.event)
-        whatsappGreeting.setText(prefs.whatsappGreeting)
-        wifiSsid.setText(prefs.wifiSsid)
-        wifiPassword.setText(prefs.wifiPassword)
-        wifiOpen.isChecked = prefs.wifiOpen
-        // Fields save as you type: tapping a preset or scanning straight after typing must not lose
-        // the text. The custom link only saves once valid; Done shows why it isn't.
-        onChange(urlField) { if (validUrl(it)) prefs.customUrl = it }
-        urlField.setOnEditorActionListener { _, _, _ ->
-            if (!validUrl(urlField.text.toString().trim())) urlField.error = getString(R.string.url_invalid)
-            false
-        }
-        onChange(eventField) { prefs.event = it }
-        onChange(whatsappGreeting, trim = false) { prefs.whatsappGreeting = it }
-        // Wi-Fi names and passwords can start or end with a space, so they stay exactly as typed.
-        onChange(wifiSsid, trim = false) { prefs.wifiSsid = it }
-        onChange(wifiPassword, trim = false) { prefs.wifiPassword = it }
-        wifiOpen.setOnCheckedChangeListener { _, checked -> prefs.wifiOpen = checked }
-
-        nfcSettings.setOnClickListener { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }
-        addTile.setOnClickListener { requestTile() }
-        findViewById<Button>(R.id.clear_received).setOnClickListener { prefs.received = emptyList() }
-        findViewById<Button>(R.id.sent_note).setOnClickListener {
-            sent.visibility = View.GONE
-            prefs.met.firstOrNull()?.let { editNote(it) }
-        }
-        findViewById<Button>(R.id.met_add).setOnClickListener {
-            editNote(Meeting(System.currentTimeMillis(), prefs.event, getString(R.string.met_manual), ""), isNew = true)
-        }
-        findViewById<Button>(R.id.met_export).setOnClickListener { export() }
+        setUpShare()
+        setUpReceive()
+        setUpMet()
+        setUpSettings()
     }
 
     override fun onResume() {
@@ -189,6 +118,7 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         prefs.store.registerOnSharedPreferenceChangeListener(prefsListener)
         lastReads = prefs.reads
         applyNfcMode()
+        applyBrightness()
         render()
     }
 
@@ -203,7 +133,16 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         super.onPause()
     }
 
-    /** Share: answer readers as a tag and stop polling. Receive: poll for tags in reader mode. */
+    private fun navId(tab: String) = when (tab) {
+        Prefs.TAB_RECEIVE -> R.id.nav_receive
+        Prefs.TAB_MET -> R.id.nav_met
+        Prefs.TAB_SETTINGS -> R.id.nav_settings
+        else -> R.id.nav_share
+    }
+
+    // ---- NFC ----
+
+    /** Receive polls for tags in reader mode; every other tab answers readers as a tag. */
     private fun applyNfcMode() {
         val nfc = adapter ?: return
         if (!resumed) return
@@ -221,6 +160,13 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
                 runCatching { nfc.setDiscoveryTechnology(this, NfcAdapter.FLAG_READER_DISABLE, NfcAdapter.FLAG_LISTEN_KEEP) }
             }
+        }
+    }
+
+    /** Full brightness on the Share tab, so the QR code scans in dim rooms; the system's level elsewhere. */
+    private fun applyBrightness() {
+        window.attributes = window.attributes.apply {
+            screenBrightness = if (resumed && prefs.tab == Prefs.TAB_SHARE) 1f else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
         }
     }
 
@@ -252,10 +198,12 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         val now = prefs.reads
         if (now > lastReads) {
             buzz()
-            sent.visibility = View.VISIBLE
-            main.removeCallbacksAndMessages(SENT_TOKEN)
-            // Long enough to reach for "Add a note".
-            main.postAtTime({ sent.visibility = View.GONE }, SENT_TOKEN, SystemClock.uptimeMillis() + 8000)
+            if (prefs.tab != Prefs.TAB_RECEIVE) {
+                sent.visibility = View.VISIBLE
+                main.removeCallbacksAndMessages(SENT_TOKEN)
+                // Long enough to reach for "Add a note".
+                main.postAtTime({ sent.visibility = View.GONE }, SENT_TOKEN, SystemClock.uptimeMillis() + 8000)
+            }
         }
         lastReads = now
         render()
@@ -277,6 +225,260 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         )
     }
 
+    // ---- Set-up ----
+
+    private fun setUpShare() {
+        val brand = SpannableStringBuilder(getString(R.string.brand_prefix)).apply {
+            setSpan(ForegroundColorSpan(getColor(R.color.accent)), 0, length, 0)
+            append(getString(R.string.brand_name))
+        }
+        findViewById<TextView>(R.id.brand).text = brand
+        findViewById<View>(R.id.share_row).setOnClickListener { showPicker() }
+        findViewById<View>(R.id.open_settings).setOnClickListener { nav.selectedItemId = R.id.nav_settings }
+        findViewById<View>(R.id.nfc_settings).setOnClickListener { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }
+        findViewById<View>(R.id.sent_done).setOnClickListener { sent.visibility = View.GONE }
+        findViewById<View>(R.id.sent_note).setOnClickListener {
+            sent.visibility = View.GONE
+            prefs.met.firstOrNull()?.let { editNote(it) }
+        }
+    }
+
+    private fun setUpReceive() {
+        findViewById<View>(R.id.clear_received).setOnClickListener { prefs.received = emptyList() }
+    }
+
+    private fun setUpMet() {
+        findViewById<View>(R.id.met_add).setOnClickListener {
+            editNote(Meeting(System.currentTimeMillis(), prefs.event, getString(R.string.met_manual), ""), isNew = true)
+        }
+        findViewById<View>(R.id.met_export).setOnClickListener { export() }
+    }
+
+    private fun setUpSettings() {
+        findViewById<MaterialSwitch>(R.id.toggle).apply {
+            isChecked = prefs.enabled
+            setOnCheckedChangeListener { _, checked -> prefs.enabled = checked }
+        }
+        field(R.id.event, prefs.event) { prefs.event = it.trim() }
+        field(R.id.whatsapp_greeting, prefs.whatsappGreeting) { prefs.whatsappGreeting = it }
+        val urlLayout = findViewById<TextInputLayout>(R.id.url_layout)
+        field(R.id.url, prefs.customUrl) {
+            val value = it.trim()
+            val valid = value.contains(':') && runCatching { Ndef.uriMessage(value) }.isSuccess
+            urlLayout.error = if (valid || value.isEmpty()) null else getString(R.string.url_invalid)
+            if (valid) prefs.customUrl = value
+        }
+        // Wi-Fi names and passwords can start or end with a space, so they stay exactly as typed.
+        field(R.id.wifi_ssid, prefs.wifiSsid) { prefs.wifiSsid = it }
+        field(R.id.wifi_password, prefs.wifiPassword) { prefs.wifiPassword = it }
+        findViewById<MaterialCheckBox>(R.id.wifi_open).apply {
+            isChecked = prefs.wifiOpen
+            setOnCheckedChangeListener { _, checked -> prefs.wifiOpen = checked }
+        }
+        findViewById<View>(R.id.whatsapp_section).visibility = if (Contact.hasWhatsapp) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.tile_section).visibility =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.add_tile).setOnClickListener { requestTile() }
+        findViewById<TextView>(R.id.version).text = getString(R.string.version, BuildConfig.VERSION_NAME)
+    }
+
+    /** Fields save as you type: switching tabs or scanning straight after typing must not lose text. */
+    private fun field(id: Int, value: String, save: (String) -> Unit) {
+        findViewById<TextInputEditText>(id).apply {
+            setText(value)
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+                override fun afterTextChanged(s: Editable?) = save(s?.toString().orEmpty())
+            })
+        }
+    }
+
+    // ---- Rendering ----
+
+    private fun render() {
+        val tab = prefs.tab
+        for ((name, panel) in panels) panel.visibility = if (name == tab) View.VISIBLE else View.GONE
+        if (nav.selectedItemId != navId(tab)) nav.selectedItemId = navId(tab)
+        when (tab) {
+            Prefs.TAB_RECEIVE -> renderReceived()
+            Prefs.TAB_MET -> renderMet()
+            Prefs.TAB_SETTINGS -> renderSettings()
+            else -> renderShare()
+        }
+    }
+
+    private fun renderShare() {
+        val nfc = adapter
+        val canEmulate = nfc != null && packageManager.hasSystemFeature("android.hardware.nfc.hce")
+        val tapping = canEmulate && nfc!!.isEnabled && prefs.enabled
+        val preset = Presets.find(prefs.share)
+        val wifiMissing = preset.id == Presets.WIFI && !prefs.wifiReady
+
+        findViewById<TextView>(R.id.state).apply {
+            val (label, colour) = when {
+                !canEmulate -> R.string.state_no_nfc to R.color.muted
+                !nfc!!.isEnabled -> R.string.state_nfc_off to R.color.accent
+                !prefs.enabled -> R.string.state_paused to R.color.muted
+                else -> R.string.state_ready to R.color.ok
+            }
+            text = getString(label)
+            setTextColor(getColor(colour))
+        }
+        findViewById<TextView>(R.id.tagline).setText(if (tapping) R.string.tagline_tap else R.string.tagline_scan)
+        findViewById<View>(R.id.nfc_settings).visibility = if (nfc != null && !nfc.isEnabled) View.VISIBLE else View.GONE
+
+        findViewById<View>(R.id.qr_card).visibility = if (wifiMissing) View.GONE else View.VISIBLE
+        findViewById<View>(R.id.wifi_missing).visibility = if (wifiMissing) View.VISIBLE else View.GONE
+        if (!wifiMissing) findViewById<ImageView>(R.id.qr).setImageBitmap(qrBitmap(prefs.qrText()))
+        findViewById<View>(R.id.iphone_hint).visibility = if (tapping && !preset.iphoneTap && !wifiMissing) View.VISIBLE else View.GONE
+
+        bindPreset(findViewById(R.id.share_row_content), preset, selected = false)
+
+        val startOfDay = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        val today = prefs.met.count { it.time >= startOfDay && it.shared != MetLog.RECEIVED && it.shared != getString(R.string.met_manual) }
+        val meta = listOfNotNull(
+            prefs.event.takeIf { it.isNotBlank() && preset.id != Presets.WIFI && preset.id != Presets.WHATSAPP }?.let { getString(R.string.meta_event, it) },
+            today.takeIf { it > 0 }?.let { resources.getQuantityString(R.plurals.meta_sent_today, it, it) },
+        )
+        findViewById<TextView>(R.id.meta).apply {
+            text = meta.joinToString(" · ")
+            visibility = if (meta.isEmpty()) View.GONE else View.VISIBLE
+        }
+    }
+
+    private fun bindPreset(row: View, preset: Presets.Preset, selected: Boolean) {
+        row.findViewById<TextView>(R.id.monogram).text = preset.monogram
+        row.findViewById<TextView>(R.id.title).apply {
+            text = preset.label
+            setTextColor(getColor(if (selected) R.color.accent else R.color.text))
+        }
+        row.findViewById<TextView>(R.id.subtitle).setText(if (preset.iphoneTap) R.string.compat_both else R.string.compat_scan)
+        row.findViewById<ImageView>(R.id.end).apply {
+            setImageResource(if (selected) R.drawable.ic_check else R.drawable.ic_chevron)
+            imageTintList = getColorStateList(if (selected) R.color.accent else R.color.muted)
+        }
+    }
+
+    /** The picker: what a tap shares, with what works on Android and iPhone under each. */
+    private fun showPicker() {
+        val sheet = BottomSheetDialog(this)
+        val list = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, dp(8), 0, dp(24))
+        }
+        list.addView(TextView(this).apply {
+            setText(R.string.picker_title)
+            setTextColor(getColor(R.color.text))
+            textSize = 18f
+            setPadding(dp(20), dp(8), dp(20), dp(12))
+        })
+        for (preset in Presets.available) {
+            val row = LayoutInflater.from(this).inflate(R.layout.row_preset, list, false)
+            bindPreset(row, preset, selected = preset.id == prefs.share)
+            row.setOnClickListener {
+                prefs.share = preset.id
+                sheet.dismiss()
+                val needsSetup = preset.id == Presets.WIFI && !prefs.wifiReady
+                if (needsSetup) {
+                    Snackbar.make(nav, R.string.picker_needs_setup, Snackbar.LENGTH_LONG)
+                        .setAnchorView(nav)
+                        .setAction(R.string.open_settings) { nav.selectedItemId = R.id.nav_settings }
+                        .show()
+                }
+            }
+            list.addView(row)
+        }
+        sheet.setContentView(list)
+        sheet.show()
+    }
+
+    private fun renderSettings() {
+        findViewById<MaterialSwitch>(R.id.toggle).let { if (it.isChecked != prefs.enabled) it.isChecked = prefs.enabled }
+        findViewById<TextInputLayout>(R.id.wifi_password_layout).isEnabled = !prefs.wifiOpen
+        findViewById<TextView>(R.id.reads).text = resources.getQuantityString(R.plurals.reads, prefs.reads, prefs.reads)
+    }
+
+    private fun renderReceived() {
+        val items = prefs.received
+        findViewById<View>(R.id.received_empty).visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.clear_received).visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+        val list = findViewById<LinearLayout>(R.id.received_list)
+        list.removeAllViews()
+        for (item in items) {
+            val actions = buildList {
+                when (item.kind) {
+                    Received.LINK -> add(R.string.action_open to { open(item.payload) })
+                    Received.CONTACT -> add(R.string.action_save_contact to { saveContact(item.payload) })
+                }
+                if (item.payload.isNotEmpty()) add(R.string.action_copy to { copy(item.payload) })
+            }
+            list.addView(listRow(item.title, item.detail, actions))
+        }
+    }
+
+    private fun renderMet() {
+        val log = prefs.met
+        findViewById<View>(R.id.met_empty).visibility = if (log.isEmpty()) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.met_export).visibility = if (log.isEmpty()) View.GONE else View.VISIBLE
+        val list = findViewById<LinearLayout>(R.id.met_list)
+        list.removeAllViews()
+        for (entry in log) {
+            val whenText = DateUtils.formatDateTime(
+                this, entry.time,
+                DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_ABBREV_MONTH,
+            )
+            val detail = listOf(whenText, entry.event, entry.shared).filter { it.isNotEmpty() }.joinToString(" · ")
+            val row = listRow(entry.note.ifEmpty { getString(R.string.met_no_note) }, detail, emptyList(), muted = entry.note.isEmpty())
+            row.setOnClickListener { editNote(entry) }
+            list.addView(row)
+        }
+    }
+
+    /** A list row like the site's bordered lists: title, monospace detail, text-button actions, hairline. */
+    private fun listRow(title: String, detail: String, actions: List<Pair<Int, () -> Unit>>, muted: Boolean = false): View {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, dp(14), 0, 0)
+            isClickable = true
+            isFocusable = true
+            val ripple = android.util.TypedValue()
+            theme.resolveAttribute(android.R.attr.selectableItemBackground, ripple, true)
+            setBackgroundResource(ripple.resourceId)
+        }
+        row.addView(TextView(this).apply {
+            text = title
+            setTextColor(getColor(if (muted) R.color.muted else R.color.text))
+            textSize = 16f
+        })
+        row.addView(TextView(this).apply {
+            text = detail
+            setTextColor(getColor(R.color.dim))
+            typeface = android.graphics.Typeface.MONOSPACE
+            textSize = 12f
+            setPadding(0, dp(2), 0, 0)
+        })
+        if (actions.isNotEmpty()) {
+            val bar = LinearLayout(this)
+            for ((label, run) in actions) {
+                bar.addView(MaterialButton(this, null, androidx.appcompat.R.attr.borderlessButtonStyle).apply {
+                    setText(label)
+                    setOnClickListener { run() }
+                })
+            }
+            row.addView(bar)
+        }
+        row.addView(View(this).apply {
+            setBackgroundColor(getColor(R.color.line))
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(1)).apply { topMargin = dp(14) }
+        })
+        return row
+    }
+
+    // ---- Actions ----
+
     private fun requestTile() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
         getSystemService(StatusBarManager::class.java).requestAddTileService(
@@ -287,165 +489,21 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         ) { }
     }
 
-    private fun onChange(field: EditText, trim: Boolean = true, save: (String) -> Unit) {
-        field.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-            override fun afterTextChanged(s: Editable?) = save(s?.toString().orEmpty().let { if (trim) it.trim() else it })
-        })
-    }
-
-    private fun validUrl(value: String) = value.contains(':') && runCatching { Ndef.uriMessage(value) }.isSuccess
-
-    private fun render() {
-        val nfc = adapter
-        val canEmulate = packageManager.hasSystemFeature("android.hardware.nfc.hce")
-        val receiving = prefs.tab == Prefs.TAB_RECEIVE
-        val meeting = prefs.tab == Prefs.TAB_MET
-        val share = prefs.share
-
-        val tab = when {
-            receiving -> R.id.tab_receive
-            meeting -> R.id.tab_met
-            else -> R.id.tab_share
-        }
-        if (tabs.checkedRadioButtonId != tab) tabs.check(tab)
-        sharePanel.visibility = if (!receiving && !meeting) View.VISIBLE else View.GONE
-        receivePanel.visibility = if (receiving) View.VISIBLE else View.GONE
-        metPanel.visibility = if (meeting) View.VISIBLE else View.GONE
-
-        status.text = getString(
-            when {
-                nfc == null || !canEmulate -> R.string.status_no_nfc
-                !nfc.isEnabled -> R.string.status_nfc_off
-                receiving -> R.string.status_receive
-                meeting -> R.string.status_met
-                !prefs.enabled -> R.string.status_paused
-                share == Presets.WIFI && !prefs.wifiReady -> R.string.status_wifi_incomplete
-                else -> R.string.status_ready
-            },
-        )
-        nfcSettings.visibility = if (nfc != null && !nfc.isEnabled) View.VISIBLE else View.GONE
-
-        when {
-            receiving -> renderReceived()
-            meeting -> renderMet()
-            else -> renderShare(share)
-        }
-    }
-
-    private fun renderShare(share: String) {
-        toggle.isChecked = prefs.enabled
-        for (i in 0 until presets.childCount) {
-            val button = presets.getChildAt(i) as RadioButton
-            if (button.tag == share && !button.isChecked) button.isChecked = true
-        }
-        customRow.visibility = if (share == Presets.CUSTOM) View.VISIBLE else View.GONE
-        whatsappRow.visibility = if (share == Presets.WHATSAPP) View.VISIBLE else View.GONE
-        wifiRows.visibility = if (share == Presets.WIFI) View.VISIBLE else View.GONE
-        // Event tags only go on tbutman.com links, so hide the field where they can't apply.
-        eventRow.visibility = if (share == Presets.WIFI || share == Presets.WHATSAPP) View.GONE else View.VISIBLE
-        wifiPassword.isEnabled = !prefs.wifiOpen
-        shareHint.text = when (share) {
-            Presets.CONTACT -> resources.getQuantityString(R.plurals.hint_contact, Contact.phones.size, Contact.phones.size)
-            Presets.WIFI -> getString(R.string.hint_wifi)
-            Presets.WHATSAPP -> getString(R.string.hint_whatsapp)
-            else -> getString(R.string.hint_link, prefs.url)
-        }
-        val showQr = share != Presets.WIFI || prefs.wifiReady
-        qr.visibility = if (showQr) View.VISIBLE else View.GONE
-        qrHint.visibility = qr.visibility
-        if (showQr) qr.setImageBitmap(qrBitmap(prefs.qrText()))
-        reads.text = resources.getQuantityString(R.plurals.reads, prefs.reads, prefs.reads)
-        addTile.visibility = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) View.VISIBLE else View.GONE
-    }
-
-    private fun renderReceived() {
-        val items = prefs.received
-        receivedEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-        receivedList.removeAllViews()
-        val pad = (12 * resources.displayMetrics.density).toInt()
-        for (item in items) {
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(0, pad, 0, pad)
-            }
-            row.addView(TextView(this).apply {
-                text = item.title
-                setTextColor(getColor(R.color.text))
-                textSize = 17f
-            })
-            row.addView(TextView(this).apply {
-                text = item.detail
-                setTextColor(getColor(R.color.muted))
-                textSize = 14f
-            })
-            val actions = LinearLayout(this)
-            fun action(label: Int, run: () -> Unit) = actions.addView(Button(this, null, android.R.attr.borderlessButtonStyle).apply {
-                text = getString(label)
-                isAllCaps = false
-                setTextColor(getColor(R.color.accent))
-                setOnClickListener { run() }
-            })
-            when (item.kind) {
-                Received.LINK -> action(R.string.action_open) { open(item.payload) }
-                Received.CONTACT -> action(R.string.action_save_contact) { saveContact(item.payload) }
-            }
-            if (item.payload.isNotEmpty()) action(R.string.action_copy) { copy(item.payload) }
-            row.addView(actions)
-            receivedList.addView(row)
-        }
-    }
-
-    private fun renderMet() {
-        val log = prefs.met
-        metEmpty.visibility = if (log.isEmpty()) View.VISIBLE else View.GONE
-        metList.removeAllViews()
-        val pad = (12 * resources.displayMetrics.density).toInt()
-        for (entry in log) {
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(0, pad, 0, pad)
-                isClickable = true
-                isFocusable = true
-                setOnClickListener { editNote(entry) }
-            }
-            val whenText = DateUtils.formatDateTime(
-                this, entry.time,
-                DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_ABBREV_MONTH,
-            )
-            row.addView(TextView(this).apply {
-                text = entry.note.ifEmpty { getString(R.string.met_no_note) }
-                setTextColor(getColor(if (entry.note.isEmpty()) R.color.muted else R.color.text))
-                textSize = 17f
-            })
-            row.addView(TextView(this).apply {
-                text = listOf(whenText, entry.event, entry.shared).filter { it.isNotEmpty() }.joinToString(" · ")
-                setTextColor(getColor(R.color.muted))
-                typeface = android.graphics.Typeface.MONOSPACE
-                textSize = 12f
-            })
-            metList.addView(row)
-        }
-    }
-
     /** Edit a note, or with `isNew` add a person by hand (QR scans can't be detected). */
     private fun editNote(entry: Meeting, isNew: Boolean = false) {
-        val field = EditText(this).apply {
-            setText(entry.note)
+        val layout = TextInputLayout(this, null, com.google.android.material.R.attr.textInputOutlinedStyle).apply {
             hint = getString(R.string.met_note_hint)
+            setPadding(dp(20), dp(8), dp(20), 0)
+        }
+        val field = TextInputEditText(layout.context).apply {
+            setText(entry.note)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
             minLines = 2
-            setSelection(text.length)
         }
-        val pad = (20 * resources.displayMetrics.density).toInt()
-        val frame = LinearLayout(this).apply {
-            setPadding(pad, pad / 2, pad, 0)
-            addView(field, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
-        }
-        val dialog = AlertDialog.Builder(this)
+        layout.addView(field)
+        val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.met_note_title)
-            .setView(frame)
+            .setView(layout)
             .setPositiveButton(R.string.met_save) { _, _ ->
                 val note = field.text.toString().trim()
                 prefs.met = if (isNew) MetLog.add(prefs.met, entry.copy(note = note)) else MetLog.withNote(prefs.met, entry.time, note)
@@ -454,6 +512,7 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         if (!isNew) dialog.setNeutralButton(R.string.met_delete) { _, _ -> prefs.met = MetLog.without(prefs.met, entry.time) }
         dialog.show()
         field.requestFocus()
+        field.setSelection(field.text?.length ?: 0)
     }
 
     /** Hands the log to email, notes or a spreadsheet app as CSV text. */
@@ -508,6 +567,8 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         val pixels = IntArray(width * height) { i -> if (matrix[(i % width) / scale, (i / width) / scale]) DARK else LIGHT }
         return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
     }
+
+    private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 
     companion object {
         private val DARK = Color.parseColor("#0b0d10")
