@@ -11,15 +11,15 @@ fun javaString(value: String) =
     "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "").replace("\n", "\\n") + "\""
 
 android {
-    namespace = "com.tbutman.nfcshare"
+    namespace = "com.tbutman.tilde"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.tbutman.nfcshare"
+        applicationId = "com.tbutman.tilde"
         minSdk = 26
         targetSdk = 36
-        versionCode = 8
-        versionName = "2.1"
+        versionCode = 9
+        versionName = "2.2"
         buildConfigField("String", "PROFILE_SEED", javaString(profileSeed))
     }
 
@@ -37,6 +37,8 @@ dependencies {
     // Material 3: bottom navigation, bottom sheet, switches and text fields that behave natively.
     implementation("com.google.android.material:material:1.14.0")
     implementation("androidx.appcompat:appcompat:1.8.0")
+    // Reads the camera rotation of picked photos on Android 8 and 9 (ImageDecoder does it from 9 up).
+    implementation("androidx.exifinterface:exifinterface:1.4.2")
     implementation("com.google.zxing:core:3.5.4")
     testImplementation("junit:junit:4.13.2")
 }

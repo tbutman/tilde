@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 /**
  * What Receive mode read from someone else's tag or phone, decoded from raw NDEF bytes. Plain

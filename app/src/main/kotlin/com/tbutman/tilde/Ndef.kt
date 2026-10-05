@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 /** Encodes NDEF messages: URI records (NFC Forum URI RTD) and MIME records such as a vCard. */
 object Ndef {

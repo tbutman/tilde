@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "nfc-share"
+rootProject.name = "tilde"
 include(":app")

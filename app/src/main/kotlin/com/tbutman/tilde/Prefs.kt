@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -17,6 +17,11 @@ class Prefs(context: Context) {
         get() = store.getString(KEY_PROFILE, null)?.let { Profile.parse(it) }
             ?: Profile.parse(BuildConfig.PROFILE_SEED).also { profile = it }
         set(value) = store.edit().putString(KEY_PROFILE, value.toText()).apply()
+
+    /** Bumped whenever the profile photo changes, so screens know to reload it. */
+    var photoVersion: Int
+        get() = store.getInt(KEY_PHOTO_VERSION, 0)
+        set(value) = store.edit().putInt(KEY_PHOTO_VERSION, value).apply()
 
     var enabled: Boolean
         get() = store.getBoolean(KEY_ENABLED, true)
@@ -145,6 +150,7 @@ class Prefs(context: Context) {
         const val HISTORY_SIZE = 20
 
         const val KEY_PROFILE = "profile"
+        const val KEY_PHOTO_VERSION = "photo_version"
         const val KEY_ENABLED = "enabled"
         const val KEY_TAB = "tab"
         const val KEY_SHARE = "share"

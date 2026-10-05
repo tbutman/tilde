@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent

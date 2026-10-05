@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 import java.io.File
 import org.junit.Assert.assertTrue

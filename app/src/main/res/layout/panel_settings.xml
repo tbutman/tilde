@@ -22,6 +22,42 @@
 
         <TextView style="@style/Hint" android:text="@string/profile_detail" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/settings_avatar"
+                layout="@layout/view_avatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/photo_pick"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/photo_add" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/photo_remove"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/photo_remove" />
+            </LinearLayout>
+        </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Field"
             android:hint="@string/profile_name"

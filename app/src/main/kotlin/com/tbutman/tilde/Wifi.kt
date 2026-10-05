@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 /**
  * Guest Wi-Fi as an NFC record (the Wi-Fi Alliance's WSC credential, which Android offers to join)

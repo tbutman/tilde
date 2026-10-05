@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 /**
  * A read-only NFC Forum Type 4 Tag (mapping version 2.0) holding one NDEF message.

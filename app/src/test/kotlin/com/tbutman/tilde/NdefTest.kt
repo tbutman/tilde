@@ -1,6 +1,6 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
-import com.tbutman.nfcshare.Type4Tag.Companion.hex
+import com.tbutman.tilde.Type4Tag.Companion.hex
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 import java.io.StringReader
 import java.io.StringWriter

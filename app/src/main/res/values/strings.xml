@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tap to share</string>
+    <string name="app_name">Tilde</string>
     <string name="service_description">Shares a link, contact card or Wi-Fi network as an NFC tag</string>
     <string name="aid_description">NFC Forum NDEF tag</string>
-    <string name="tile_label">Tap to share</string>
+    <string name="tile_label">Tilde</string>
 
     <string name="tab_share">Share</string>
     <string name="tab_receive">Receive</string>
@@ -72,7 +72,7 @@
     <string name="met_cancel">Cancel</string>
     <string name="met_no_note">No note yet. Tap to add one.</string>
     <string name="met_manual">added by hand</string>
-    <string name="met_export_subject">People I met (Tap to share)</string>
+    <string name="met_export_subject">People I met (Tilde)</string>
 
     <!-- Settings -->
     <string name="settings_profile">Profile</string>
@@ -86,6 +86,14 @@
     <string name="profile_github">GitHub link</string>
     <string name="profile_instagram">Instagram link</string>
     <string name="profile_x">X link</string>
+    <string name="photo_add">Add photo</string>
+    <string name="photo_change">Change photo</string>
+    <string name="photo_remove">Remove</string>
+    <string name="photo_unreadable">That photo can\'t be opened. Try another one.</string>
+    <string name="crop_title">Move and scale</string>
+    <string name="crop_hint">Pinch to zoom, drag to move, double-tap to reset</string>
+    <string name="crop_rotate">Rotate</string>
+    <string name="crop_done">Use photo</string>
     <string name="settings_phones">Phone numbers</string>
     <string name="phones_detail">On the contact card, so only shared in person. Use the international format, such as +351 900 000 000.</string>
     <string name="phone_label">Label, such as mobile</string>

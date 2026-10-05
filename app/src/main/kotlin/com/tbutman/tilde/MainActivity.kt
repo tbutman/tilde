@@ -1,4 +1,4 @@
-package com.tbutman.nfcshare
+package com.tbutman.tilde
 
 import android.app.StatusBarManager
 import android.content.ClipData
@@ -39,6 +39,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -66,6 +68,17 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private val main = Handler(Looper.getMainLooper())
     private var lastReads = 0
     private var resumed = false
+
+    private var photo: Bitmap? = null
+    private var photoLoaded = -1
+
+    /** Android's photo picker: no permission needed, and the app only sees the photo chosen. */
+    private val pickPhoto = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let { cropPhoto.launch(Intent(this, CropActivity::class.java).setData(it)) }
+    }
+    private val cropPhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) prefs.photoVersion += 1
+    }
 
     private lateinit var nav: BottomNavigationView
     private lateinit var panels: Map<String, View>
@@ -265,6 +278,13 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         profileField(R.id.profile_instagram, profile.instagram) { copy(instagram = it) }
         profileField(R.id.profile_x, profile.x) { copy(x = it) }
         profileField(R.id.profile_whatsapp, profile.whatsapp) { copy(whatsapp = it) }
+        findViewById<View>(R.id.photo_pick).setOnClickListener {
+            pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+        findViewById<View>(R.id.photo_remove).setOnClickListener {
+            Photo.delete(this)
+            prefs.photoVersion += 1
+        }
         val phoneFields = listOf(R.id.phone1_label, R.id.phone1_number, R.id.phone2_label, R.id.phone2_number)
             .map { findViewById<TextInputEditText>(it) }
         fun phonesFromFields() = phoneFields.chunked(2)
@@ -337,10 +357,13 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             setSpan(ForegroundColorSpan(getColor(R.color.accent)), 0, length, 0)
             append(profile.handle)
         }
-        findViewById<TextView>(R.id.name).apply {
-            text = profile.name
-            visibility = if (profile.isSet) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.profile_card).visibility = if (profile.isSet) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.name).text = profile.name
+        findViewById<TextView>(R.id.card_title).apply {
+            text = profile.title
+            visibility = if (profile.title.isBlank()) View.GONE else View.VISIBLE
         }
+        bindAvatar(findViewById(R.id.card_avatar), profile)
         findViewById<View>(R.id.set_up_profile).visibility = if (profile.isSet) View.GONE else View.VISIBLE
         // If the profile no longer has what was selected (say, its LinkedIn link was cleared), fall back.
         val available = Presets.available(profile)
@@ -477,7 +500,27 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         sheet.show()
     }
 
+    /** The photo if there is one, otherwise the initials, in a circle. */
+    private fun bindAvatar(avatar: View, profile: Profile) {
+        if (photoLoaded != prefs.photoVersion) {
+            photo = Photo.load(this)
+            photoLoaded = prefs.photoVersion
+        }
+        val image = avatar.findViewById<ImageView>(R.id.avatar_photo)
+        val initials = avatar.findViewById<TextView>(R.id.avatar_initials)
+        image.setImageBitmap(photo)
+        image.visibility = if (photo != null) View.VISIBLE else View.GONE
+        initials.visibility = if (photo != null) View.GONE else View.VISIBLE
+        initials.text = listOf(profile.firstName, profile.lastName)
+            .mapNotNull { it.firstOrNull()?.uppercaseChar() }
+            .joinToString("")
+            .ifEmpty { "~" }
+    }
+
     private fun renderSettings() {
+        bindAvatar(findViewById(R.id.settings_avatar), prefs.profile)
+        findViewById<MaterialButton>(R.id.photo_pick).setText(if (photo != null) R.string.photo_change else R.string.photo_add)
+        findViewById<View>(R.id.photo_remove).visibility = if (photo != null) View.VISIBLE else View.GONE
         findViewById<View>(R.id.whatsapp_section).visibility = if (prefs.profile.hasWhatsapp) View.VISIBLE else View.GONE
         findViewById<MaterialSwitch>(R.id.toggle).let { if (it.isChecked != prefs.enabled) it.isChecked = prefs.enabled }
         findViewById<TextInputLayout>(R.id.wifi_password_layout).isEnabled = !prefs.wifiOpen
@@ -637,7 +680,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun copy(text: String) {
-        getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Tap to share", text))
+        getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Tilde", text))
         Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
