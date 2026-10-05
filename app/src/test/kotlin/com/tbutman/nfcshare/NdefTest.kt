@@ -7,12 +7,16 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class NdefTest {
-    // Made-up numbers: the real ones live only in contact.local.properties.
-    private val phones = listOf("mobile (US)" to "+1 555 0100", "mobile (Portugal)" to "+351 900 000 000")
+    // A made-up person: the real profile lives only on the phone and in profile.local.properties.
+    private val profile = Profile(
+        name = "Jane Doe", title = "Product designer", email = "jane@example.com",
+        website = "https://example.com/hello", instagram = "https://www.instagram.com/janedoe/",
+        phones = listOf("mobile (US)" to "+1 555 0100", "mobile (Portugal)" to "+351 900 000 000"),
+    )
 
     @Test
     fun aContactMessageIsALongVcardRecordThenTheLink() {
-        val vcard = Contact.vcard(phones).toByteArray()
+        val vcard = profile.vcard().toByteArray()
         assertTrue("the card needs a long record", vcard.size > 255)
         val message = Ndef.message(listOf(Ndef.mimeRecord("text/vcard", vcard), Ndef.uriRecord("https://tbutman.com/hello")))
 
@@ -32,26 +36,28 @@ class NdefTest {
 
     @Test
     fun theVcardCarriesLabelledNumbersAndLinks() {
-        val card = Contact.vcard(phones)
+        val card = profile.vcard()
         assertTrue(card.startsWith("BEGIN:VCARD\r\nVERSION:3.0\r\n"))
         assertTrue(card.endsWith("END:VCARD\r\n"))
         assertTrue("item1.TEL;TYPE=CELL:+1 555 0100\r\nitem1.X-ABLabel:mobile (US)" in card)
         assertTrue("item2.TEL;TYPE=CELL:+351 900 000 000\r\nitem2.X-ABLabel:mobile (Portugal)" in card)
-        assertTrue("item3.URL:https://tbutman.com/\r\nitem3.X-ABLabel:Website" in card)
-        assertTrue("EMAIL;TYPE=INTERNET:tbutman@gmail.com" in card)
+        assertTrue("item3.URL:https://example.com/\r\nitem3.X-ABLabel:Website" in card)
+        assertTrue("item4.URL:https://www.instagram.com/janedoe/\r\nitem4.X-ABLabel:Instagram" in card)
+        assertTrue("N:Doe;Jane;;;\r\nFN:Jane Doe\r\nTITLE:Product designer" in card)
+        assertTrue("EMAIL;TYPE=INTERNET:jane@example.com" in card)
     }
 
     @Test
     fun theCompactCardKeepsOnlyTheWebsiteLink() {
-        val card = Contact.vcard(phones, compact = true)
-        assertTrue("item3.URL:https://tbutman.com/" in card)
+        val card = profile.vcard(compact = true)
+        assertTrue("item3.URL:https://example.com/" in card)
         assertTrue("instagram" !in card && "linkedin" !in card)
         assertTrue("+351 900 000 000" in card)
     }
 
     @Test
     fun aReaderGetsTheWholeContactMessageInChunks() {
-        val message = Ndef.message(listOf(Ndef.mimeRecord("text/vcard", Contact.vcard(phones).toByteArray()), Ndef.uriRecord("https://tbutman.com/hello")))
+        val message = Ndef.message(listOf(Ndef.mimeRecord("text/vcard", profile.vcard().toByteArray()), Ndef.uriRecord("https://tbutman.com/hello")))
         var reads = 0
         val tag = Type4Tag(message) { reads++ }
         tag.process(hex("00A4040007D276000085010100"))

@@ -1,23 +1,14 @@
-import java.util.Properties
-
 plugins {
     id("com.android.application")
 }
 
-// Phone numbers for the "Share contact" mode and the WhatsApp preset come from
-// contact.local.properties, which git ignores, so they never land in the repository. Without the
-// file the contact card has no numbers and the WhatsApp preset is hidden.
-val contactProperties = Properties().apply {
-    val file = rootProject.file("contact.local.properties")
-    if (file.exists()) file.inputStream().use { load(it) }
-}
-val phones: List<Pair<String, String>> = generateSequence(1) { it + 1 }
-    .map { (contactProperties.getProperty("phone.$it.label") ?: "") to (contactProperties.getProperty("phone.$it.number") ?: "") }
-    .takeWhile { it.second.isNotBlank() }
-    .toList()
-val whatsapp: String = contactProperties.getProperty("whatsapp.number") ?: ""
+// Everything personal (name, links, phone numbers) comes from profile.local.properties, which git
+// ignores, and only seeds the profile on first launch; after that the profile is edited in the app.
+// A build without the file starts with an empty profile. See profile.example.properties.
+val profileSeed: String = rootProject.file("profile.local.properties").takeIf { it.exists() }?.readText() ?: ""
 
-fun javaString(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+fun javaString(value: String) =
+    "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "").replace("\n", "\\n") + "\""
 
 android {
     namespace = "com.tbutman.nfcshare"
@@ -27,11 +18,9 @@ android {
         applicationId = "com.tbutman.nfcshare"
         minSdk = 26
         targetSdk = 36
-        versionCode = 7
-        versionName = "2.0"
-        buildConfigField("String[]", "PHONE_LABELS", "{" + phones.joinToString(",") { javaString(it.first) } + "}")
-        buildConfigField("String", "WHATSAPP_NUMBER", javaString(whatsapp))
-        buildConfigField("String[]", "PHONE_NUMBERS", "{" + phones.joinToString(",") { javaString(it.second) } + "}")
+        versionCode = 8
+        versionName = "2.1"
+        buildConfigField("String", "PROFILE_SEED", javaString(profileSeed))
     }
 
     buildFeatures {

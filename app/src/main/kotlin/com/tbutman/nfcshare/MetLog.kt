@@ -4,10 +4,10 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-/** One person met: when, at which event, what they got, and Thomas's note. Stored only on the phone. */
+/** One person met: when, at which event, what they got, and the owner's note. Stored only on the phone. */
 data class Meeting(val time: Long, val event: String, val shared: String, val note: String)
 
-/** The "Met" log: who Thomas shared with, for following up. Plain Kotlin, so it is unit-tested. */
+/** The "Met" log: who the owner shared with, for following up. Plain Kotlin, so it is unit-tested. */
 object MetLog {
     /** A phone often reads a tag more than once per tap; reads this close together are one person. */
     const val SAME_TAP_MS = 30_000L

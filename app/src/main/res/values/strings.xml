@@ -12,16 +12,20 @@
 
     <!-- Share: what the other person sees -->
     <string name="brand_prefix">~/</string>
-    <string name="brand_name">tbutman</string>
-    <string name="your_name">Thomas Butman</string>
-    <string name="tagline_tap">Tap your phone to mine, or scan the code</string>
-    <string name="tagline_scan">Scan the code with your camera</string>
-    <string name="iphone_hint">On an iPhone? Scan the code.</string>
+    <string name="set_up_profile">Set up your profile</string>
+    <string name="tagline_tap">Tap phones to share</string>
+    <string name="tagline_scan">Scan the code to share</string>
+    <!-- iPhones only act on links from a tap: the contact card's tap opens its second record, the
+         website; a Wi-Fi tap carries no link, so it does nothing on an iPhone. -->
+    <string name="iphone_hint_contact">On an iPhone? Scan the code to save the contact.</string>
+    <string name="iphone_hint_contact_link">On an iPhone? Scan the code to save the contact. Tapping opens the website instead.</string>
+    <string name="iphone_hint_wifi">On an iPhone? Scan the code to join.</string>
     <string name="state_ready">Ready</string>
     <string name="state_paused">Paused</string>
     <string name="state_nfc_off">NFC off</string>
     <string name="state_no_nfc">No NFC</string>
     <string name="iphone_scan_only">iPhone: scan the code</string>
+    <string name="iphone_contact_note">iPhone: tap opens the website, scan for the card</string>
     <string name="detail_contact">Name, title, email, phone numbers and links</string>
     <string name="detail_whatsapp">Opens a chat with me</string>
     <string name="detail_wifi_missing">Not set up yet</string>
@@ -71,17 +75,33 @@
     <string name="met_export_subject">People I met (Tap to share)</string>
 
     <!-- Settings -->
+    <string name="settings_profile">Profile</string>
+    <string name="profile_detail">What you share. Stored only on this phone; leave out anything you don\'t want to share.</string>
+    <string name="profile_name">Name</string>
+    <string name="profile_title">Title</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_website">Website (what Website opens)</string>
+    <string name="profile_handle">Handle (after ~/ on the Share screen)</string>
+    <string name="profile_linkedin">LinkedIn link</string>
+    <string name="profile_github">GitHub link</string>
+    <string name="profile_instagram">Instagram link</string>
+    <string name="profile_x">X link</string>
+    <string name="settings_phones">Phone numbers</string>
+    <string name="phones_detail">On the contact card, so only shared in person. Use the international format, such as +351 900 000 000.</string>
+    <string name="phone_label">Label, such as mobile</string>
+    <string name="phone_number">Number</string>
+    <string name="profile_whatsapp">WhatsApp number</string>
     <string name="settings_sharing">Sharing</string>
     <string name="toggle">Share over NFC</string>
     <string name="toggle_detail">Off: taps do nothing, the QR code still works.</string>
     <string name="settings_event">Event tag</string>
     <string name="event_hint">lisbon-js</string>
-    <string name="event_detail">Added to tbutman.com links as ?event=, so the site\'s log shows which event a visit came from.</string>
+    <string name="event_detail">Added to links on your website as ?event=, so its log shows which event a visit came from.</string>
     <string name="settings_whatsapp">WhatsApp message</string>
-    <string name="whatsapp_greeting_hint">Hi Thomas</string>
+    <string name="whatsapp_greeting_hint">Message</string>
     <string name="whatsapp_detail">Typed into the chat, never sent. Leave empty for an empty chat.</string>
     <string name="settings_custom">Custom link</string>
-    <string name="url_invalid">Enter a full link, such as https://tbutman.com/hello</string>
+    <string name="url_invalid">Enter a full link, starting with https://</string>
     <string name="settings_wifi">Guest Wi-Fi</string>
     <string name="wifi_ssid_label">Network name</string>
     <string name="wifi_password_label">Password</string>

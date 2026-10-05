@@ -1,51 +1,51 @@
 # Tap to share
 
 An Android app that makes the phone act as an NFC tag. With the app open and the screen on,
-another phone tapped against it reads `https://tbutman.com/hello` and offers to open it, just as
-it would from the [business card](../business-card).
+another phone tapped against it gets your website, contact card, WhatsApp, a social profile or
+guest Wi-Fi, just as it would from an NFC business card (like [this one](../business-card)). The
+same thing is on screen as a QR code for phones that would rather scan.
 
 It uses Host Card Emulation: Android routes readers that select the NFC Forum NDEF application
-(AID `D2760000850101`) to `NdefHceService`, which answers as a read-only NFC Forum Type 4 Tag
-holding one URI record.
+(AID `D2760000850101`) to `NdefHceService`, which answers as a read-only NFC Forum Type 4 Tag.
 
-- **Layout:** four tabs in a bottom toolbar. **Share** is what the other person sees: the name, a
-  large QR code (at full screen brightness), and one line saying what a tap shares and whether it
-  works by tap or scan on Android and iPhone. Tapping that line opens the picker. **Settings**
-  holds everything else (sharing on/off, event tag, WhatsApp message, custom link, guest Wi-Fi,
-  Quick Settings tile), so none of it is on show. A completed tap fills the screen with "Sent"
-  and offers "Add a note".
-- **Share or Receive.** Share answers taps as a tag. Receive turns the phone into a reader for
-  NFC tags, NFC business cards and other phones running this app, keeping the last 20 things read
-  with Open, Save contact (Android's new-contact screen, filled in) and Copy actions.
-- **What a tap shares:** `tbutman.com/hello`, the contact card, WhatsApp, LinkedIn, GitHub,
-  Instagram, X, a custom link, or guest Wi-Fi. An optional **event tag** adds `?event=<tag>` to tbutman.com links
-  only, so the site's access log shows which event a visit came from.
-- **Contact card** sends a vCard (name, title, email, phone numbers, website and socials), then
-  the link as a second record. Android offers to save the contact; iPhones skip the card and open
-  the link (tested 5 October 2026). The on-screen QR code holds a shorter card, which iPhone
-  cameras import fully.
-- **WhatsApp** sends a `https://wa.me/<number>` click-to-chat link; iPhones open it from a tap
-  too. "Hi Thomas" is typed into the chat but never sent: they choose, and if they leave it stays
-  as a draft. The text is editable in the app, and blank opens an empty chat. WhatsApp has no
-  "add contact" link (it reads the phone's contacts), so to be saved, share the contact card. The number is `whatsapp.number` in `contact.local.properties`; without it the preset
-  is hidden.
-- **Guest Wi-Fi** sends the Wi-Fi Alliance's NFC credential record, which Android offers to join;
-  the QR code uses the `WIFI:` format that iPhone and Android cameras both join. The name and
-  password are stored only in the app's private settings.
-- **Feedback:** when a reader finishes reading, the phone double-buzzes and shows "Sent ✓".
-- **Quick Settings tile:** "Add to Quick Settings" asks Android to add a tile that opens the app. The phone numbers are only ever shared in person: they come from
-  `contact.local.properties`, which git ignores (copy `contact.example.properties`), and are built
-  into the app through `BuildConfig`.
+- **Your profile:** name, title, email, website, handle, LinkedIn, GitHub, Instagram and X links,
+  up to two phone numbers and a WhatsApp number, edited under **Settings → Profile** and stored
+  only on the phone. Nothing personal is in the source. A build can seed the profile on first
+  launch from `profile.local.properties`, which git ignores (copy `profile.example.properties`);
+  without it the app starts empty and the Share screen offers to set it up.
+- **Layout:** four tabs in a bottom toolbar. **Share** is what the other person sees: your name,
+  "Tap phones to share", a large QR code (at full screen brightness) and one line saying what a
+  tap shares; tapping that line opens the picker. **Settings** holds everything else, so none of
+  it is on show. A completed tap fills the screen with "Sent" and offers "Add a note".
+- **What a tap shares:** only what the profile has: Website, Contact card, WhatsApp, LinkedIn,
+  GitHub, Instagram, X, plus a custom link and guest Wi-Fi. An optional **event tag** adds
+  `?event=<tag>` to links on your website only, so its access log shows which event a visit came
+  from.
+- **Works on every phone, with two iPhone exceptions.** iPhones only act on links from a tap. The
+  **contact card** sends a vCard and then your website as a second record: Android offers to
+  save the contact, an iPhone opens the website (tested 5 October 2026), and the on-screen QR
+  code (a shorter card) saves the contact on either. **Guest Wi-Fi** sends the Wi-Fi Alliance's
+  NFC credential, which Android offers to join; a tap does nothing on an iPhone, but the `WIFI:`
+  QR code joins on both. The Share screen says so when one of these is selected.
+- **WhatsApp** sends a `https://wa.me/<number>` click-to-chat link. "Hi" and your first name are
+  typed into the chat but never sent, and stay as a draft if they leave; the text is editable,
+  and blank opens an empty chat. WhatsApp has no "add contact" link (it reads the phone's
+  contacts), so to be saved, share the contact card.
+- **Met:** each completed tap is logged on the phone (time, event, what was shared), with notes
+  and CSV export. **Receive** turns the phone into a reader for tags, NFC business cards and other
+  Android phones running the app.
+- **Quick Settings tile:** "Add to Quick Settings" asks Android to add a tile that opens the app.
 - **Icons:** the WhatsApp, LinkedIn, GitHub, Instagram and X logos come from Simple Icons (CC0;
   LinkedIn from version 13.21.0, the last to include it), unaltered, and are used only to link to
-  Thomas's own profiles, as each brand's guidelines allow. They remain their owners' trademarks.
+  the profile's own accounts, as each brand's guidelines allow. They remain their owners'
+  trademarks. The paths are rewritten so Android's parser accepts them (see `VectorPathTest`).
 - **Permissions:** `NFC` and `VIBRATE`. No network access and no analytics. Libraries: Material
   Components (with AppCompat) for the interface, and ZXing core for the QR code.
 - **While open**, the app keeps the screen on, asks Android to prefer its service for the AID,
   and on Android 15+ stops the phone polling as a reader, so two phones back to back don't both
   act as readers.
 - **Keep the app open when sharing.** Other apps can claim the same NDEF application ID (on
-  Thomas's phone: X and Meshtastic). Android only routes to this app first while it is in the
+  the author's phone: X and Meshtastic). Android only routes to this app first while it is in the
   foreground.
 
 ## Build and install

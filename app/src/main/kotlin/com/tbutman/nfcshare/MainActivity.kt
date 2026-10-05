@@ -57,7 +57,7 @@ import java.util.Calendar
 
 /**
  * One screen, four tabs. Share is what the other person looks at (name, QR code, what a tap
- * shares), so everything only Thomas needs lives in Settings, Met and the picker sheet.
+ * shares), so everything only the owner needs lives in Settings, Met and the picker sheet.
  */
 class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private lateinit var prefs: Prefs
@@ -228,12 +228,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     // ---- Set-up ----
 
     private fun setUpShare() {
-        val brand = SpannableStringBuilder(getString(R.string.brand_prefix)).apply {
-            setSpan(ForegroundColorSpan(getColor(R.color.accent)), 0, length, 0)
-            append(getString(R.string.brand_name))
-        }
-        findViewById<TextView>(R.id.brand).text = brand
         findViewById<View>(R.id.share_row).setOnClickListener { showPicker() }
+        findViewById<View>(R.id.set_up_profile).setOnClickListener { nav.selectedItemId = R.id.nav_settings }
         findViewById<View>(R.id.open_settings).setOnClickListener { nav.selectedItemId = R.id.nav_settings }
         findViewById<View>(R.id.nfc_settings).setOnClickListener { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }
         findViewById<View>(R.id.sent_done).setOnClickListener { sent.visibility = View.GONE }
@@ -255,6 +251,32 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun setUpSettings() {
+        // Profile: each field rewrites the stored profile as you type.
+        val profile = prefs.profile
+        fun profileField(id: Int, value: String, update: Profile.(String) -> Profile) =
+            field(id, value) { text -> prefs.profile = prefs.profile.update(text.trim()) }
+        profileField(R.id.profile_name, profile.name) { copy(name = it) }
+        profileField(R.id.profile_title, profile.title) { copy(title = it) }
+        profileField(R.id.profile_email, profile.email) { copy(email = it) }
+        profileField(R.id.profile_website, profile.website) { copy(website = it) }
+        profileField(R.id.profile_handle, profile.handle) { copy(handle = it) }
+        profileField(R.id.profile_linkedin, profile.linkedin) { copy(linkedin = it) }
+        profileField(R.id.profile_github, profile.github) { copy(github = it) }
+        profileField(R.id.profile_instagram, profile.instagram) { copy(instagram = it) }
+        profileField(R.id.profile_x, profile.x) { copy(x = it) }
+        profileField(R.id.profile_whatsapp, profile.whatsapp) { copy(whatsapp = it) }
+        val phoneFields = listOf(R.id.phone1_label, R.id.phone1_number, R.id.phone2_label, R.id.phone2_number)
+            .map { findViewById<TextInputEditText>(it) }
+        fun phonesFromFields() = phoneFields.chunked(2)
+            .map { (label, number) -> label.text.toString().trim() to number.text.toString().trim() }
+            .filter { it.second.isNotEmpty() }
+        phoneFields.forEachIndexed { i, view ->
+            val phone = profile.phones.getOrNull(i / 2)
+            field(view.id, if (i % 2 == 0) phone?.first.orEmpty() else phone?.second.orEmpty()) {
+                prefs.profile = prefs.profile.copy(phones = phonesFromFields())
+            }
+        }
+
         findViewById<MaterialSwitch>(R.id.toggle).apply {
             isChecked = prefs.enabled
             setOnCheckedChangeListener { _, checked -> prefs.enabled = checked }
@@ -277,7 +299,6 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         }
         // Android's own Wi-Fi screen can show any saved network's password (Share), which apps can't read.
         findViewById<View>(R.id.wifi_settings).setOnClickListener { runCatching { startActivity(Intent(Settings.ACTION_WIFI_SETTINGS)) } }
-        findViewById<View>(R.id.whatsapp_section).visibility = if (Contact.hasWhatsapp) View.VISIBLE else View.GONE
         findViewById<View>(R.id.tile_section).visibility =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) View.VISIBLE else View.GONE
         findViewById<View>(R.id.add_tile).setOnClickListener { requestTile() }
@@ -311,6 +332,19 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun renderShare() {
+        val profile = prefs.profile
+        findViewById<TextView>(R.id.brand).text = SpannableStringBuilder(getString(R.string.brand_prefix)).apply {
+            setSpan(ForegroundColorSpan(getColor(R.color.accent)), 0, length, 0)
+            append(profile.handle)
+        }
+        findViewById<TextView>(R.id.name).apply {
+            text = profile.name
+            visibility = if (profile.isSet) View.VISIBLE else View.GONE
+        }
+        findViewById<View>(R.id.set_up_profile).visibility = if (profile.isSet) View.GONE else View.VISIBLE
+        // If the profile no longer has what was selected (say, its LinkedIn link was cleared), fall back.
+        val available = Presets.available(profile)
+        if (available.none { it.id == prefs.share }) prefs.share = available.first().id
         val nfc = adapter
         val canEmulate = nfc != null && packageManager.hasSystemFeature("android.hardware.nfc.hce")
         val tapping = canEmulate && nfc!!.isEnabled && prefs.enabled
@@ -333,7 +367,16 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<View>(R.id.qr_card).visibility = if (wifiMissing) View.GONE else View.VISIBLE
         findViewById<View>(R.id.wifi_missing).visibility = if (wifiMissing) View.VISIBLE else View.GONE
         if (!wifiMissing) findViewById<ImageView>(R.id.qr).setImageBitmap(qrBitmap(prefs.qrText()))
-        findViewById<View>(R.id.iphone_hint).visibility = if (tapping && !preset.iphoneTap && !wifiMissing) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.iphone_hint).apply {
+            visibility = if (tapping && !preset.iphoneTap && !wifiMissing) View.VISIBLE else View.GONE
+            setText(
+                when {
+                    preset.id == Presets.WIFI -> R.string.iphone_hint_wifi
+                    prefs.url.isNotEmpty() -> R.string.iphone_hint_contact_link
+                    else -> R.string.iphone_hint_contact
+                },
+            )
+        }
 
         bindPreset(findViewById(R.id.share_row_content), preset, selected = false)
 
@@ -367,14 +410,17 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         }
         row.findViewById<TextView>(R.id.subtitle).text = detail(preset)
         // Everything works by tap or scan everywhere, so only the exceptions get a note.
-        row.findViewById<View>(R.id.note).visibility = if (preset.iphoneTap) View.GONE else View.VISIBLE
+        row.findViewById<TextView>(R.id.note).apply {
+            visibility = if (preset.iphoneTap) View.GONE else View.VISIBLE
+            setText(if (preset.id == Presets.CONTACT && prefs.urlFor(Presets.CONTACT).isNotEmpty()) R.string.iphone_contact_note else R.string.iphone_scan_only)
+        }
         row.findViewById<ImageView>(R.id.end).apply {
             setImageResource(if (selected) R.drawable.ic_check else R.drawable.ic_chevron)
             imageTintList = getColorStateList(if (selected) R.color.accent else R.color.muted)
         }
     }
 
-    /** The services' own logos, simple icons for the generic options; tbutman.com keeps its ~/ mark. */
+    /** The services' own logos, simple icons for the generic options; the website keeps the ~/ mark. */
     private fun logoFor(id: String): Int? = when (id) {
         Presets.WHATSAPP -> R.drawable.ic_brand_whatsapp
         "linkedin" -> R.drawable.ic_brand_linkedin
@@ -393,7 +439,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         Presets.WHATSAPP -> getString(R.string.detail_whatsapp)
         Presets.WIFI -> prefs.wifiSsid.ifBlank { getString(R.string.detail_wifi_missing) }
         Presets.CUSTOM -> bare(prefs.customUrl)
-        else -> bare(Presets.withEvent(preset.url ?: Prefs.DEFAULT_URL, prefs.event))
+        else -> bare(prefs.urlFor(preset.id))
     }
 
     private fun bare(url: String) = url.removePrefix("https://").removePrefix("http://").removePrefix("www.").removeSuffix("/")
@@ -411,7 +457,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             textSize = 18f
             setPadding(dp(20), dp(8), dp(20), dp(12))
         })
-        for (preset in Presets.available) {
+        for (preset in Presets.available(prefs.profile)) {
             val row = LayoutInflater.from(this).inflate(R.layout.row_preset, list, false)
             bindPreset(row, preset, selected = preset.id == prefs.share)
             row.setOnClickListener {
@@ -432,6 +478,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun renderSettings() {
+        findViewById<View>(R.id.whatsapp_section).visibility = if (prefs.profile.hasWhatsapp) View.VISIBLE else View.GONE
         findViewById<MaterialSwitch>(R.id.toggle).let { if (it.isChecked != prefs.enabled) it.isChecked = prefs.enabled }
         findViewById<TextInputLayout>(R.id.wifi_password_layout).isEnabled = !prefs.wifiOpen
         findViewById<TextView>(R.id.reads).text = resources.getQuantityString(R.plurals.reads, prefs.reads, prefs.reads)

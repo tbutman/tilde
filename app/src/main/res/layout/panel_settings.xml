@@ -17,6 +17,217 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
+
+        <TextView style="@style/Label" android:text="@string/settings_profile" />
+
+        <TextView style="@style/Hint" android:text="@string/profile_detail" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_name"
+            android:labelFor="@id/profile_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName|textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_title"
+            android:labelFor="@id/profile_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_email"
+            android:labelFor="@id/profile_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_website"
+            android:labelFor="@id/profile_website">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_website"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_handle"
+            android:labelFor="@id/profile_handle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_linkedin"
+            android:labelFor="@id/profile_linkedin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_linkedin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_github"
+            android:labelFor="@id/profile_github">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_github"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_instagram"
+            android:labelFor="@id/profile_instagram">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_instagram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_x"
+            android:labelFor="@id/profile_x">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_x"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView style="@style/Label" android:text="@string/settings_phones" />
+
+        <TextView style="@style/Hint" android:text="@string/phones_detail" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/phone_label"
+            android:labelFor="@id/phone1_label">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone1_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/phone_number"
+            android:labelFor="@id/phone1_number">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone1_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/phone_label"
+            android:labelFor="@id/phone2_label">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone2_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/phone_number"
+            android:labelFor="@id/phone2_number">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone2_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_whatsapp"
+            android:labelFor="@id/profile_whatsapp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_whatsapp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <TextView style="@style/Label" android:text="@string/settings_sharing" />
 
         <com.google.android.material.materialswitch.MaterialSwitch

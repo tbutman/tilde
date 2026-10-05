@@ -9,6 +9,15 @@ import org.json.JSONObject
 class Prefs(context: Context) {
     val store: SharedPreferences = context.getSharedPreferences("nfc-share", Context.MODE_PRIVATE)
 
+    /**
+     * Whose card this is. The first launch seeds it from the build (profile.local.properties, empty
+     * in a build without one); after that it lives only here and is edited in Settings.
+     */
+    var profile: Profile
+        get() = store.getString(KEY_PROFILE, null)?.let { Profile.parse(it) }
+            ?: Profile.parse(BuildConfig.PROFILE_SEED).also { profile = it }
+        set(value) = store.edit().putString(KEY_PROFILE, value.toText()).apply()
+
     var enabled: Boolean
         get() = store.getBoolean(KEY_ENABLED, true)
         set(value) = store.edit().putBoolean(KEY_ENABLED, value).apply()
@@ -21,22 +30,22 @@ class Prefs(context: Context) {
     /** Which preset a tap shares (see Presets). */
     var share: String
         get() = store.getString(KEY_SHARE, null)
-            ?: if (store.getString("mode", null) == "contact") Presets.CONTACT else Presets.HELLO // 1.1 setting
+            ?: if (store.getString("mode", null) == "contact") Presets.CONTACT else Presets.WEBSITE // 1.1 setting
         set(value) = store.edit().putString(KEY_SHARE, value).apply()
 
     /** The custom link, used when `share` is CUSTOM. */
     var customUrl: String
-        get() = store.getString(KEY_URL, DEFAULT_URL) ?: DEFAULT_URL
+        get() = store.getString(KEY_URL, "") ?: ""
         set(value) = store.edit().putString(KEY_URL, value).apply()
 
-    /** Optional tag added to tbutman.com links as ?event=, e.g. the meetup's name. */
+    /** Optional tag added to links on the profile's website as ?event=, e.g. the meetup's name. */
     var event: String
         get() = store.getString(KEY_EVENT, "") ?: ""
         set(value) = store.edit().putString(KEY_EVENT, value).apply()
 
     /** Text typed into the WhatsApp chat for them to send or not; blank for an empty chat. */
     var whatsappGreeting: String
-        get() = store.getString(KEY_WHATSAPP_GREETING, Contact.WHATSAPP_GREETING) ?: Contact.WHATSAPP_GREETING
+        get() = store.getString(KEY_WHATSAPP_GREETING, null) ?: profile.greeting
         set(value) = store.edit().putString(KEY_WHATSAPP_GREETING, value).apply()
 
     var wifiSsid: String
@@ -56,18 +65,21 @@ class Prefs(context: Context) {
         get() = store.getInt(KEY_READS, 0)
         set(value) = store.edit().putInt(KEY_READS, value).apply()
 
-    /** The link a tap carries in link and contact modes, with the event tag applied. */
+    /** The link a preset carries, with the event tag applied; "" when there's nothing to link to. */
+    fun urlFor(id: String, profile: Profile = this.profile): String {
+        val base = when (id) {
+            Presets.CUSTOM -> customUrl
+            Presets.WHATSAPP -> Profile.whatsappUrl(profile.whatsapp, whatsappGreeting) ?: ""
+            // The contact card links to the website too, for readers that only act on links.
+            Presets.CONTACT, Presets.WIFI -> profile.website
+            else -> Presets.profileUrl(id, profile) ?: ""
+        }.trim()
+        return if (base.isEmpty()) "" else Presets.withEvent(base, event, profile.siteHost)
+    }
+
+    /** The link a tap carries for the current preset. */
     val url: String
-        get() {
-            val preset = Presets.find(share)
-            val base = when (preset.id) {
-                Presets.CUSTOM -> customUrl
-                Presets.WHATSAPP -> Contact.whatsappUrl(greeting = whatsappGreeting) ?: DEFAULT_URL
-                Presets.CONTACT, Presets.WIFI -> DEFAULT_URL
-                else -> preset.url ?: DEFAULT_URL
-            }
-            return Presets.withEvent(base, event)
-        }
+        get() = urlFor(share)
 
     val wifiReady: Boolean
         get() = wifiSsid.isNotBlank() && (wifiOpen || wifiPassword.length >= 8)
@@ -77,7 +89,10 @@ class Prefs(context: Context) {
         // Android dispatches on the first record, so the card comes first; the link is a fallback
         // for readers that only act on URLs.
         Presets.CONTACT -> Ndef.message(
-            listOf(Ndef.mimeRecord("text/vcard", Contact.vcard().toByteArray(Charsets.UTF_8)), Ndef.uriRecord(url)),
+            listOfNotNull(
+                Ndef.mimeRecord("text/vcard", profile.vcard().toByteArray(Charsets.UTF_8)),
+                url.takeIf { it.isNotEmpty() }?.let { Ndef.uriRecord(it) },
+            ),
         )
         Presets.WIFI -> Ndef.message(listOf(Wifi.record(wifiSsid, wifiPassword, wifiOpen)))
         else -> Ndef.uriMessage(url)
@@ -85,7 +100,7 @@ class Prefs(context: Context) {
 
     /** What the on-screen QR code encodes, for phones without NFC. */
     fun qrText(): String = when (share) {
-        Presets.CONTACT -> Contact.vcard(compact = true)
+        Presets.CONTACT -> profile.vcard(compact = true)
         Presets.WIFI -> Wifi.qrText(wifiSsid, wifiPassword, wifiOpen)
         else -> url
     }
@@ -123,13 +138,13 @@ class Prefs(context: Context) {
         }
 
     companion object {
-        const val DEFAULT_URL = "https://tbutman.com/hello"
         const val TAB_SHARE = "share"
         const val TAB_RECEIVE = "receive"
         const val TAB_MET = "met"
         const val TAB_SETTINGS = "settings"
         const val HISTORY_SIZE = 20
 
+        const val KEY_PROFILE = "profile"
         const val KEY_ENABLED = "enabled"
         const val KEY_TAB = "tab"
         const val KEY_SHARE = "share"

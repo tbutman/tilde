@@ -7,11 +7,14 @@ import org.junit.Test
 class FeaturesTest {
     @Test
     fun eventTagsOnlyGoOnTbutmanLinks() {
-        assertEquals("https://tbutman.com/hello?event=lisbon-js", Presets.withEvent("https://tbutman.com/hello", "lisbon-js"))
-        assertEquals("https://tbutman.com/hello?a=1&event=web+summit", Presets.withEvent("https://tbutman.com/hello?a=1", " web summit "))
-        assertEquals("https://github.com/tbutman", Presets.withEvent("https://github.com/tbutman", "lisbon-js"))
-        assertEquals("https://tbutman.com.evil.example/", Presets.withEvent("https://tbutman.com.evil.example/", "x"))
-        assertEquals("https://tbutman.com/hello", Presets.withEvent("https://tbutman.com/hello", "  "))
+        val site = Profile(website = "https://example.com/hello").siteHost
+        assertEquals("example.com", site)
+        assertEquals("https://example.com/hello?event=lisbon-js", Presets.withEvent("https://example.com/hello", "lisbon-js", site))
+        assertEquals("https://www.example.com/x?a=1&event=web+summit", Presets.withEvent("https://www.example.com/x?a=1", " web summit ", site))
+        assertEquals("https://github.com/janedoe", Presets.withEvent("https://github.com/janedoe", "lisbon-js", site))
+        assertEquals("https://example.com.evil.test/", Presets.withEvent("https://example.com.evil.test/", "x", site))
+        assertEquals("https://example.com/hello", Presets.withEvent("https://example.com/hello", "  ", site))
+        assertEquals("https://example.com/hello", Presets.withEvent("https://example.com/hello", "x", null))
     }
 
     @Test
@@ -35,12 +38,12 @@ class FeaturesTest {
         assertEquals(Received.LINK, link[0].kind)
         assertEquals("https://tbutman.com/hello", link[0].payload)
 
-        val phones = listOf("mobile (US)" to "+1 555 0100")
+        val profile = Profile(name = "Jane Doe", phones = listOf("mobile (US)" to "+1 555 0100"))
         val contact = Received.fromNdef(
-            Ndef.message(listOf(Ndef.mimeRecord("text/vcard", Contact.vcard(phones).toByteArray()), Ndef.uriRecord("https://tbutman.com/hello"))),
+            Ndef.message(listOf(Ndef.mimeRecord("text/vcard", profile.vcard().toByteArray()), Ndef.uriRecord("https://example.com/hello"))),
         )
         assertEquals(listOf(Received.CONTACT, Received.LINK), contact.map { it.kind })
-        assertEquals("Thomas Butman", contact[0].title)
+        assertEquals("Jane Doe", contact[0].title)
         assertTrue("+1 555 0100" in contact[0].detail)
 
         val wifi = Received.fromNdef(Ndef.message(listOf(Wifi.record("Home Guest", "correct horse", open = false))))
@@ -70,11 +73,11 @@ class FeaturesTest {
 
     @Test
     fun whatsappLinksUseDigitsOnlyAndAPrefilledGreeting() {
-        // A made-up number: the real one lives only in contact.local.properties.
-        assertEquals("https://wa.me/351900000000?text=Hi%20Thomas", Contact.whatsappUrl("+351 900 000 000"))
-        assertEquals("https://wa.me/351900000000?text=Ol%C3%A1%2C%20Thomas%21", Contact.whatsappUrl("+351 900 000 000", "Olá, Thomas!"))
-        assertEquals("https://wa.me/351900000000", Contact.whatsappUrl("+351 900 000 000", "  "))
-        assertEquals(null, Contact.whatsappUrl("", "Hi"))
-        assertEquals(null, Contact.whatsappUrl("+351", "Hi"))
+        // A made-up number: real ones live only in the profile on the phone.
+        assertEquals("https://wa.me/351900000000?text=Hi%20Jane", Profile.whatsappUrl("+351 900 000 000", "Hi Jane"))
+        assertEquals("https://wa.me/351900000000?text=Ol%C3%A1%2C%20Jane%21", Profile.whatsappUrl("+351 900 000 000", "Olá, Jane!"))
+        assertEquals("https://wa.me/351900000000", Profile.whatsappUrl("+351 900 000 000", "  "))
+        assertEquals(null, Profile.whatsappUrl("", "Hi"))
+        assertEquals(null, Profile.whatsappUrl("+351", "Hi"))
     }
 }

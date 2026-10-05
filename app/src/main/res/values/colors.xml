@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The site's palette (tbutman-site/src/styles/base.css). -->
+<!-- Dark palette with an amber accent (from the author's site). -->
 <resources>
     <color name="bg">#0B0D10</color>
     <color name="panel">#11151A</color>
