@@ -350,7 +350,15 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun bindPreset(row: View, preset: Presets.Preset, selected: Boolean) {
-        row.findViewById<TextView>(R.id.monogram).text = preset.monogram
+        val logo = logoFor(preset.id)
+        row.findViewById<ImageView>(R.id.logo).apply {
+            visibility = if (logo != null) View.VISIBLE else View.GONE
+            logo?.let { setImageResource(it) }
+        }
+        row.findViewById<TextView>(R.id.monogram).apply {
+            visibility = if (logo == null) View.VISIBLE else View.GONE
+            text = preset.monogram
+        }
         row.findViewById<TextView>(R.id.title).apply {
             text = preset.label
             setTextColor(getColor(if (selected) R.color.accent else R.color.text))
@@ -362,6 +370,19 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             setImageResource(if (selected) R.drawable.ic_check else R.drawable.ic_chevron)
             imageTintList = getColorStateList(if (selected) R.color.accent else R.color.muted)
         }
+    }
+
+    /** The services' own logos, simple icons for the generic options; tbutman.com keeps its ~/ mark. */
+    private fun logoFor(id: String): Int? = when (id) {
+        Presets.WHATSAPP -> R.drawable.ic_brand_whatsapp
+        "linkedin" -> R.drawable.ic_brand_linkedin
+        "github" -> R.drawable.ic_brand_github
+        "instagram" -> R.drawable.ic_brand_instagram
+        "x" -> R.drawable.ic_brand_x
+        Presets.CONTACT -> R.drawable.ic_opt_contact
+        Presets.CUSTOM -> R.drawable.ic_opt_link
+        Presets.WIFI -> R.drawable.ic_opt_wifi
+        else -> null
     }
 
     /** What an option opens, in a few words. Never a phone number or the Wi-Fi password. */

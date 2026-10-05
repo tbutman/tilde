@@ -36,6 +36,9 @@ holding one URI record.
 - **Quick Settings tile:** "Add to Quick Settings" asks Android to add a tile that opens the app. The phone numbers are only ever shared in person: they come from
   `contact.local.properties`, which git ignores (copy `contact.example.properties`), and are built
   into the app through `BuildConfig`.
+- **Icons:** the WhatsApp, LinkedIn, GitHub, Instagram and X logos come from Simple Icons (CC0;
+  LinkedIn from version 13.21.0, the last to include it), unaltered, and are used only to link to
+  Thomas's own profiles, as each brand's guidelines allow. They remain their owners' trademarks.
 - **Permissions:** `NFC` and `VIBRATE`. No network access and no analytics. Libraries: Material
   Components (with AppCompat) for the interface, and ZXing core for the QR code.
 - **While open**, the app keeps the screen on, asks Android to prefer its service for the AID,
