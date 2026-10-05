@@ -1,8 +1,15 @@
 # Changelog
 
-## 1.0.0 (unreleased)
+## 1.0.0-beta.1 (5 October 2026)
 
-The first public release.
+A beta of the first public release. Sharing by tap and QR code, and the Met list, are tested on an
+Android phone with an iPhone reading. Still to test on real hardware: **Write a card** with an NFC
+sticker, tapping between two Android phones, and the welcome screen and profile photo (so far tried
+on the Android emulator).
+
+Installing over an earlier test build of Tilde: uninstall that first. A release is signed with a
+different key, so Android won't install it over the top. From this beta on, updates install over
+each other as normal.
 
 - Share your website, contact card, WhatsApp, LinkedIn, GitHub, Instagram, X, any link or guest
   Wi-Fi with a tap, or as a QR code.

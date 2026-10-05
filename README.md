@@ -33,8 +33,8 @@ phone until you share them.
 
 Tilde is for Android 8.0 or newer. Tapping needs a phone with NFC; the QR code works on any phone.
 
-1. On your Android phone, open the [latest release](https://github.com/tbutman/tilde/releases/latest)
-   and tap the file ending in `.apk` to download it.
+1. On your Android phone, open [Releases](https://github.com/tbutman/tilde/releases) and, under the
+   newest version, tap the file ending in `.apk` to download it.
 2. Open the downloaded file. Android will ask whether your browser may install apps: allow it, go
    back and tap **Install**.
 3. Open Tilde, fill in your card and tap **Create my card**.
