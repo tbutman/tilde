@@ -275,6 +275,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             isChecked = prefs.wifiOpen
             setOnCheckedChangeListener { _, checked -> prefs.wifiOpen = checked }
         }
+        // Android's own Wi-Fi screen can show any saved network's password (Share), which apps can't read.
+        findViewById<View>(R.id.wifi_settings).setOnClickListener { runCatching { startActivity(Intent(Settings.ACTION_WIFI_SETTINGS)) } }
         findViewById<View>(R.id.whatsapp_section).visibility = if (Contact.hasWhatsapp) View.VISIBLE else View.GONE
         findViewById<View>(R.id.tile_section).visibility =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) View.VISIBLE else View.GONE

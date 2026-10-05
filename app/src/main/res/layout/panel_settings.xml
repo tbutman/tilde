@@ -130,6 +130,14 @@
 
         <TextView style="@style/Hint" android:text="@string/wifi_detail" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/wifi_settings"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/wifi_open_settings" />
+
         <LinearLayout
             android:id="@+id/tile_section"
             android:layout_width="match_parent"

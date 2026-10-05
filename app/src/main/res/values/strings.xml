@@ -86,7 +86,8 @@
     <string name="wifi_ssid_label">Network name</string>
     <string name="wifi_password_label">Password</string>
     <string name="wifi_open">Open network (no password)</string>
-    <string name="wifi_detail">Stored only on this phone. Never shown on the Share screen.</string>
+    <string name="wifi_detail">Stored only on this phone. Never shown on the Share screen. Android doesn\'t let apps read saved passwords: to find one, tap your network in Wi-Fi settings, then Share.</string>
+    <string name="wifi_open_settings">Open Wi-Fi settings</string>
     <string name="settings_shortcuts">Shortcuts</string>
     <string name="add_tile">Add to Quick Settings</string>
     <string name="settings_about">About</string>
