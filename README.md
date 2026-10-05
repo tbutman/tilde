@@ -4,8 +4,8 @@
 your website, contact details, WhatsApp or LinkedIn, just as if you'd handed them an NFC business
 card. Or they scan the code on your screen.
 
-No account, no subscription and no internet: Tilde can't go online, and your details stay on your
-phone until you share them.
+**Free and open source** (MIT licence). No account, sign-up, subscription, payment or ads, and no
+internet: Tilde can't go online, and your details stay on your phone until you share them.
 
 <p>
   <img src="docs/screenshots/share.png" width="240" alt="The Share screen: Jane Doe's card, a QR code and what a tap shares">
@@ -19,14 +19,21 @@ phone until you share them.
   read an NFC tag.
 - **Or scan.** The same thing is on screen as a large QR code, for phones without NFC or people
   who'd rather scan.
-- **You choose what a tap shares:** your website, your contact card, a WhatsApp chat with you,
-  LinkedIn, GitHub, Instagram, X, any link, or your guest Wi-Fi.
+- **Switch what you share in one tap,** to suit who you're talking to. Tap the line under the QR
+  code and pick:
+  - **Contact card:** your name, title, phone numbers, email, website and social links all at once,
+    ready to save to their contacts. (It's a vCard, the standard format every phone's contacts app
+    understands.)
+  - **A link:** your website, LinkedIn, GitHub, Instagram, X, or any link you like.
+  - **WhatsApp:** opens a chat with you, with a greeting typed and ready to send.
+  - **Guest Wi-Fi:** joins your network without anyone typing the password.
 - **Remember who you met.** Every tap is listed under **Met** with the time and what you shared.
   Add a note so you remember who they were, and export the list as a spreadsheet (CSV).
 - **Events.** Add an event name and the links to your own website carry it, so you can see which
   event a visit came from.
-- **Write a card.** Put your link on an NFC sticker or a printed NFC business card, so it works
-  even when your phone isn't there. Tilde never locks a tag, so you can change it later.
+- **Write a card.** Put your link or your whole contact card on an NFC sticker or a printed NFC
+  business card, so it works even when your phone isn't there. Tilde never locks a tag, so you can
+  change it later.
 - **Receive.** Read other people's NFC cards, tags and phones running Tilde.
 
 ## Install
@@ -62,8 +69,9 @@ Things worth knowing:
 ## Optional: a printed card
 
 Tilde works on its own; you don't need a card. If you have a 3D printer and want something to hand
-out too, there's an NFC business card designed to go with it: a QR code on the front and an NFC tag
-sealed inside. Print it, then use **Settings → Write a card** to put your link on it. See
+out too, there's a free, open-source business card designed to go with it: a QR code on the front,
+and optionally an NFC tag sealed inside. Customise it with your name and colours, print it, then
+use **Settings → Write a card** to put your link or contact card on the tag. See
 [tbutman/tilde-card](https://github.com/tbutman/tilde-card).
 
 ## Privacy
