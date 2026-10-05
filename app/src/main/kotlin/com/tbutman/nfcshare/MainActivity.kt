@@ -24,11 +24,12 @@ import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.provider.ContactsContract
 import android.provider.Settings
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -135,10 +136,17 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         wifiSsid.setText(prefs.wifiSsid)
         wifiPassword.setText(prefs.wifiPassword)
         wifiOpen.isChecked = prefs.wifiOpen
-        onDone(urlField) { saveUrl() }
-        onDone(eventField) { prefs.event = eventField.text.toString().trim() }
-        onDone(wifiSsid) { prefs.wifiSsid = wifiSsid.text.toString() }
-        onDone(wifiPassword) { prefs.wifiPassword = wifiPassword.text.toString() }
+        // Fields save as you type: tapping a preset or scanning straight after typing must not lose
+        // the text. The custom link only saves once valid; Done shows why it isn't.
+        onChange(urlField) { if (validUrl(it)) prefs.customUrl = it }
+        urlField.setOnEditorActionListener { _, _, _ ->
+            if (!validUrl(urlField.text.toString().trim())) urlField.error = getString(R.string.url_invalid)
+            false
+        }
+        onChange(eventField) { prefs.event = it }
+        // Wi-Fi names and passwords can start or end with a space, so they stay exactly as typed.
+        onChange(wifiSsid, trim = false) { prefs.wifiSsid = it }
+        onChange(wifiPassword, trim = false) { prefs.wifiPassword = it }
         wifiOpen.setOnCheckedChangeListener { _, checked -> prefs.wifiOpen = checked }
 
         nfcSettings.setOnClickListener { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) }
@@ -247,19 +255,15 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         ) { }
     }
 
-    private fun onDone(field: EditText, save: () -> Unit) {
-        field.setOnEditorActionListener { _, action, _ ->
-            if (action == EditorInfo.IME_ACTION_DONE || action == EditorInfo.IME_ACTION_NEXT) save()
-            false
-        }
-        field.setOnFocusChangeListener { _, focused -> if (!focused) save() }
+    private fun onChange(field: EditText, trim: Boolean = true, save: (String) -> Unit) {
+        field.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: Editable?) = save(s?.toString().orEmpty().let { if (trim) it.trim() else it })
+        })
     }
 
-    private fun saveUrl() {
-        val value = urlField.text.toString().trim()
-        val valid = value.contains(':') && runCatching { Ndef.uriMessage(value) }.isSuccess
-        if (valid) prefs.customUrl = value else urlField.error = getString(R.string.url_invalid)
-    }
+    private fun validUrl(value: String) = value.contains(':') && runCatching { Ndef.uriMessage(value) }.isSuccess
 
     private fun render() {
         val nfc = adapter
