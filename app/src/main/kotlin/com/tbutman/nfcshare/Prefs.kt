@@ -57,6 +57,7 @@ class Prefs(context: Context) {
             val preset = Presets.find(share)
             val base = when (preset.id) {
                 Presets.CUSTOM -> customUrl
+                Presets.WHATSAPP -> Contact.whatsappUrl ?: DEFAULT_URL
                 Presets.CONTACT, Presets.WIFI -> DEFAULT_URL
                 else -> preset.url ?: DEFAULT_URL
             }

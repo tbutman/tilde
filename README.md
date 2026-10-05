@@ -11,13 +11,17 @@ holding one URI record.
 - **Share or Receive.** Share answers taps as a tag. Receive turns the phone into a reader for
   NFC tags, NFC business cards and other phones running this app, keeping the last 20 things read
   with Open, Save contact (Android's new-contact screen, filled in) and Copy actions.
-- **What a tap shares:** `tbutman.com/hello`, the contact card, LinkedIn, GitHub, Instagram, X, a
-  custom link, or guest Wi-Fi. An optional **event tag** adds `?event=<tag>` to tbutman.com links
+- **What a tap shares:** `tbutman.com/hello`, the contact card, WhatsApp, LinkedIn, GitHub,
+  Instagram, X, a custom link, or guest Wi-Fi. An optional **event tag** adds `?event=<tag>` to tbutman.com links
   only, so the site's access log shows which event a visit came from.
 - **Contact card** sends a vCard (name, title, email, phone numbers, website and socials), then
   the link as a second record. Android offers to save the contact; iPhones skip the card and open
   the link (tested 5 October 2026). The on-screen QR code holds a shorter card, which iPhone
   cameras import fully.
+- **WhatsApp** sends a `https://wa.me/<number>` click-to-chat link with a pre-filled greeting
+  ("Hi Thomas, nice to meet you! I'm "), so they add their name and send; iPhones open it from a
+  tap too. The number is `whatsapp.number` in `contact.local.properties`; without it the preset
+  is hidden.
 - **Guest Wi-Fi** sends the Wi-Fi Alliance's NFC credential record, which Android offers to join;
   the QR code uses the `WIFI:` format that iPhone and Android cameras both join. The name and
   password are stored only in the app's private settings.

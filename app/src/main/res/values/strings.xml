@@ -38,6 +38,7 @@
     <string name="wifi_password_label">Password</string>
     <string name="wifi_open">Open network (no password)</string>
     <string name="hint_link">A tap opens %1$s.</string>
+    <string name="hint_whatsapp">A tap or scan opens a WhatsApp chat with your Portuguese number, with \"Hi Thomas, nice to meet you! I\'m \" ready to send. When they send it, you have their number too.</string>
     <string name="hint_wifi">A tap offers Android phones the network. iPhones can join by scanning the QR code. The password stays on this phone.</string>
     <string name="qr_description">QR code for what a tap shares</string>
     <string name="qr_hint">No NFC on their phone? They can scan this.</string>

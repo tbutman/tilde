@@ -67,4 +67,15 @@ class FeaturesTest {
         assertEquals("Acme, Inc.", fields.org)
         assertEquals(listOf("+1 5550100"), fields.phones)
     }
+
+    @Test
+    fun whatsappLinksUseDigitsOnlyAndAPrefilledGreeting() {
+        // A made-up number: the real one lives only in contact.local.properties.
+        assertEquals(
+            "https://wa.me/351900000000?text=Hi%20Thomas%2C%20nice%20to%20meet%20you%21%20I%27m%20",
+            Contact.whatsappUrl("+351 900 000 000"),
+        )
+        assertEquals(null, Contact.whatsappUrl(""))
+        assertEquals(null, Contact.whatsappUrl("+351"))
+    }
 }

@@ -4,16 +4,18 @@ plugins {
     id("com.android.application")
 }
 
-// Phone numbers for the "Share contact" mode come from contact.local.properties, which git ignores,
-// so they never land in the repository. Without the file the contact card simply has no numbers.
-val phones: List<Pair<String, String>> = Properties().run {
+// Phone numbers for the "Share contact" mode and the WhatsApp preset come from
+// contact.local.properties, which git ignores, so they never land in the repository. Without the
+// file the contact card has no numbers and the WhatsApp preset is hidden.
+val contactProperties = Properties().apply {
     val file = rootProject.file("contact.local.properties")
     if (file.exists()) file.inputStream().use { load(it) }
-    generateSequence(1) { it + 1 }
-        .map { (getProperty("phone.$it.label") ?: "") to (getProperty("phone.$it.number") ?: "") }
-        .takeWhile { it.second.isNotBlank() }
-        .toList()
 }
+val phones: List<Pair<String, String>> = generateSequence(1) { it + 1 }
+    .map { (contactProperties.getProperty("phone.$it.label") ?: "") to (contactProperties.getProperty("phone.$it.number") ?: "") }
+    .takeWhile { it.second.isNotBlank() }
+    .toList()
+val whatsapp: String = contactProperties.getProperty("whatsapp.number") ?: ""
 
 fun javaString(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 
@@ -25,9 +27,10 @@ android {
         applicationId = "com.tbutman.nfcshare"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "1.4"
         buildConfigField("String[]", "PHONE_LABELS", "{" + phones.joinToString(",") { javaString(it.first) } + "}")
+        buildConfigField("String", "WHATSAPP_NUMBER", javaString(whatsapp))
         buildConfigField("String[]", "PHONE_NUMBERS", "{" + phones.joinToString(",") { javaString(it.second) } + "}")
     }
 

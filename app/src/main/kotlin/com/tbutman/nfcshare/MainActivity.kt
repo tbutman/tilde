@@ -122,7 +122,7 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         receivedEmpty = findViewById(R.id.received_empty)
         receivedList = findViewById(R.id.received_list)
 
-        for (preset in Presets.all) {
+        for (preset in Presets.available) {
             presets.addView(RadioButton(this).apply {
                 id = View.generateViewId()
                 tag = preset.id
@@ -336,11 +336,13 @@ class MainActivity : Activity(), NfcAdapter.ReaderCallback {
         }
         customRow.visibility = if (share == Presets.CUSTOM) View.VISIBLE else View.GONE
         wifiRows.visibility = if (share == Presets.WIFI) View.VISIBLE else View.GONE
-        eventRow.visibility = if (share == Presets.WIFI) View.GONE else View.VISIBLE
+        // Event tags only go on tbutman.com links, so hide the field where they can't apply.
+        eventRow.visibility = if (share == Presets.WIFI || share == Presets.WHATSAPP) View.GONE else View.VISIBLE
         wifiPassword.isEnabled = !prefs.wifiOpen
         shareHint.text = when (share) {
             Presets.CONTACT -> resources.getQuantityString(R.plurals.hint_contact, Contact.phones.size, Contact.phones.size)
             Presets.WIFI -> getString(R.string.hint_wifi)
+            Presets.WHATSAPP -> getString(R.string.hint_whatsapp)
             else -> getString(R.string.hint_link, prefs.url)
         }
         val showQr = share != Presets.WIFI || prefs.wifiReady

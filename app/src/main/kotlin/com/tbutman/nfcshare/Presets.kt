@@ -8,12 +8,14 @@ object Presets {
     const val CONTACT = "contact"
     const val CUSTOM = "custom"
     const val WIFI = "wifi"
+    const val WHATSAPP = "whatsapp"
 
     class Preset(val id: String, val label: String, val url: String? = null)
 
     val all = listOf(
         Preset(HELLO, "tbutman.com/hello", Prefs.DEFAULT_URL),
         Preset(CONTACT, "Contact card"),
+        Preset(WHATSAPP, "WhatsApp"),
         Preset("linkedin", "LinkedIn", "https://www.linkedin.com/in/thomasbutman"),
         Preset("github", "GitHub", "https://github.com/tbutman"),
         Preset("instagram", "Instagram", "https://www.instagram.com/t.butman/"),
@@ -21,6 +23,10 @@ object Presets {
         Preset(CUSTOM, "Custom link"),
         Preset(WIFI, "Guest Wi-Fi"),
     )
+
+    /** What the screen offers: WhatsApp only when a number is configured. */
+    val available: List<Preset>
+        get() = all.filter { it.id != WHATSAPP || Contact.whatsappUrl != null }
 
     fun find(id: String) = all.firstOrNull { it.id == id } ?: all.first()
 
