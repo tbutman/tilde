@@ -48,6 +48,7 @@ Tilde is for Android 8.0 or newer. Tapping needs a phone with NFC; the QR code w
 
 Tilde isn't on the Play Store yet. To get updates automatically, install
 [Obtainium](https://obtainium.imranr.dev) and add `https://github.com/tbutman/tilde` as an app.
+While Tilde is in beta, turn on **Include prereleases** for it in Obtainium.
 
 ## Using it
 

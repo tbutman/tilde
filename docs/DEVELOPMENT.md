@@ -80,6 +80,11 @@ attaches it to a GitHub release, which is also what Obtainium follows.
    version to `CHANGELOG.md`.
 2. Commit, then tag and push: `git tag v1.0.0 && git push origin main v1.0.0`.
 
+The tag must match `versionName` (`v` + version), or the workflow stops. A version with a hyphen,
+such as `1.0.0-beta.1`, is published as a pre-release: GitHub doesn't show it as the latest
+release, and Obtainium only offers it to people who turn on pre-releases. The release notes are
+that version's section of `CHANGELOG.md`.
+
 Signing uses one upload key, which must never be committed or lost: Android only installs an
 update signed with the same key. It is read from `TILDE_*` environment variables (in CI, from
 repository secrets) or from a git-ignored `keystore.properties`:
