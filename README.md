@@ -59,10 +59,11 @@ Things worth knowing:
 - **The other phone needs NFC switched on.** Most Android phones have it in Quick Settings. iPhones
   read without any setting.
 
-## Print a card to go with it
+## Optional: a printed card
 
-There's a 3D-printable NFC business card designed to go with Tilde: a QR code on the front and an
-NFC tag sealed inside. Print it, then use **Settings → Write a card** to put your link on it. See
+Tilde works on its own; you don't need a card. If you have a 3D printer and want something to hand
+out too, there's an NFC business card designed to go with it: a QR code on the front and an NFC tag
+sealed inside. Print it, then use **Settings → Write a card** to put your link on it. See
 [tbutman/tilde-card](https://github.com/tbutman/tilde-card).
 
 ## Privacy
