@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "Your card is ready": shown once over the Share screen when the welcome screens finish, with
+     the three things to know. People who chose a card or sticker can go on to write it. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="24dp">
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_check"
+            android:importantForAccessibility="no"
+            android:padding="14dp"
+            android:src="@drawable/ic_check"
+            app:tint="@color/bg" />
+
+        <TextView
+            style="@style/StepTitle"
+            android:layout_marginTop="16dp"
+            android:text="@string/ready_title"
+            android:textSize="24sp" />
+
+        <TextView style="@style/StepBody" android:text="@string/ready_body" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_feature_tap" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView style="@style/RowTitle" android:text="@string/ready_tap_title" />
+                <TextView style="@style/RowDetail" android:text="@string/ready_tap_detail" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_nav_share" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView style="@style/RowTitle" android:text="@string/ready_switch_title" />
+                <TextView style="@style/RowDetail" android:text="@string/ready_switch_detail" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_nav_met" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView style="@style/RowTitle" android:text="@string/ready_tabs_title" />
+                <TextView style="@style/RowDetail" android:text="@string/ready_tabs_detail" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ready_primary"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="28dp"
+            android:text="@string/ready_done"
+            android:textColor="@color/bg"
+            android:textSize="16sp"
+            app:backgroundTint="@color/accent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ready_later"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ready_later"
+            android:visibility="gone" />
+    </LinearLayout>
+</ScrollView>

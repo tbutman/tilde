@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The business card, like Blinq's: an amber cover band, the round photo overlapping its lower
+     edge, then name and title. On the Share screen, and as the welcome screens' live preview. -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/panel_raised"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/line_strong"
+    app:strokeWidth="1dp">
+
+    <!-- The bottom padding is here, not on the title, so a card without a title keeps it. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="18dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/accent" />
+
+        <!-- Ring in the card's colour so the photo sits cleanly over the band's edge. -->
+        <FrameLayout
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="-46dp"
+            android:background="@drawable/bg_avatar_ring"
+            android:padding="4dp">
+
+            <include
+                android:id="@+id/card_avatar"
+                layout="@layout/view_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/text"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/card_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/muted"
+            android:textSize="15sp" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

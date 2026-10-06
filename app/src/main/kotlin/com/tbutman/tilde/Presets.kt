@@ -2,7 +2,10 @@ package com.tbutman.tilde
 
 import java.net.URLEncoder
 
-/** What a tap can share. The links come from the Profile; event tags go on the profile's website only. */
+/**
+ * What a tap can share: the fixed options (links from the Profile, the contact card, Wi-Fi) plus
+ * each saved link. Event tags go on links to the profile's own website only.
+ */
 object Presets {
     const val WEBSITE = "hello" // kept as "hello" so settings saved by earlier versions still match
     const val CONTACT = "contact"
@@ -11,6 +14,7 @@ object Presets {
     const val GITHUB = "github"
     const val INSTAGRAM = "instagram"
     const val X = "x"
+    /** Version 1.0's single custom link; now migrated to a saved link (see [SavedLink.migrate]). */
     const val CUSTOM = "custom"
     const val WIFI = "wifi"
 
@@ -29,11 +33,27 @@ object Presets {
         Preset(GITHUB, "GitHub", "gh"),
         Preset(INSTAGRAM, "Instagram", "ig"),
         Preset(X, "X", "X"),
-        Preset(CUSTOM, "Custom link", "↗"),
         Preset(WIFI, "Guest Wi-Fi", "wi", iphoneTap = false),
     )
 
-    fun find(id: String) = all.firstOrNull { it.id == id } ?: all.first()
+    /** Every option, in the picker's order: the fixed ones, then the saved links, then Guest Wi-Fi last. */
+    fun options(links: List<SavedLink>): List<Preset> =
+        all.filter { it.id != WIFI } + links.map { Preset(it.presetId, it.name, monogramFor(it.name)) } + all.filter { it.id == WIFI }
+
+    /** The option with this id, or the first one when it's gone (say, a deleted link). */
+    fun find(id: String, links: List<SavedLink> = emptyList()) = options(links).firstOrNull { it.id == id } ?: all.first()
+
+    /** A saved link's badge: its name's first letter or digit. */
+    fun monogramFor(name: String) = name.firstOrNull { it.isLetterOrDigit() }?.uppercase() ?: "↗"
+
+    /** Whether an option has what it needs to share; the picker greys out the ones that don't. */
+    fun isReady(id: String, profile: Profile, links: List<SavedLink>, wifiReady: Boolean): Boolean = when {
+        SavedLink.idOf(id) != null -> links.any { it.presetId == id && it.url.isNotBlank() }
+        id == CONTACT -> profile.isSet
+        id == WHATSAPP -> profile.hasWhatsapp
+        id == WIFI -> wifiReady
+        else -> profileUrl(id, profile) != null
+    }
 
     /** The profile's own link for a preset, or null when the profile doesn't have one. */
     fun profileUrl(id: String, profile: Profile): String? = when (id) {
@@ -45,15 +65,9 @@ object Presets {
         else -> null
     }?.trim()?.takeIf { it.isNotEmpty() }
 
-    /** What the picker offers: only what this profile can actually share. */
-    fun available(profile: Profile): List<Preset> = all.filter {
-        when (it.id) {
-            CONTACT -> profile.isSet
-            WHATSAPP -> profile.hasWhatsapp
-            CUSTOM, WIFI -> true
-            else -> profileUrl(it.id, profile) != null
-        }
-    }
+    /** The options ready to share right now, in order. */
+    fun available(profile: Profile, links: List<SavedLink> = emptyList(), wifiReady: Boolean = false): List<Preset> =
+        options(links).filter { isReady(it.id, profile, links, wifiReady) }
 
     /**
      * Adds `event=<tag>` to links on the profile's own site (`siteHost`), so its access log shows

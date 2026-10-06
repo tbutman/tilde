@@ -9,7 +9,7 @@ internet: Tilde can't go online, and your details stay on your phone until you s
 
 <p>
   <img src="docs/screenshots/share.png" width="240" alt="The Share screen: Jane Doe's card, a QR code and what a tap shares">
-  <img src="docs/screenshots/picker.png" width="240" alt="Choosing what a tap shares: website, contact card, WhatsApp, LinkedIn, GitHub, a custom link or guest Wi-Fi">
+  <img src="docs/screenshots/picker.png" width="240" alt="Choosing what a tap shares: website, contact card, WhatsApp, LinkedIn, GitHub, saved links or guest Wi-Fi">
   <img src="docs/screenshots/met.png" width="240" alt="The Met tab: people you've shared with, with notes">
 </p>
 
@@ -19,14 +19,18 @@ internet: Tilde can't go online, and your details stay on your phone until you s
   read an NFC tag.
 - **Or scan.** The same thing is on screen as a large QR code, for phones without NFC or people
   who'd rather scan.
-- **Switch what you share in one tap,** to suit who you're talking to. Tap the line under the QR
-  code and pick:
+- **Switch what you share in one tap,** to suit who you're talking to: tap one of the chips under
+  the QR code (or swipe the code), or tap the line below them for every option:
   - **Contact card:** your name, title, phone numbers, email, website and social links all at once,
     ready to save to their contacts. (It's a vCard, the standard format every phone's contacts app
     understands.)
-  - **A link:** your website, LinkedIn, GitHub, Instagram, X, or any link you like.
+  - **A link:** your website, LinkedIn, GitHub, Instagram, X, or links you save yourself, such as
+    your projects. Each saved link is its own option, with its own name.
   - **WhatsApp:** opens a chat with you, with a greeting typed and ready to send.
   - **Guest Wi-Fi:** joins your network without anyone typing the password.
+- **Send it instead.** For someone who isn't in front of you, send the link or your contact card
+  through WhatsApp, email or messages, or copy the link. Tilde stays offline: the app you choose
+  does the sending.
 - **Remember who you met.** Every tap is listed under **Met** with the time and what you shared.
   Add a note so you remember who they were, and export the list as a spreadsheet (CSV).
 - **Events.** Add an event name and the links to your own website carry it, so you can see which
@@ -38,16 +42,41 @@ internet: Tilde can't go online, and your details stay on your phone until you s
 
 ## Install
 
-Tilde is for Android 8.0 or newer. Tapping needs a phone with NFC; the QR code works on any phone.
+Tilde isn't in the Play Store yet, so you install it from this page. It takes about a minute and
+you **don't** need developer mode or any special settings: Android just asks you twice to confirm.
 
-1. On your Android phone, open [Releases](https://github.com/tbutman/tilde/releases) and, under the
-   newest version, tap the file ending in `.apk` to download it.
-2. Open the downloaded file. Android will ask whether your browser may install apps: allow it, go
-   back and tap **Install**.
-3. Open Tilde, fill in your card and tap **Create my card**.
+Tilde needs Android 8.0 or newer. Tapping phones needs NFC; the QR code works on any phone.
 
-Tilde isn't on the Play Store yet. To get updates automatically, install
-[Obtainium](https://obtainium.imranr.dev) and add `https://github.com/tbutman/tilde` as an app.
+1. **Download it.** On your Android phone, open the
+   [latest release](https://github.com/tbutman/tilde/releases/latest) and, under **Assets**, tap
+   the file ending in `.apk`. If your browser warns that this type of file can harm your device,
+   tap **Download anyway**: it says that about every app downloaded outside the Play Store.
+2. **Let your browser install apps (once).** Open the downloaded file. Android says your browser
+   isn't allowed to install unknown apps: tap **Settings**, turn on **Allow from this source**, then
+   go back.
+3. **Install it.** Tap **Install**. Google Play Protect may say it doesn't recognise the developer,
+   because Tilde isn't in the Play Store: choose to install anyway (on some phones that's under
+   **More details**). If it offers to scan the app first, that's fine too.
+4. **Open Tilde** and follow the welcome screens.
+
+The exact wording of these prompts varies a little between phones and Android versions.
+
+**Is it safe?** Every release is built from this code by GitHub Actions and signed with the same
+key, and Android only installs an update over Tilde if it's signed with that key, so nobody else can
+replace your copy. Tilde has no internet permission, so it can't send your details anywhere. To
+check a download yourself (for example with [AppVerifier](https://github.com/soupslurpr/AppVerifier)),
+the package is `com.tbutman.tilde` and the signing certificate's SHA-256 fingerprint is:
+
+```
+84:5F:25:41:BD:70:77:34:EC:97:76:23:90:BE:B1:0B:9D:0A:5C:64:AF:0D:B4:27:A6:94:99:86:73:A0:38:D9
+```
+
+### Updates
+
+- **Automatically:** install [Obtainium](https://obtainium.imranr.dev), tap **Add app** and enter
+  `https://github.com/tbutman/tilde`. It checks for new versions and offers to install them.
+- **By hand:** repeat steps 1 and 3 with the new version. It installs over the old one and keeps
+  your card and everything else.
 
 ## Using it
 

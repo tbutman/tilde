@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- What Send can hand to another app: only the contact card file it writes to the cache. -->
+<paths>
+    <cache-path name="shared" path="shared/" />
+</paths>

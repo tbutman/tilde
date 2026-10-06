@@ -106,5 +106,14 @@
             android:layout_gravity="end"
             android:layout_marginTop="16dp"
             android:text="@string/write_close" />
+
+        <!-- Opened from the welcome screens only: where to find this screen later. -->
+        <TextView
+            android:id="@+id/write_later"
+            style="@style/Hint"
+            android:layout_marginTop="4dp"
+            android:gravity="end"
+            android:text="@string/write_later"
+            android:visibility="gone" />
     </LinearLayout>
 </ScrollView>

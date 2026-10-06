@@ -20,6 +20,8 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private var adapter: NfcAdapter? = null
     /** Debug builds only: draw the screen as with NFC switched on, for emulator screenshots. */
     private val demo by lazy { BuildConfig.DEBUG && intent.getBooleanExtra("demo", false) }
+    /** Opened straight after the welcome screens: the person may not have a card yet, so they can skip. */
+    private val fromWelcome by lazy { intent.getBooleanExtra(EXTRA_WELCOME, false) }
     private var choice = ""
     private var written = 0
     /** The last outcome, shown until the next tag or until the choice changes. */
@@ -29,9 +31,8 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_write)
         adapter = NfcAdapter.getDefaultAdapter(this)
-        val available = Presets.available(prefs.profile)
-        choice = prefs.share.takeIf { id -> available.any { it.id == id } && (id != Presets.WIFI || prefs.wifiReady) }
-            ?: available.first().id
+        val available = prefs.available()
+        choice = prefs.share.takeIf { id -> available.any { it.id == id } } ?: available.firstOrNull()?.id ?: Presets.CONTACT
         findViewById<View>(R.id.write_choice).setOnClickListener {
             rows.showPicker(R.string.write_picker_title, choice) { preset ->
                 choice = preset.id
@@ -79,7 +80,7 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun render() {
-        rows.bind(findViewById(R.id.write_choice_content), Presets.find(choice), selected = false)
+        rows.bind(findViewById(R.id.write_choice_content), prefs.find(choice), selected = false)
         val nfc = adapter
         val nfcOn = demo || nfc?.isEnabled == true
         val (icon, title, detail) = when {
@@ -111,5 +112,11 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<TextView>(R.id.write_status).text = title
         findViewById<TextView>(R.id.write_detail).text = detail
         findViewById<View>(R.id.write_nfc_settings).visibility = if (nfc != null && !nfcOn) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.write_close).setText(if (fromWelcome && written == 0) R.string.write_skip else R.string.write_close)
+        findViewById<View>(R.id.write_later).visibility = if (fromWelcome && written == 0) View.VISIBLE else View.GONE
+    }
+
+    companion object {
+        const val EXTRA_WELCOME = "welcome"
     }
 }

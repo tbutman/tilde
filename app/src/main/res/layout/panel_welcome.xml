@@ -1,150 +1,580 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- First launch with an empty profile: a short explanation and the few details a card needs. -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Panel">
+<!-- First launch with an empty profile, in four short steps: what Tilde is, the card (with a live
+     preview), how people reach you, and whether a printed card or sticker comes too. A bar at the
+     bottom keeps Back and Next in reach. It's inflated once, on first launch, so its size (over
+     lint's 80 views) doesn't matter. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="TooManyViews"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/welcome_brand"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:fontFamily="monospace"
-            android:text="@string/brand_prefix"
-            android:textColor="@color/accent"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/welcome_title"
             android:textColor="@color/text"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
-
-        <TextView
-            style="@style/Hint"
-            android:layout_marginTop="8dp"
-            android:text="@string/welcome_body"
-            android:textSize="16sp" />
-
-        <TextView
-            style="@style/Hint"
-            android:layout_marginTop="12dp"
-            android:text="@string/welcome_points"
-            android:textColor="@color/text_soft"
-            android:textSize="15sp" />
-
-        <TextView style="@style/Label" android:text="@string/welcome_card" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/welcome_dots"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal" />
+    </LinearLayout>
 
-            <include
-                android:id="@+id/welcome_avatar"
-                layout="@layout/view_avatar"
-                android:layout_width="72dp"
-                android:layout_height="72dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/welcome_photo"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/photo_add" />
-        </LinearLayout>
+        <!-- 1. What Tilde is -->
+        <ScrollView
+            android:id="@+id/welcome_step_intro"
+            style="@style/Panel">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/welcome_name"
-            android:labelFor="@id/welcome_name">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/welcome_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName|textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/welcome_title_field"
-            android:labelFor="@id/welcome_job">
+                <include
+                    android:id="@+id/welcome_sample_card"
+                    layout="@layout/view_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/welcome_job"
+                <TextView
+                    style="@style/StepTitle"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/welcome_title" />
+
+                <TextView
+                    style="@style/StepBody"
+                    android:text="@string/welcome_body" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal">
+
+                    <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_feature_tap" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView style="@style/RowTitle" android:text="@string/welcome_tap_title" />
+                        <TextView style="@style/RowDetail" android:text="@string/welcome_tap_detail" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_feature_qr" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView style="@style/RowTitle" android:text="@string/welcome_scan_title" />
+                        <TextView style="@style/RowDetail" android:text="@string/welcome_scan_detail" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_feature_card" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView style="@style/RowTitle" android:text="@string/welcome_card_feature_title" />
+                        <TextView style="@style/RowDetail" android:text="@string/welcome_card_feature_detail" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_feature_lock" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView style="@style/RowTitle" android:text="@string/welcome_private_title" />
+                        <TextView style="@style/RowDetail" android:text="@string/welcome_private_detail" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- 2. The card: photo, name and title, with a live preview -->
+        <ScrollView
+            android:id="@+id/welcome_step_card"
+            style="@style/Panel"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_email"
-            android:labelFor="@id/welcome_email">
+                <TextView style="@style/StepTitle" android:text="@string/welcome_card_title" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/welcome_email"
+                <TextView style="@style/StepBody" android:text="@string/welcome_card_body" />
+
+                <!-- The preview: the Share screen's ~/handle line, then the card. -->
+                <TextView
+                    android:id="@+id/welcome_preview_handle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/text"
+                    android:textSize="16sp" />
+
+                <include
+                    android:id="@+id/welcome_card"
+                    layout="@layout/view_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/welcome_photo"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/photo_add" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/welcome_name_layout"
+                    style="@style/Field"
+                    android:layout_marginTop="12dp"
+                    android:hint="@string/welcome_name"
+                    android:labelFor="@id/welcome_name"
+                    app:helperText="@string/welcome_name_helper"
+                    app:startIconDrawable="@drawable/ic_field_person">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/welcome_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="personName"
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName|textCapWords" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Field"
+                    android:hint="@string/welcome_title_field"
+                    android:labelFor="@id/welcome_job"
+                    app:placeholderText="@string/welcome_title_placeholder"
+                    app:startIconDrawable="@drawable/ic_field_work">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/welcome_job"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:inputType="textCapSentences" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Follows the name ("Jane Doe" → janedoe) until it's edited. -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Field"
+                    android:hint="@string/profile_handle"
+                    android:labelFor="@id/welcome_handle"
+                    app:helperText="@string/profile_handle_helper"
+                    app:placeholderText="@string/welcome_handle_placeholder"
+                    app:prefixText="@string/handle_prefix"
+                    app:prefixTextColor="@color/accent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/welcome_handle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="text|textNoSuggestions" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- 3. How people reach you -->
+        <ScrollView
+            android:id="@+id/welcome_step_contact"
+            style="@style/Panel"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/welcome_phone"
-            android:labelFor="@id/welcome_phone">
+                <TextView style="@style/StepTitle" android:text="@string/welcome_contact_title" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/welcome_phone"
+                <TextView style="@style/StepBody" android:text="@string/welcome_contact_body" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/welcome_email_layout"
+                    style="@style/Field"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/profile_email"
+                    android:labelFor="@id/welcome_email"
+                    app:startIconDrawable="@drawable/ic_field_email">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/welcome_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="emailAddress"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Phone numbers: a country button (flag and dialling code) beside the number. -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/welcome_country1"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="96dp"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="14dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:textColor="@color/text"
+                        app:cornerRadius="4dp"
+                        app:strokeColor="@color/line_strong" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Field"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/welcome_phone"
+                        android:labelFor="@id/welcome_phone1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/welcome_phone1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="phoneNumber"
+                            android:imeOptions="actionNext"
+                            android:inputType="phone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/welcome_phone2_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/welcome_country2"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="96dp"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="14dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:paddingHorizontal="8dp"
+                        android:textColor="@color/text"
+                        app:cornerRadius="4dp"
+                        app:strokeColor="@color/line_strong" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Field"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/welcome_phone2"
+                        android:labelFor="@id/welcome_phone2">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/welcome_phone2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:importantForAutofill="no"
+                            android:inputType="phone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/welcome_phone2_remove"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="18dp"
+                        android:contentDescription="@string/welcome_phone_remove"
+                        app:icon="@drawable/ic_close"
+                        app:iconTint="@color/muted" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/welcome_phone_add"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-12dp"
+                    android:text="@string/welcome_phone_add"
+                    app:icon="@drawable/ic_add" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Field"
+                    android:hint="@string/welcome_website"
+                    android:labelFor="@id/welcome_website"
+                    app:helperText="@string/welcome_website_helper"
+                    app:startIconDrawable="@drawable/ic_opt_link">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/welcome_website"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="textUri" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- 4. A phone on its own, or a printed card or sticker too -->
+        <ScrollView
+            android:id="@+id/welcome_step_share"
+            style="@style/Panel"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="phone" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/welcome_website"
-            android:labelFor="@id/welcome_website">
+                <TextView style="@style/StepTitle" android:text="@string/welcome_mode_title" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/welcome_website"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="textUri" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <TextView style="@style/StepBody" android:text="@string/welcome_mode_body" />
 
-        <TextView
-            style="@style/Hint"
-            android:layout_marginTop="8dp"
-            android:text="@string/welcome_later" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/welcome_mode_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/panel_raised"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:checkedIconTint="@color/accent"
+                    app:strokeColor="@color/option_stroke"
+                    app:strokeWidth="1.5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_field_phone" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="24dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView style="@style/RowTitle" android:text="@string/welcome_mode_phone" />
+                            <TextView style="@style/RowDetail" android:text="@string/welcome_mode_phone_detail" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/welcome_mode_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/panel_raised"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:checkedIconTint="@color/accent"
+                    app:strokeColor="@color/option_stroke"
+                    app:strokeWidth="1.5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_feature_card" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="24dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView style="@style/RowTitle" android:text="@string/welcome_mode_card" />
+                            <TextView style="@style/RowDetail" android:text="@string/welcome_mode_card_detail" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- A plug for the printable card: opens its section of the product page. -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/welcome_get_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/bg"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/line"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/RowTitle"
+                                android:text="@string/welcome_get_card"
+                                android:textColor="@color/accent" />
+
+                            <TextView style="@style/RowDetail" android:text="@string/welcome_get_card_detail" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="12dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_chevron"
+                            app:tint="@color/muted" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    style="@style/Hint"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/welcome_later" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/panel"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="12dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/welcome_done"
-            android:layout_width="match_parent"
+            android:id="@+id/welcome_back"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:enabled="false"
-            android:text="@string/welcome_done" />
+            android:layout_marginEnd="12dp"
+            android:text="@string/welcome_back"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/welcome_next"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="@string/welcome_start"
+            android:textSize="16sp" />
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

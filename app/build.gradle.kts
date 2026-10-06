@@ -45,6 +45,10 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "PROFILE_SEED", javaString(profileSeed))
+            // A separate app ("Tilde dev"), so a debug build installs next to a release instead of
+            // replacing it: the real Tilde and its profile stay untouched while changes are tested.
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
         }
         release {
             buildConfigField("String", "PROFILE_SEED", "\"\"")
@@ -73,4 +77,6 @@ dependencies {
     implementation("androidx.exifinterface:exifinterface:1.4.2")
     implementation("com.google.zxing:core:3.5.4")
     testImplementation("junit:junit:4.13.2")
+    // Android's org.json is only a stub in unit tests; the real one, for tests only (saved links).
+    testImplementation("org.json:json:20260814")
 }

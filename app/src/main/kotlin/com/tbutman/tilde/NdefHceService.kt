@@ -14,13 +14,12 @@ class NdefHceService : HostApduService() {
     override fun processCommandApdu(commandApdu: ByteArray, extras: Bundle?): ByteArray {
         val prefs = Prefs(this)
         if (!prefs.enabled || prefs.tab == Prefs.TAB_RECEIVE) return Type4Tag.SW_FILE_NOT_FOUND
-        if (prefs.share == Presets.WIFI && !prefs.wifiReady) return Type4Tag.SW_FILE_NOT_FOUND
-        if (prefs.share != Presets.WIFI && prefs.share != Presets.CONTACT && prefs.url.isEmpty()) return Type4Tag.SW_FILE_NOT_FOUND
-        if (prefs.share == Presets.CONTACT && !prefs.profile.isSet) return Type4Tag.SW_FILE_NOT_FOUND
+        // Nothing to answer with: Wi-Fi not set up, a link that's empty or was deleted, no profile.
+        if (!prefs.isReady(prefs.share)) return Type4Tag.SW_FILE_NOT_FOUND
         // A fresh tag per tap, so a mode or URL changed in the app applies from the next tap.
         val current = tag ?: Type4Tag(prefs.message()) {
             // Log who got what before bumping the count, so the screen's "Sent" banner finds the entry.
-            prefs.met = MetLog.afterTap(prefs.met, System.currentTimeMillis(), prefs.event, Presets.find(prefs.share).label)
+            prefs.met = MetLog.afterTap(prefs.met, System.currentTimeMillis(), prefs.event, prefs.find(prefs.share).label)
             prefs.reads += 1
         }.also { tag = it }
         return current.process(commandApdu)

@@ -1,5 +1,67 @@
 # Changelog
 
+## Unreleased
+
+Not released yet: changes collected for the next version, tested locally on the emulator.
+
+### First launch
+
+- A new welcome in four short steps, with Back and Next always at the bottom and progress dots:
+  what Tilde is (including the NFC card or sticker option), your card, how people reach
+  you, and how you'll share.
+- A live preview of your card as you type your name and title, with your photo.
+- Clearer fields: **Full name**, **Job title** (with an example) and **Link to share** (your
+  website, portfolio or LinkedIn; leave it empty and a tap shares your contact card), each with an
+  icon. Android's autofill can now fill in your
+  name, email and phone number.
+- Phone numbers have a country picker (flag and dialling code, set from your SIM, searchable by
+  name or code), format as you type, and are saved in international format. Add a second number
+  on the spot; two numbers from different countries are labelled, for example "mobile (US)".
+- Checks before moving on: a name is needed, and an email must look like one.
+- The last step asks how you'll share: just your phone, or your phone and a card or sticker. If you
+  don't have a card, a link shows how to print your own (the design is free).
+- **Your card is ready:** a short panel when setup finishes, with the three things to know (hold
+  phones back to back, change what you share, Receive and Met). If you chose a card or sticker, it
+  offers **Write my card**, and Write a card has **Skip for now** in case it hasn't arrived yet
+  (write it any time from Settings).
+- **Tilde handle:** the name after `~/` at the top of your card, set up on the "Make your card"
+  step and shown in the preview. It follows your name (`~/janedoe`) until you change it: lower-case
+  letters, numbers, dots, dashes and underscores, up to 20. It used to start empty, showing a bare
+  `~/`; an empty handle now shows `~/tilde`. Called **Tilde handle** in Settings too.
+
+### Sharing
+
+- **Saved links** replace the single custom link: save as many as you like, each with a name (for
+  example "Tilde → tbutman.com/tilde"), and each becomes its own option. Add them from the options
+  list (**Add a link**) or under Settings → Links, where you can also change or delete them. A
+  custom link from 1.0 becomes your first saved link automatically.
+- **Quick switch:** chips under the QR code for your favourite options, one tap each, or swipe the
+  code to step through them. Star options in the options list (or tick saved links in Settings) to
+  choose which appear; an unticked link stays saved without showing on the Share screen.
+- The options list puts your starred options first and folds the rest under **More options**, so
+  it stays short however many links you save.
+- Options that aren't set up yet (Guest Wi-Fi, a social link, WhatsApp) are shown greyed out with
+  **Set up**, which asks for the missing link or number on the spot, or opens the right part of
+  Settings. Before, an empty custom link could be chosen and shared nothing.
+- A line under the code says what it opens ("Opens tbutman.com/tilde"), for the person scanning.
+- Tap the code to show it full screen, for scanning from further away.
+- **Send** the current link, or your contact card as a file, through any app (WhatsApp, email,
+  messages), and **Copy link**. Not offered for Guest Wi-Fi, so its password stays out of other apps.
+
+### Profile and contact card
+
+- A LinkedIn, GitHub, Instagram or X link given as the link to share now goes in its own field,
+  and a tap shares it under its own name.
+- Fixed: a LinkedIn (or other social) profile entered as the website went on the contact card as
+  just `linkedin.com`, and event tags were added to its links. It now stays whole, without tags.
+- iPhones can't save a contact card from a tap, so the card also carries a link for them to open.
+  That was always the website; with no website, it's now your first social profile (LinkedIn,
+  GitHub, Instagram or X), and every note about it says what an iPhone will open, or that a tap
+  does nothing when there's no link at all.
+- An optional second email in Settings, for example work and personal; both go on the contact card.
+- Settings says **Full name** and **Job title**, to match.
+- Fixed: on a card without a job title, the name sat against the card's bottom edge.
+
 ## 1.0.0 (5 October 2026)
 
 The first public release.

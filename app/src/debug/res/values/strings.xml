@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug builds are a separate app, "Tilde dev", so they're easy to tell apart from the real one. -->
+<resources>
+    <string name="app_name">Tilde dev</string>
+    <string name="tile_label">Tilde dev</string>
+</resources>

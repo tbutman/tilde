@@ -47,6 +47,12 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 To start a debug build with your own details instead of the welcome screen, copy
 `profile.example.properties` to `profile.local.properties` (git ignores it). It only seeds the
 profile on first launch of a debug build. Release builds always start empty.
+Debug builds are a separate app, **Tilde dev** (`com.tbutman.tilde.dev`), so one installs next to a
+release of Tilde without touching it or its profile. Use it to try changes on a phone before
+publishing anything. Its Settings has a **Show the welcome screens** button (debug builds only), which
+clears the dev profile and starts the welcome again.
+
+Only one app answers taps at a time: whichever is open, so open the one you're testing.
 
 ### Screenshots
 
@@ -54,7 +60,7 @@ The emulator has no NFC, so the Share screen would say "No NFC". Debug builds ac
 extra that draws it as on a phone with NFC switched on:
 
 ```bash
-adb shell am start -n com.tbutman.tilde/.MainActivity --ez demo true
+adb shell am start -n com.tbutman.tilde.dev/com.tbutman.tilde.MainActivity --ez demo true
 ```
 
 The screenshots in `docs/screenshots` use the made-up profile Jane Doe and the system UI demo mode

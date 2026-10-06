@@ -28,6 +28,14 @@ class Prefs(context: Context) {
         get() = store.getBoolean(KEY_WELCOMED, false)
         set(value) = store.edit().putBoolean(KEY_WELCOMED, value).apply()
 
+    /**
+     * Set when the welcome screens finish, so the Share screen shows "You're all set" once:
+     * [READY_CARD] when they chose a card or sticker too, [READY_PHONE] otherwise, "" once shown.
+     */
+    var ready: String
+        get() = store.getString(KEY_READY, "") ?: ""
+        set(value) = store.edit().putString(KEY_READY, value).apply()
+
     var enabled: Boolean
         get() = store.getBoolean(KEY_ENABLED, true)
         set(value) = store.edit().putBoolean(KEY_ENABLED, value).apply()
@@ -37,16 +45,51 @@ class Prefs(context: Context) {
         get() = store.getString(KEY_TAB, TAB_SHARE) ?: TAB_SHARE
         set(value) = store.edit().putString(KEY_TAB, value).apply()
 
-    /** Which preset a tap shares (see Presets). */
+    /** Which option a tap shares (see Presets): a fixed option's id, or a saved link's "link:<id>". */
     var share: String
-        get() = store.getString(KEY_SHARE, null)
-            ?: if (store.getString("mode", null) == "contact") Presets.CONTACT else Presets.WEBSITE // 1.1 setting
+        get() {
+            migrateLinks()
+            return store.getString(KEY_SHARE, null)
+                ?: if (store.getString("mode", null) == "contact") Presets.CONTACT else Presets.WEBSITE // 1.1 setting
+        }
         set(value) = store.edit().putString(KEY_SHARE, value).apply()
 
-    /** The custom link, used when `share` is CUSTOM. */
-    var customUrl: String
-        get() = store.getString(KEY_URL, "") ?: ""
-        set(value) = store.edit().putString(KEY_URL, value).apply()
+    /** Links saved to share, each its own option, in the order they were added. */
+    var links: List<SavedLink>
+        get() {
+            migrateLinks()
+            return SavedLink.fromJson(store.getString(KEY_LINKS, null))
+        }
+        set(value) = store.edit().putString(KEY_LINKS, SavedLink.toJson(value)).apply()
+
+    /** Version 1.0's single custom link becomes the first saved link, once. */
+    private fun migrateLinks() {
+        if (store.contains(KEY_LINKS)) return
+        val (links, share) = SavedLink.migrate(store.getString(KEY_URL, "") ?: "", store.getString(KEY_SHARE, null), SavedLink.newId(emptyList()))
+        store.edit().putString(KEY_LINKS, SavedLink.toJson(links)).remove(KEY_URL)
+            .apply { if (share == null) remove(KEY_SHARE) else putString(KEY_SHARE, share) }.apply()
+    }
+
+    /** The options on the Share screen's quick-switch row (starred in the picker), in order. */
+    var pinned: List<String>
+        get() = store.getString(KEY_PINNED, null)?.let { json ->
+            runCatching { JSONArray(json).let { a -> (0 until a.length()).map { a.getString(it) } } }.getOrNull()
+        } ?: listOf(Presets.WEBSITE, Presets.CONTACT) + links.map { it.presetId } + listOf(Presets.LINKEDIN, Presets.WHATSAPP)
+        set(value) = store.edit().putString(KEY_PINNED, JSONArray(value.distinct()).toString()).apply()
+
+    /** Every option in the picker's order, including saved links. */
+    fun options(): List<Presets.Preset> = Presets.options(links)
+
+    fun find(id: String): Presets.Preset = Presets.find(id, links)
+
+    /** Whether an option can share right now (it has its link, number or network). */
+    fun isReady(id: String): Boolean = Presets.isReady(id, profile, links, wifiReady)
+
+    /** The options ready to share, in order. */
+    fun available(): List<Presets.Preset> = Presets.available(profile, links, wifiReady)
+
+    /** The quick-switch row: the pinned options that are ready, in the picker's order. */
+    fun quickSwitch(): List<Presets.Preset> = pinned.toSet().let { pins -> available().filter { it.id in pins } }
 
     /** Optional tag added to links on the profile's website as ?event=, e.g. the meetup's name. */
     var event: String
@@ -78,11 +121,13 @@ class Prefs(context: Context) {
     /** The link a preset carries, with the event tag applied; "" when there's nothing to link to. */
     fun urlFor(id: String, profile: Profile = this.profile, event: String = this.event): String {
         val base = when (id) {
-            Presets.CUSTOM -> customUrl
+            Presets.CUSTOM -> links.firstOrNull()?.url.orEmpty()
             Presets.WHATSAPP -> Profile.whatsappUrl(profile.whatsapp, whatsappGreeting) ?: ""
-            // The contact card links to the website too, for readers that only act on links.
-            Presets.CONTACT, Presets.WIFI -> profile.website
-            else -> Presets.profileUrl(id, profile) ?: ""
+            // The contact card carries a link too, for readers that only act on links (iPhones).
+            Presets.CONTACT -> profile.contactLink?.second.orEmpty()
+            Presets.WIFI -> profile.website
+            else -> SavedLink.idOf(id)?.let { linkId -> links.firstOrNull { it.id == linkId }?.url }
+                ?: Presets.profileUrl(id, profile) ?: ""
         }.trim()
         return if (base.isEmpty()) "" else Presets.withEvent(base, event, profile.siteHost)
     }
@@ -163,10 +208,15 @@ class Prefs(context: Context) {
         const val KEY_PROFILE = "profile"
         const val KEY_PHOTO_VERSION = "photo_version"
         const val KEY_WELCOMED = "welcomed"
+        const val KEY_READY = "ready"
+        const val READY_PHONE = "phone"
+        const val READY_CARD = "card"
         const val KEY_ENABLED = "enabled"
         const val KEY_TAB = "tab"
         const val KEY_SHARE = "share"
-        const val KEY_URL = "url"
+        const val KEY_URL = "url" // version 1.0's custom link, migrated to KEY_LINKS
+        const val KEY_LINKS = "links"
+        const val KEY_PINNED = "pinned"
         const val KEY_EVENT = "event"
         const val KEY_WHATSAPP_GREETING = "whatsapp_greeting"
         const val KEY_WIFI_SSID = "wifi_ssid"

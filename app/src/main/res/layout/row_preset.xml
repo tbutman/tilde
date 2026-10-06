@@ -71,6 +71,31 @@
             android:visibility="gone" />
     </LinearLayout>
 
+    <!-- In the picker: star an option to put it in the Share screen's quick-switch row. -->
+    <ImageView
+        android:id="@+id/star"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/picker_star"
+        android:padding="9dp"
+        android:src="@drawable/ic_star"
+        android:visibility="gone"
+        app:tint="@color/muted" />
+
+    <!-- In the picker: an option that isn't ready yet shows this instead of the end mark. -->
+    <TextView
+        android:id="@+id/set_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/picker_set_up"
+        android:textColor="@color/accent"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <ImageView
         android:id="@+id/end"
         android:layout_width="20dp"

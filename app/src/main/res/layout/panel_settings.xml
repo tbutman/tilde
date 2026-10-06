@@ -102,6 +102,20 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Field"
+            android:hint="@string/profile_email2"
+            android:labelFor="@id/profile_email2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_email2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
             android:hint="@string/profile_website"
             android:labelFor="@id/profile_website">
 
@@ -118,7 +132,10 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Field"
             android:hint="@string/profile_handle"
-            android:labelFor="@id/profile_handle">
+            android:labelFor="@id/profile_handle"
+            app:helperText="@string/profile_handle_helper"
+            app:prefixText="@string/handle_prefix"
+            app:prefixTextColor="@color/accent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_handle"
@@ -127,7 +144,7 @@
                 android:fontFamily="monospace"
                 android:imeOptions="actionNext"
                 android:importantForAutofill="no"
-                android:inputType="text" />
+                android:inputType="text|textNoSuggestions" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -321,23 +338,25 @@
             <TextView style="@style/Hint" android:layout_marginTop="6dp" android:text="@string/whatsapp_detail" />
         </LinearLayout>
 
-        <TextView style="@style/Label" android:text="@string/settings_custom" />
+        <!-- Saved links: each one is an option on the Share screen. Rows are added in code. -->
+        <TextView style="@style/Label" android:text="@string/settings_links" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/url_layout"
-            style="@style/Field"
-            android:hint="@string/settings_custom"
-            android:labelFor="@id/url">
+        <TextView style="@style/Hint" android:text="@string/settings_links_detail" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/url"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="textUri" />
-        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:id="@+id/links_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/links_add"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/picker_add_link"
+            app:icon="@drawable/ic_add" />
 
         <TextView style="@style/Label" android:text="@string/settings_wifi" />
 
@@ -420,5 +439,15 @@
         <TextView android:id="@+id/reads" style="@style/Hint" android:fontFamily="monospace" />
 
         <TextView android:id="@+id/version" style="@style/Hint" android:fontFamily="monospace" />
+
+        <!-- Debug builds only: start the welcome screens again with an empty profile. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/debug_welcome"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/debug_welcome"
+            android:visibility="gone" />
     </LinearLayout>
 </ScrollView>

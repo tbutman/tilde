@@ -26,6 +26,43 @@
         <item name="hintTextColor">@color/accent</item>
     </style>
 
+    <!-- Welcome screens: a step's heading and its line of explanation. -->
+    <style name="StepTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="StepBody" parent="Hint">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+    </style>
+
+    <!-- An icon in a rounded amber square, beside a feature or an option. -->
+    <style name="IconBox">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/bg_icon_box</item>
+        <item name="android:padding">9dp</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="tint">@color/accent</item>
+    </style>
+
+    <style name="RowTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="RowDetail" parent="Hint">
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+
     <style name="Circle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

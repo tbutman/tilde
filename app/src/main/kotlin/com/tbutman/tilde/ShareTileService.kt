@@ -13,7 +13,7 @@ class ShareTileService : TileService() {
         val tile = qsTile ?: return
         val prefs = Prefs(this)
         tile.state = if (prefs.enabled) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) tile.subtitle = Presets.find(prefs.share).label
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) tile.subtitle = prefs.find(prefs.share).label
         tile.updateTile()
     }
 

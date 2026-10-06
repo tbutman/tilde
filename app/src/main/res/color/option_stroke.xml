@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A selectable option card's border: amber when chosen. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/accent" android:state_checked="true" />
+    <item android:color="@color/line_strong" />
+</selector>

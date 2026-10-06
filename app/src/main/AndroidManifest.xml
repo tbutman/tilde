@@ -32,6 +32,17 @@
             android:name=".WriteActivity"
             android:exported="false" />
 
+        <!-- Send hands the contact card to another app as a .vcf file (see res/xml/file_paths.xml). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <service
             android:name=".NdefHceService"
             android:exported="true"

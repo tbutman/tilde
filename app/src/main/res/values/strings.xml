@@ -13,33 +13,100 @@
     <!-- Share: what the other person sees -->
     <string name="brand_prefix">~/</string>
     <string name="set_up_profile">Set up your profile</string>
-    <string name="welcome_title">Welcome to Tilde</string>
-    <string name="welcome_body">Your business card, on your phone. Hold your phone against someone else\'s and they get your details, or they scan the code on your screen.</string>
-    <string name="welcome_points">• Works with iPhones and Android phones\n• No account, no subscription, no internet\n• Your details stay on this phone until you share them</string>
-    <string name="welcome_card">Your card</string>
-    <string name="welcome_name">Your name</string>
-    <string name="welcome_title_field">What you do, such as Product designer</string>
-    <string name="welcome_phone">Phone number (optional)</string>
-    <string name="welcome_website">Website (optional)</string>
-    <string name="welcome_later">You can change any of this, and add LinkedIn, Instagram and more, under Settings.</string>
+    <string name="brand_name">tilde</string>
+    <string name="welcome_step">Step %1$d of %2$d</string>
+    <string name="welcome_start">Get started</string>
+    <string name="welcome_next">Next</string>
+    <string name="welcome_back">Back</string>
     <string name="welcome_done">Create my card</string>
+    <!-- 1. What Tilde is -->
+    <string name="welcome_title">Your business card, on your phone</string>
+    <string name="welcome_body">Share your details with a tap. The other person doesn\'t need Tilde, or any app.</string>
+    <string name="welcome_tap_title">Tap phones to share</string>
+    <string name="welcome_tap_detail">Hold your phone to theirs. Works with iPhones and Android phones.</string>
+    <string name="welcome_scan_title">Or let them scan your code</string>
+    <string name="welcome_scan_detail">Any phone camera can read it.</string>
+    <string name="welcome_card_feature_title">Add a card or sticker</string>
+    <string name="welcome_card_feature_detail">Put your link on any NFC card or sticker, or print a Tilde card, and it shares even when your phone stays in your pocket.</string>
+    <string name="welcome_private_title">Free, open source and private</string>
+    <string name="welcome_private_detail">No account, no subscription, no internet. Your details stay on this phone until you share them.</string>
+    <string name="welcome_sample_name">Jane Doe</string>
+    <string name="welcome_sample_title">Product designer</string>
+    <!-- 2. The card -->
+    <string name="welcome_card_title">Make your card</string>
+    <string name="welcome_card_body">This is what people see when you share.</string>
+    <string name="welcome_name">Full name</string>
+    <string name="welcome_name_helper">As you\'d like it on your card</string>
+    <string name="welcome_name_missing">Add your name to continue</string>
+    <string name="welcome_title_field">Job title</string>
+    <string name="welcome_title_placeholder">Product designer at Acme</string>
+    <string name="welcome_handle_placeholder">yourname</string>
+    <!-- 3. How people reach you -->
+    <string name="welcome_contact_title">How people reach you</string>
+    <string name="welcome_contact_body">All optional. Your email and numbers go on your contact card, which you only share when you choose to.</string>
+    <string name="welcome_email_invalid">That doesn\'t look like an email address</string>
+    <string name="welcome_phone">Mobile number</string>
+    <string name="welcome_phone2">Another number</string>
+    <string name="welcome_phone_add">Add another number</string>
+    <string name="welcome_phone_remove">Remove this number</string>
+    <string name="welcome_country">Country code: %1$s</string>
+    <string name="welcome_country_code" translatable="false">%1$s +%2$s</string>
+    <string name="welcome_country_row" translatable="false">%1$s   %2$s  +%3$s</string>
+    <string name="welcome_country_title">Country or region</string>
+    <string name="welcome_country_search">Search</string>
+    <string name="welcome_website">Link to share</string>
+    <string name="welcome_website_helper">Optional. Your website, portfolio or LinkedIn: what a tap or a scan opens. Leave it empty and a tap shares your contact card instead.</string>
+    <!-- 4. Phone only, or a card too -->
+    <string name="welcome_mode_title">How will you share?</string>
+    <string name="welcome_mode_body">Your phone is all you need. An NFC card or sticker can share your link too, even when your phone stays in your pocket.</string>
+    <string name="welcome_mode_phone">Just my phone</string>
+    <string name="welcome_mode_phone_detail">Tap phones, or show your code. Nothing else needed.</string>
+    <string name="welcome_mode_card">My phone and a card or sticker</string>
+    <string name="welcome_mode_card_detail">Next, put your link on it with Write a card. No card yet? Skip that step and write one any time from Settings.</string>
+    <string name="welcome_get_card">No card yet? Print your own</string>
+    <string name="welcome_get_card_detail">Got a 3D printer? The Tilde card design is free: add your details, print it, and seal an NFC sticker inside.</string>
+    <string name="welcome_get_card_url" translatable="false">https://tbutman.com/tilde#card</string>
+    <!-- After the welcome screens: shown once over the Share screen -->
+    <string name="ready_title">Your card is ready</string>
+    <string name="ready_body">Here\'s how to share it.</string>
+    <string name="ready_tap_title">Hold phones back to back</string>
+    <string name="ready_tap_detail">That sends your card. Or let them scan the code on your screen.</string>
+    <string name="ready_switch_title">Change what you share</string>
+    <string name="ready_switch_detail">Tap the row under your code: your website, contact card, WhatsApp and more.</string>
+    <string name="ready_tabs_title">Receive and Met</string>
+    <string name="ready_tabs_detail">Receive reads other people\'s cards and tags. Met remembers who you\'ve shared with.</string>
+    <string name="ready_done">Got it</string>
+    <string name="ready_write">Write my card</string>
+    <string name="ready_later">Later</string>
+    <string name="welcome_later">You can review or change any of this at any time in Settings, and add LinkedIn, Instagram and more.</string>
     <string name="tagline_tap">Tap phones to share</string>
     <string name="tagline_scan">Scan the code to share</string>
     <!-- iPhones only act on links from a tap: the contact card's tap opens its second record, the
          website; a Wi-Fi tap carries no link, so it does nothing on an iPhone. -->
     <string name="iphone_hint_contact">On an iPhone? Scan the code to save the contact.</string>
-    <string name="iphone_hint_contact_link">On an iPhone? Scan the code to save the contact. Tapping opens the website instead.</string>
+    <string name="iphone_hint_contact_link">On an iPhone? Scan the code to save the contact. Tapping opens %1$s instead.</string>
     <string name="iphone_hint_wifi">On an iPhone? Scan the code to join.</string>
     <string name="state_ready">Ready</string>
     <string name="state_paused">Paused</string>
     <string name="state_nfc_off">NFC off</string>
     <string name="state_no_nfc">No NFC</string>
     <string name="iphone_scan_only">iPhone: scan the code</string>
-    <string name="iphone_contact_note">iPhone: tap opens the website, scan for the card</string>
+    <string name="iphone_contact_note">iPhone: tap opens %1$s, scan for the card</string>
+    <!-- What an iPhone opens instead of the contact card: "your website", or a network's name ("LinkedIn"). -->
+    <string name="iphone_your_website">your website</string>
     <string name="detail_contact">Name, title, email, phone numbers and links</string>
     <string name="detail_whatsapp">Opens a chat with me</string>
     <string name="detail_wifi_missing">Not set up yet</string>
     <string name="qr_description">QR code for what a tap shares</string>
+    <string name="qr_enlarge">Tap to show it bigger</string>
+    <string name="qr_close">Tap anywhere to close</string>
+    <string name="opens_link">Opens %1$s</string>
+    <string name="opens_contact">Saves your contact card</string>
+    <string name="opens_whatsapp">Opens a WhatsApp chat with you</string>
+    <string name="opens_wifi">Joins %1$s</string>
+    <string name="share_send">Send</string>
+    <string name="share_copy">Copy link</string>
+    <string name="share_send_title">Send with</string>
     <string name="wifi_missing">Add the Wi-Fi name and password in Settings to share it.</string>
     <string name="open_settings">Open settings</string>
     <string name="open_nfc_settings">Turn on NFC</string>
@@ -54,7 +121,24 @@
 
     <!-- Picker -->
     <string name="picker_title">What should a tap share?</string>
-    <string name="picker_needs_setup">Set it up in Settings first.</string>
+    <string name="picker_set_up">Set up</string>
+    <string name="setup_in_settings">Add it here, then choose it on the Share screen.</string>
+    <string name="picker_add_link">Add a link</string>
+    <string name="picker_more">More options (%1$d)</string>
+    <string name="picker_less">Fewer options</string>
+    <string name="picker_star">Show in the quick-switch row</string>
+    <string name="picker_unstar">Remove from the quick-switch row</string>
+    <string name="detail_missing">Not set up yet</string>
+    <!-- Saved links -->
+    <string name="link_add_title">Add a link</string>
+    <string name="link_edit_title">Edit link</string>
+    <string name="link_url_hint">Link, such as tbutman.com/tilde</string>
+    <string name="link_name_hint">Name (optional), such as Tilde</string>
+    <string name="link_invalid">That doesn\'t look like a link</string>
+    <string name="setup_title">Add your %1$s</string>
+    <string name="setup_link_hint">Link</string>
+    <string name="setup_whatsapp_hint">WhatsApp number, such as +351 912 345 678</string>
+    <string name="setup_whatsapp_invalid">Enter the full number, with the country code</string>
 
     <!-- Receive -->
     <string name="receive_title">Hold an NFC tag or another phone to the back of yours.</string>
@@ -87,11 +171,14 @@
     <!-- Settings -->
     <string name="settings_profile">Profile</string>
     <string name="profile_detail">What you share. Stored only on this phone; leave out anything you don\'t want to share.</string>
-    <string name="profile_name">Name</string>
-    <string name="profile_title">Title</string>
+    <string name="profile_name">Full name</string>
+    <string name="profile_title">Job title</string>
     <string name="profile_email">Email</string>
+    <string name="profile_email2">Second email (optional)</string>
     <string name="profile_website">Website (what Website opens)</string>
-    <string name="profile_handle">Handle (after ~/ on the Share screen)</string>
+    <string name="profile_handle">Tilde handle</string>
+    <string name="profile_handle_helper">Shown as ~/yourname at the top of your card.</string>
+    <string name="handle_prefix" translatable="false">~/</string>
     <string name="profile_linkedin">LinkedIn link</string>
     <string name="profile_github">GitHub link</string>
     <string name="profile_instagram">Instagram link</string>
@@ -118,8 +205,9 @@
     <string name="settings_whatsapp">WhatsApp message</string>
     <string name="whatsapp_greeting_hint">Message</string>
     <string name="whatsapp_detail">Typed into the chat, never sent. Leave empty for an empty chat.</string>
-    <string name="settings_custom">Custom link</string>
-    <string name="url_invalid">Enter a full link, starting with https://</string>
+    <string name="settings_links">Links</string>
+    <string name="settings_links_detail">Links you\'d like to share, such as your projects. Ticked ones show on the Share screen for one-tap switching; untick one to keep it without showing it. Tap a link to change or delete it.</string>
+    <string name="link_on_share">Show %1$s on the Share screen</string>
     <string name="settings_wifi">Guest Wi-Fi</string>
     <string name="wifi_ssid_label">Network name</string>
     <string name="wifi_password_label">Password</string>
@@ -129,6 +217,7 @@
     <string name="settings_shortcuts">Shortcuts</string>
     <string name="add_tile">Add to Quick Settings</string>
     <string name="settings_about">About</string>
+    <string name="debug_welcome" translatable="false">Show the welcome screens (debug)</string>
     <plurals name="reads">
         <item quantity="one">Read %d time from this phone</item>
         <item quantity="other">Read %d times from this phone</item>
@@ -166,6 +255,9 @@
     <string name="write_nothing_wifi">Set up guest Wi-Fi under Settings first.</string>
     <string name="write_note">You can change a card any time by writing it again. Tilde never locks tags.</string>
     <string name="write_close">Done</string>
-    <string name="write_iphone_contact">iPhone: opens your website instead</string>
+    <string name="write_skip">Skip for now</string>
+    <string name="write_later">No card yet? Write one any time from Settings → Cards and stickers.</string>
+    <string name="write_iphone_contact">iPhone: opens %1$s instead</string>
+    <string name="write_iphone_contact_none">iPhone: a tap does nothing. Add a website in Settings for iPhones to open.</string>
     <string name="write_iphone_wifi">iPhone: can\'t join Wi-Fi from a tag</string>
 </resources>
