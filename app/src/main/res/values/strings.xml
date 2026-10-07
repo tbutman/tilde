@@ -229,14 +229,14 @@
     <string name="cards_created_copy">%1$s is ready. Change what differs in Edit card.</string>
     <string name="cards_created_blank">%1$s is ready. Fill in the rest here.</string>
     <string name="cards_switched">Now sharing %1$s</string>
-    <string name="cards_edit">Rename and colour</string>
+    <string name="cards_edit">Rename and color</string>
     <string name="cards_duplicate">Duplicate</string>
     <string name="cards_move_up">Move up</string>
     <string name="cards_move_down">Move down</string>
     <string name="cards_delete">Delete</string>
     <string name="cards_delete_title">Delete %1$s?</string>
     <string name="cards_delete_body">Its details, links and photo are removed from this phone. Stickers you\'ve already written keep what\'s on them.</string>
-    <string name="cards_colour">Colour</string>
+    <string name="cards_colour">Color</string>
     <string name="cards_colour_selected">Selected</string>
     <string name="colour_amber">Amber</string>
     <string name="colour_teal">Teal</string>
@@ -391,7 +391,7 @@
     <string name="about_privacy">Privacy</string>
     <string name="about_privacy_detail">Tilde has no internet permission, no account, no analytics and no cloud backup. Your cards, photos and Met list stay on this phone until you share them, and uninstalling Tilde removes everything.</string>
     <string name="about_source">Open source</string>
-    <string name="about_source_detail">Tilde is free and open source under the MIT licence.</string>
+    <string name="about_source_detail">Tilde is free and open source under the MIT license.</string>
     <string name="about_source_link">github.com/tbutman/tilde</string>
     <string name="about_source_url" translatable="false">https://github.com/tbutman/tilde</string>
     <string name="about_website">Website · tbutman.com/tilde</string>
@@ -400,8 +400,8 @@
     <string name="about_privacy_url">https://tbutman.com/tilde/privacy</string>
     <string name="about_issues">Report a problem · github.com/tbutman/tilde/issues</string>
     <string name="about_issues_url" translatable="false">https://github.com/tbutman/tilde/issues</string>
-    <string name="about_licences">Open-source licences</string>
-    <string name="about_licences_detail">Tilde is built with:\n\n• ZXing, for the QR code: Apache License 2.0\n• AndroidX and Material Components for Android: Apache License 2.0\n• Simple Icons, for the logos: CC0 1.0 (public domain)\n\nThe Apache License 2.0 is at apache.org/licenses/LICENSE-2.0. Tilde itself is under the MIT licence.</string>
+    <string name="about_licences">Open-source licenses</string>
+    <string name="about_licences_detail">Tilde is built with:\n\n• ZXing, for the QR code: Apache License 2.0\n• AndroidX and Material Components for Android: Apache License 2.0\n• Simple Icons, for the logos: CC0 1.0 (public domain)\n\nThe Apache License 2.0 is at apache.org/licenses/LICENSE-2.0. Tilde itself is under the MIT license.</string>
     <!-- Settings list: what each row shows under its name -->
     <string name="row_cards">Your cards</string>
     <plurals name="row_cards_summary">
