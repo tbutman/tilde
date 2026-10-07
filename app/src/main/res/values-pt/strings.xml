@@ -255,7 +255,7 @@
     <string name="profile_company">Empresa (opcional)</string>
     <string name="profile_email">Email</string>
     <string name="profile_email2">Segundo email (opcional)</string>
-    <string name="profile_website">Site (o que a opção Site abre)</string>
+    <string name="profile_website">Site</string>
     <string name="profile_handle">Identificador Tilde</string>
     <string name="profile_handle_helper">Aparece como ~/oteunome no topo do teu cartão.</string>
     <string name="profile_linkedin">Link do LinkedIn</string>

@@ -113,7 +113,7 @@ object LinkDialogs {
                 val profile = prefs.profile
                 val updated = when (preset.id) {
                     Presets.WHATSAPP -> profile.copy(whatsapp = text).takeIf { it.hasWhatsapp }
-                    else -> SavedLink.validUrl(text)?.let { link ->
+                    else -> Profile.linkField(text, preset.id.takeUnless { it == Presets.WEBSITE })?.takeIf { it.isNotEmpty() }?.let { link ->
                         when (preset.id) {
                             Presets.WEBSITE -> profile.copy(website = link)
                             Presets.LINKEDIN -> profile.copy(linkedin = link)

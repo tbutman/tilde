@@ -190,6 +190,31 @@ data class Profile(
             return PLATFORMS.entries.firstOrNull { (_, value) -> value.second.any { host == it || host.endsWith(".$it") } }?.key
         }
 
+        /** Where a handle typed as "@janedoe" goes, for each social network's field. */
+        private val PROFILE_LINKS = mapOf(
+            Presets.LINKEDIN to "https://www.linkedin.com/in/",
+            Presets.GITHUB to "https://github.com/",
+            Presets.INSTAGRAM to "https://www.instagram.com/",
+            Presets.X to "https://x.com/",
+        )
+
+        /**
+         * What's typed in the website or a social profile's field, as it's stored: a web link, with
+         * https:// added to a bare address ("janedoe.com" → "https://janedoe.com"). In a social
+         * network's field (`network`, its preset id) a handle such as "@janedoe" becomes the profile's
+         * link. "" for an empty field; null when it isn't a link, so the field shows an error and the
+         * card keeps the last one that was.
+         */
+        fun linkField(text: String, network: String? = null): String? {
+            val trimmed = text.trim()
+            if (trimmed.isEmpty()) return ""
+            if (network != null && trimmed.startsWith("@")) {
+                val handle = trimmed.drop(1)
+                return PROFILE_LINKS[network]?.takeIf { Regex("[A-Za-z0-9._-]+").matches(handle) }?.plus(handle)
+            }
+            return SavedLink.validUrl(trimmed)?.takeIf { Regex("^https?://", RegexOption.IGNORE_CASE).containsMatchIn(it) }
+        }
+
         /** Adds https:// to a bare address; leaves full links and empty text alone. */
         fun normalizeUrl(link: String): String {
             val trimmed = link.trim()

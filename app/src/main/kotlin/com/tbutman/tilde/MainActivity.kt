@@ -253,7 +253,10 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             findViewById<TextInputEditText>(R.id.welcome_phone2).text = null
             showSecondPhone(false)
         }
-        findViewById<TextInputEditText>(R.id.welcome_website).onDone { welcomeNext() }
+        findViewById<TextInputEditText>(R.id.welcome_website).apply {
+            addTextChangedListener(afterChange { findViewById<TextInputLayout>(R.id.welcome_website_layout).error = null })
+            onDone { welcomeNext() }
+        }
 
         // Step 4: phone only, or a card or sticker too (which opens Write a card afterwards).
         val modes = listOf(findViewById<MaterialCardView>(R.id.welcome_mode_phone), findViewById(R.id.welcome_mode_card))
@@ -334,6 +337,12 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                     findViewById<View>(R.id.welcome_email).requestFocus()
                     return
                 }
+                // The link a tap and the code open, so it has to be one ("janedoe.com" is fine).
+                if (Profile.linkField(findViewById<TextInputEditText>(R.id.welcome_website).text.toString()) == null) {
+                    findViewById<TextInputLayout>(R.id.welcome_website_layout).error = getString(R.string.link_invalid)
+                    findViewById<View>(R.id.welcome_website).requestFocus()
+                    return
+                }
             }
             welcomeSteps.lastIndex -> return finishWelcome()
         }
@@ -406,7 +415,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         fun text(id: Int) = findViewById<TextInputEditText>(id).text.toString().trim()
         val numbers = listOfNotNull(welcomePhone(0), if (secondPhone) welcomePhone(1) else null)
         val labels = Countries.phoneLabels(numbers.map { it.first })
-        val link = text(R.id.welcome_website)
+        // Checked on Next: "janedoe.com" comes back as https://janedoe.com.
+        val link = Profile.linkField(text(R.id.welcome_website)).orEmpty()
         prefs.profile = prefs.profile.copy(
             name = text(R.id.welcome_name),
             title = text(R.id.welcome_job),

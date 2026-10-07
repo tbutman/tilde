@@ -72,11 +72,11 @@ class CardEditActivity : AppCompatActivity() {
         profileField(R.id.profile_handle, profile.handle) { copy(handle = it) }
         profileField(R.id.profile_email, profile.email) { copy(email = it) }
         profileField(R.id.profile_email2, profile.email2) { copy(email2 = it) }
-        profileField(R.id.profile_website, profile.website) { copy(website = it) }
-        profileField(R.id.profile_linkedin, profile.linkedin) { copy(linkedin = it) }
-        profileField(R.id.profile_github, profile.github) { copy(github = it) }
-        profileField(R.id.profile_instagram, profile.instagram) { copy(instagram = it) }
-        profileField(R.id.profile_x, profile.x) { copy(x = it) }
+        linkField(R.id.profile_website, profile.website, null) { copy(website = it) }
+        linkField(R.id.profile_linkedin, profile.linkedin, Presets.LINKEDIN) { copy(linkedin = it) }
+        linkField(R.id.profile_github, profile.github, Presets.GITHUB) { copy(github = it) }
+        linkField(R.id.profile_instagram, profile.instagram, Presets.INSTAGRAM) { copy(instagram = it) }
+        linkField(R.id.profile_x, profile.x, Presets.X) { copy(x = it) }
         profileField(R.id.profile_whatsapp, profile.whatsapp) { copy(whatsapp = it) }
         findViewById<TextInputEditText>(R.id.whatsapp_greeting).saveAsYouType(prefs.whatsappGreeting) { prefs.whatsappGreeting = it }
 
@@ -91,7 +91,7 @@ class CardEditActivity : AppCompatActivity() {
         findViewById<View>(R.id.edit_card_header).setOnClickListener { CardDialogs.edit(this, prefs, prefs.activeCard) { renderHeader() } }
         findViewById<View>(R.id.links_add).setOnClickListener { LinkDialogs.editLink(this, prefs, null) { renderLinks() } }
         findViewById<View>(R.id.phone_add).setOnClickListener { addPhoneRow(home, "", "", focus = true) }
-        findViewById<View>(R.id.edit_done).setOnClickListener { finish() }
+        findViewById<View>(R.id.edit_done).setOnClickListener { if (linksAreValid()) finish() }
 
         // Phone numbers: each saved number back in its country ("+351 912 345 678" → Portugal, 912 345 678).
         for ((label, number) in profile.phones) {
@@ -117,6 +117,41 @@ class CardEditActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    /** The link fields, with the social network each one is for (null: the website). */
+    private val linkFields = mutableListOf<Pair<TextInputEditText, String?>>()
+
+    /**
+     * A website or social profile field. What's typed is saved once it's a link ("janedoe.com" is
+     * saved as https://janedoe.com, "@janedoe" as the network's profile link). Anything else shows
+     * "That doesn't look like a link" when the field is left, and the card keeps the last good one.
+     */
+    private fun linkField(id: Int, value: String, network: String?, update: Profile.(String) -> Profile) {
+        val field = findViewById<TextInputEditText>(id)
+        val layout = field.parent.parent as? TextInputLayout
+        field.saveAsYouType(value) { text ->
+            Profile.linkField(text, network)?.let { link ->
+                layout?.error = null
+                prefs.profile = prefs.profile.update(link)
+            }
+        }
+        field.setOnFocusChangeListener { _, focused -> if (!focused) checkLink(field, network) }
+        linkFields += field to network
+    }
+
+    /** Shows the error under a link field that isn't a link; true when it's fine. */
+    private fun checkLink(field: TextInputEditText, network: String?): Boolean {
+        val ok = Profile.linkField(field.text.toString(), network) != null
+        (field.parent.parent as? TextInputLayout)?.error = if (ok) null else getString(R.string.link_invalid)
+        return ok
+    }
+
+    /** Before closing: a link field that isn't a link gets its error and the focus, so it's seen. */
+    private fun linksAreValid(): Boolean {
+        val bad = linkFields.filterNot { (field, network) -> checkLink(field, network) }.map { it.first }
+        bad.firstOrNull()?.requestFocus()
+        return bad.isEmpty()
     }
 
     override fun onResume() {

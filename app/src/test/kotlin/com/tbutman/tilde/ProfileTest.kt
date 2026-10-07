@@ -171,4 +171,32 @@ class ProfileTest {
         assertFalse(jane.vcard(compact = true, photoJpeg = photo).contains("PHOTO"))
         assertFalse(jane.vcard().contains("PHOTO"))
     }
+
+    @Test
+    fun anInvalidWebsiteIsRejectedInEditCard() {
+        // What Edit card and the welcome store for what's typed: null means "not a link", so the
+        // field shows an error and the card keeps its last good value.
+        assertEquals(null, Profile.linkField("not a link"))
+        assertEquals(null, Profile.linkField("janedoe"))
+        assertEquals(null, Profile.linkField("mailto:jane@example.com"))
+        assertEquals("", Profile.linkField("  "))
+        // A bare address gets https://, so the website stays on the contact card.
+        val website = Profile.linkField("janedoe.com")
+        assertEquals("https://janedoe.com", website)
+        assertEquals("https://janedoe.com/", Profile(name = "Jane Doe", website = website!!).siteRoot)
+        assertEquals("http://example.com/a", Profile.linkField(" http://example.com/a "))
+    }
+
+    @Test
+    fun aHandleInASocialFieldBecomesTheProfileLink() {
+        assertEquals("https://www.linkedin.com/in/janedoe", Profile.linkField("@janedoe", Presets.LINKEDIN))
+        assertEquals("https://github.com/jane-doe", Profile.linkField("@jane-doe", Presets.GITHUB))
+        assertEquals("https://www.instagram.com/jane.doe", Profile.linkField("@jane.doe", Presets.INSTAGRAM))
+        assertEquals("https://x.com/jane_doe", Profile.linkField("@jane_doe", Presets.X))
+        assertEquals(null, Profile.linkField("@", Presets.X))
+        assertEquals(null, Profile.linkField("@jane doe", Presets.X))
+        // Not in the website field: there's no network to make a link for.
+        assertEquals(null, Profile.linkField("@janedoe"))
+        assertEquals(null, Profile.linkField("not a link", Presets.LINKEDIN))
+    }
 }
