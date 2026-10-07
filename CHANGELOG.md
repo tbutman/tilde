@@ -71,6 +71,9 @@ Not released yet. Tested on the emulator.
   tap to Tilde with the screen on even when it was closed. On, taps also work with Tilde closed while
   the phone is unlocked (never from the lock screen).
 
+- **Lock a sticker after writing it** (Write a sticker, off unless ticked and confirmed), so nobody
+  can overwrite it. Tilde says so if a sticker can't be locked.
+
 ### Share screen
 
 - Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap

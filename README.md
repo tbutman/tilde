@@ -39,8 +39,8 @@ internet: Tilde can't go online, and your details stay on your phone until you s
 - **Events.** Add an event name and the links to your own website carry it, so you can see which
   event a visit came from.
 - **Write a sticker.** Put your link or your whole contact card on an NFC sticker, or on a printed
-  card with one inside, so it works even when your phone isn't there. Tilde never locks a tag, so
-  you can change it later.
+  card with one inside, so it works even when your phone isn't there. You can change it later,
+  unless you choose to lock it so nobody can overwrite it.
 - **Receive.** Read other people's NFC cards, tags and phones running Tilde.
 
 ## Install

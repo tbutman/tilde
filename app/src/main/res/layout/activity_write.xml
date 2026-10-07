@@ -107,6 +107,14 @@
             android:layout_marginTop="16dp"
             android:text="@string/write_note" />
 
+        <!-- Off by default; ticking it asks for confirmation (locking is permanent). -->
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/write_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/write_lock" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/write_close"
             style="@style/Widget.Material3.Button.TextButton"

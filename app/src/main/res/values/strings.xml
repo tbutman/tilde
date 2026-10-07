@@ -384,7 +384,14 @@
     <string name="write_nothing">Nothing to write yet</string>
     <string name="write_nothing_link">Add this link under Settings, or choose something else.</string>
     <string name="write_nothing_wifi">Set up guest Wi-Fi under Settings first.</string>
-    <string name="write_note">You can change a sticker any time by writing it again; Tilde never locks them. Switching or editing your card doesn\'t change stickers already written.</string>
+    <string name="write_note">You can change a sticker any time by writing it again, unless you lock it. Switching or editing your card doesn\'t change stickers already written.</string>
+    <string name="write_lock">Lock it after writing, so nobody can change it</string>
+    <string name="write_lock_confirm_title">Lock stickers for good?</string>
+    <string name="write_lock_confirm">A locked sticker can never be changed or erased again, by anyone, including you. If your link changes, you\'ll need a new sticker. While this is ticked, every sticker you write is locked.</string>
+    <string name="write_lock_yes">Lock them</string>
+    <string name="write_done_locked">Written and locked</string>
+    <string name="write_done_locked_detail">Nobody can change it now. Tap it with another phone to try it.</string>
+    <string name="write_not_lockable">Written, but this sticker can\'t be locked, so it can still be changed.</string>
     <string name="write_close">Done</string>
     <string name="write_skip">Skip for now</string>
     <string name="write_later">No sticker yet? Write one any time from Settings → Stickers and cards.</string>

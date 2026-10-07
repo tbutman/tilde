@@ -24,7 +24,8 @@ To the other phone it looks like any NFC sticker or business card, so it needs n
   `docs/specs/multiple-cards.md`.
 - **Write a sticker** (`WriteActivity`, `TagWriter`; called Write a card before 1.2) uses reader
   mode too, and writes the active card's chosen option's message without the event tag (a printed card outlives the event). It formats blank
-  tags, refuses locked ones and tags that are too small, and never locks a tag.
+  tags, refuses locked ones and tags that are too small, and only makes a tag read-only when the
+  owner ticks "Lock it after writing" (confirmed, since it's permanent).
 - **Met.** `MetLog` turns the reads a tap produces (a phone often reads more than once) into one
   entry per person.
 - **WhatsApp** sends a `https://wa.me/<number>?text=...` click-to-chat link; the greeting is typed

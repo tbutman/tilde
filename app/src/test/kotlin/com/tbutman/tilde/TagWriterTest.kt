@@ -17,6 +17,15 @@ class TagWriterTest {
     }
 
     @Test
+    fun lockingOnlyWhenAskedAndSaysWhenItCant() {
+        assertEquals(TagWriter.Result.Written, TagWriter.locked(lockAsked = false, lockWorked = false))
+        assertEquals(TagWriter.Result.WrittenLocked, TagWriter.locked(lockAsked = true, lockWorked = true))
+        assertEquals(TagWriter.Result.WrittenNotLockable, TagWriter.locked(lockAsked = true, lockWorked = false))
+        assertEquals(true, TagWriter.wrote(TagWriter.Result.WrittenNotLockable))
+        assertEquals(false, TagWriter.wrote(TagWriter.Result.Failed))
+    }
+
+    @Test
     fun saysHowMuchRoomIsMissing() {
         // A contact card on an NTAG213, which has 137 bytes for the message.
         assertEquals(TagWriter.Result.TooSmall(needed = 300, capacity = 137), TagWriter.check(size = 300, capacity = 137, writable = true))
