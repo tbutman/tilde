@@ -130,16 +130,6 @@
                         <TextView style="@style/RowDetail" android:text="@string/welcome_card_feature_detail" />
                     </LinearLayout>
                 </LinearLayout>
-
-                <!-- Moving to a new phone: restore everything instead of making a card. -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/welcome_restore"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="-12dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/welcome_restore" />
             </LinearLayout>
         </ScrollView>
 
@@ -539,6 +529,15 @@
             </LinearLayout>
         </ScrollView>
     </FrameLayout>
+
+    <!-- First step only, always in view: moving to a new phone restores everything instead. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/welcome_restore"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:text="@string/welcome_restore" />
 
     <View
         android:layout_width="match_parent"

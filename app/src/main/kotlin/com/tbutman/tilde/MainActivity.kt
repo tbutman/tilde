@@ -304,6 +304,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         welcomeStep = step.coerceIn(0, welcomeSteps.lastIndex)
         welcomeSteps.forEachIndexed { i, view -> view.visibility = if (i == welcomeStep) View.VISIBLE else View.GONE }
         findViewById<View>(R.id.welcome_back).visibility = if (welcomeStep > 0) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.welcome_restore).visibility = if (welcomeStep == 0) View.VISIBLE else View.GONE
         findViewById<MaterialButton>(R.id.welcome_next).setText(
             when (welcomeStep) {
                 0 -> R.string.welcome_start
