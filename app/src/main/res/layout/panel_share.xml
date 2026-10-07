@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
             android:paddingBottom="16dp">
 
             <LinearLayout
@@ -61,7 +61,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="8dp">
 
                 <include
                     android:id="@+id/profile_card"
@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 app:cardBackgroundColor="@color/qr_light"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
