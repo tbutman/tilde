@@ -24,6 +24,15 @@
             android:layout_marginTop="8dp"
             android:text="@string/write_body" />
 
+        <!-- With more than one card: which card's details are written. -->
+        <TextView
+            android:id="@+id/write_from"
+            style="@style/Hint"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:textColor="@color/accent"
+            android:visibility="gone" />
+
         <TextView style="@style/Label" android:text="@string/write_what" />
 
         <com.google.android.material.card.MaterialCardView

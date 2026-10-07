@@ -62,7 +62,7 @@
     <string name="welcome_mode_phone">Just my phone</string>
     <string name="welcome_mode_phone_detail">Tap phones, or show your code. Nothing else needed.</string>
     <string name="welcome_mode_card">My phone and a card or sticker</string>
-    <string name="welcome_mode_card_detail">Next, put your link on it with Write a card. No card yet? Skip that step and write one any time from Settings.</string>
+    <string name="welcome_mode_card_detail">Next, put your link on it with Write a sticker. Don\'t have one yet? Skip that step and write one any time from Settings.</string>
     <string name="welcome_get_card">No card yet? Print your own</string>
     <string name="welcome_get_card_detail">Got a 3D printer? The Tilde card design is free: add your details, print it, and seal an NFC sticker inside.</string>
     <string name="welcome_get_card_url" translatable="false">https://tbutman.com/tilde#card</string>
@@ -76,7 +76,8 @@
     <string name="ready_tabs_title">Receive and Met</string>
     <string name="ready_tabs_detail">Receive reads other people\'s cards and tags. Met remembers who you\'ve shared with.</string>
     <string name="ready_done">Got it</string>
-    <string name="ready_write">Write my card</string>
+    <string name="ready_write">Write a sticker</string>
+    <string name="ready_more_cards">Want another card, say for work or an event? Tap ~/ at the top of the Share screen to add one.</string>
     <string name="ready_later">Later</string>
     <string name="welcome_later">You can review or change any of this at any time in Settings, and add LinkedIn, Instagram and more.</string>
     <string name="tagline_tap">Tap phones to share</string>
@@ -131,6 +132,8 @@
     <string name="detail_missing">Not set up yet</string>
     <!-- Saved links -->
     <string name="link_add_title">Add a link</string>
+    <string name="link_from_other_cards">From your other cards</string>
+    <string name="link_suggestion">%1$s · %2$s (%3$s)</string>
     <string name="link_edit_title">Edit link</string>
     <string name="link_url_hint">Link, such as tbutman.com/tilde</string>
     <string name="link_name_hint">Name (optional), such as Tilde</string>
@@ -254,20 +257,21 @@
         <item quantity="other">Read %d times from this phone</item>
     </plurals>
     <string name="version">Version %1$s</string>
-    <!-- Write a card -->
-    <string name="settings_write">Cards and stickers</string>
-    <string name="settings_write_detail">Put your link on any NFC card or sticker, including a printed Tilde card.</string>
-    <string name="write_open">Write a card</string>
-    <string name="write_title">Write a card</string>
-    <string name="write_body">Put your link on any NFC card or sticker, including a printed Tilde card. Any phone that taps it opens your link, even when you and Tilde aren\'t there.</string>
-    <string name="write_what">What the card opens</string>
-    <string name="write_picker_title">What should the card open?</string>
-    <string name="write_ready">Hold the card or sticker to the back of your phone</string>
+    <!-- Write a sticker (called Write a card before 1.2, when "card" came to mean one of your cards) -->
+    <string name="settings_write">Stickers and cards</string>
+    <string name="settings_write_detail">Put your link on an NFC sticker, or on a printed card with one inside, such as a Tilde card.</string>
+    <string name="write_open">Write a sticker</string>
+    <string name="write_title">Write a sticker</string>
+    <string name="write_body">Put your link on an NFC sticker, or on a printed card with one inside, such as a Tilde card. Any phone that taps it opens your link, even when you and Tilde aren\'t there.</string>
+    <string name="write_from">From your card: %1$s</string>
+    <string name="write_what">What the sticker opens</string>
+    <string name="write_picker_title">What should the sticker open?</string>
+    <string name="write_ready">Hold the sticker or card to the back of your phone</string>
     <string name="write_ready_detail">Keep it still until your phone buzzes.</string>
     <string name="write_done">Written</string>
     <plurals name="write_done_detail">
-        <item quantity="one">Tap it with another phone to try it. To write another card, just hold it to your phone.</item>
-        <item quantity="other">%d cards written. To write another, just hold it to your phone.</item>
+        <item quantity="one">Tap it with another phone to try it. To write another sticker, just hold it to your phone.</item>
+        <item quantity="other">%d stickers written. To write another, just hold it to your phone.</item>
     </plurals>
     <string name="write_locked">This one can\'t be changed</string>
     <string name="write_locked_detail">It\'s locked, or it\'s a phone rather than a tag.</string>
@@ -278,16 +282,16 @@
     <string name="write_failed">Didn\'t finish writing</string>
     <string name="write_failed_detail">Hold it still against your phone and try again.</string>
     <string name="write_no_nfc">This phone has no NFC</string>
-    <string name="write_no_nfc_detail">Writing a card needs a phone with NFC.</string>
+    <string name="write_no_nfc_detail">Writing a sticker needs a phone with NFC.</string>
     <string name="write_nfc_off">NFC is off</string>
-    <string name="write_nfc_off_detail">Turn it on to write a card.</string>
+    <string name="write_nfc_off_detail">Turn it on to write a sticker.</string>
     <string name="write_nothing">Nothing to write yet</string>
     <string name="write_nothing_link">Add this link under Settings, or choose something else.</string>
     <string name="write_nothing_wifi">Set up guest Wi-Fi under Settings first.</string>
-    <string name="write_note">You can change a card any time by writing it again. Tilde never locks tags.</string>
+    <string name="write_note">You can change a sticker any time by writing it again; Tilde never locks them. Switching or editing your card doesn\'t change stickers already written.</string>
     <string name="write_close">Done</string>
     <string name="write_skip">Skip for now</string>
-    <string name="write_later">No card yet? Write one any time from Settings → Cards and stickers.</string>
+    <string name="write_later">No sticker yet? Write one any time from Settings → Stickers and cards.</string>
     <string name="write_iphone_contact">iPhone: opens %1$s instead</string>
     <string name="write_iphone_contact_none">iPhone: a tap does nothing. Add a website in Settings for iPhones to open.</string>
     <string name="write_iphone_wifi">iPhone: can\'t join Wi-Fi from a tag</string>

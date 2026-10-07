@@ -1,6 +1,6 @@
 # Spec: multiple cards
 
-Status: **agreed, to build for 1.2** (7 October 2026). All decisions are recorded below.
+Status: **built on `feature/cards` for 1.2** (7 October 2026). All decisions are recorded below.
 
 ## Why
 

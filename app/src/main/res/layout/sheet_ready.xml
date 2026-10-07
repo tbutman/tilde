@@ -91,12 +91,17 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            style="@style/Hint"
+            android:layout_marginTop="20dp"
+            android:text="@string/ready_more_cards" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ready_primary"
             style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="20dp"
             android:text="@string/ready_done"
             android:textColor="@color/bg"
             android:textSize="16sp"

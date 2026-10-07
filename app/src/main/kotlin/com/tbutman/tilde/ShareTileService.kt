@@ -13,7 +13,10 @@ class ShareTileService : TileService() {
         val tile = qsTile ?: return
         val prefs = Prefs(this)
         tile.state = if (prefs.enabled) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) tile.subtitle = prefs.find(prefs.share).label
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) tile.subtitle = prefs.find(prefs.share).label.let { option ->
+            // "Work · LinkedIn" once there's more than one card.
+            if (prefs.cards.size > 1) "${prefs.activeCard.label} · $option" else option
+        }
         tile.updateTile()
     }
 

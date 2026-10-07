@@ -1,5 +1,34 @@
 # Changelog
 
+## Unreleased (1.2)
+
+Not released yet. Tested on the emulator.
+
+### More than one card
+
+- **Cards:** keep several, each a different you to share (work, personal, a project, an event).
+  Each has its own name, title, photo, handle, phone numbers, links, WhatsApp greeting, what a tap
+  shares, quick-switch row, and a cover colour. Labels such as "Work" are only for you.
+- **Switching:** tap `~/` at the top of the Share screen (it shows the card's label once you have
+  more than one) or the card itself, or swipe the card sideways to step through your cards.
+- **New card:** copy the current card (photo and links included, then change what differs) or
+  start blank with just a name.
+- **Manage cards:** rename, recolour, duplicate, reorder and delete. The last card can't be
+  deleted.
+- **Settings** is split into **This card** (with the card's label and a Switch button) and **All
+  cards** (Share over NFC, the event tag, guest Wi-Fi, writing stickers, shortcuts, About).
+- **Add a link** suggests links from your other cards, so you don't have to type them again.
+- **Met** shows which card was shared, and the CSV export has a `card` column.
+- The Quick Settings tile shows the card as well as what it shares ("Work · LinkedIn").
+- Updating from 1.1 keeps everything: your profile, photo, links and choices become your first
+  card, "My card".
+
+### Write a sticker
+
+- **Write a card** is now **Write a sticker** (Settings → Stickers and cards), now that "card"
+  means one of your cards. It writes the active card, and says which one when you have several.
+  Stickers already written keep what's on them.
+
 ## 1.1.0 (7 October 2026)
 
 A new first launch, saved links and quicker switching. It installs over 1.0.0 and keeps your card

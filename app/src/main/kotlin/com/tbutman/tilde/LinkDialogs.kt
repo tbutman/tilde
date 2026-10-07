@@ -25,9 +25,38 @@ object LinkDialogs {
         name.setText(existing?.name)
         url.setText(existing?.url)
         url.doAfterTextChanged { urlLayout.error = null }
+        // A new link: offer the ones on your other cards that this card doesn't have yet. Picking one
+        // fills the fields; saving makes this card's own copy.
+        val have = prefs.links.map { it.url.trimEnd('/') }.toSet()
+        val suggestions = if (existing != null) emptyList() else prefs.cards.filter { it.id != prefs.activeCardId }
+            .flatMap { card -> card.links.map { card to it } }
+            .filter { (_, link) -> link.url.trimEnd('/') !in have }
+            .distinctBy { (_, link) -> link.url.trimEnd('/') }
+            .take(5)
+        val views = mutableListOf<View>(urlLayout, nameLayout)
+        if (suggestions.isNotEmpty()) {
+            views += android.widget.TextView(context).apply {
+                setText(R.string.link_from_other_cards)
+                setTextColor(context.getColor(R.color.dim))
+                textSize = 13f
+                typeface = android.graphics.Typeface.MONOSPACE
+            }
+            for ((card, link) in suggestions) {
+                views += com.google.android.material.button.MaterialButton(context, null, androidx.appcompat.R.attr.borderlessButtonStyle).apply {
+                    text = context.getString(R.string.link_suggestion, link.name, PresetRows.bare(link.url), card.label)
+                    isAllCaps = false
+                    gravity = android.view.Gravity.START or android.view.Gravity.CENTER_VERTICAL
+                    setTextColor(context.getColor(R.color.accent))
+                    setOnClickListener {
+                        url.setText(link.url)
+                        name.setText(link.name)
+                    }
+                }
+            }
+        }
         val builder = MaterialAlertDialogBuilder(context)
             .setTitle(if (existing == null) R.string.link_add_title else R.string.link_edit_title)
-            .setView(column(context, urlLayout, nameLayout))
+            .setView(column(context, *views.toTypedArray()))
             .setPositiveButton(R.string.met_save, null)
             .setNegativeButton(R.string.met_cancel, null)
         if (existing != null) {

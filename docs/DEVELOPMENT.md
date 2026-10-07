@@ -17,8 +17,13 @@ To the other phone it looks like any NFC sticker or business card, so it needs n
   Other apps can register the same AID (on the author's phone, X and Meshtastic did), and Android
   only prefers Tilde while it is in the foreground.
 - **Receive** uses reader mode to read NDEF from tags, NFC cards and other phones running Tilde.
-- **Write a card** (`WriteActivity`, `TagWriter`) uses reader mode too, and writes the chosen
-  option's message without the event tag (a printed card outlives the event). It formats blank
+- **Cards.** Each identity is a `Card` (`Cards.kt`): profile, saved links, share choice, stars,
+  greeting, label and colour, stored as JSON. `Prefs.profile`, `links`, `share`, `pinned` and
+  `whatsappGreeting` read and write the active card, so most code doesn't know about cards. Version
+  1.1's single profile (and photo) becomes card 1 the first time cards are read. See
+  `docs/specs/multiple-cards.md`.
+- **Write a sticker** (`WriteActivity`, `TagWriter`; called Write a card before 1.2) uses reader
+  mode too, and writes the active card's chosen option's message without the event tag (a printed card outlives the event). It formats blank
   tags, refuses locked ones and tags that are too small, and never locks a tag.
 - **Met.** `MetLog` turns the reads a tap produces (a phone often reads more than once) into one
   entry per person.

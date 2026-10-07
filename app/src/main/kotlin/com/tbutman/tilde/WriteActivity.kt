@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * Write a card: puts a link (or the contact card, or guest Wi-Fi) on an NFC sticker or a printed
+ * Write a sticker: puts the active card's link (or contact card, or guest Wi-Fi) on an NFC sticker or a printed
  * card, so it works without this phone. Stays ready after each write, for a stack of cards.
  */
 class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
@@ -80,6 +80,10 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun render() {
+        findViewById<TextView>(R.id.write_from).apply {
+            text = getString(R.string.write_from, prefs.activeCard.label)
+            visibility = if (prefs.cards.size > 1) View.VISIBLE else View.GONE
+        }
         rows.bind(findViewById(R.id.write_choice_content), prefs.find(choice), selected = false)
         val nfc = adapter
         val nfcOn = demo || nfc?.isEnabled == true

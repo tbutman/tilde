@@ -15,6 +15,9 @@ internet: Tilde can't go online, and your details stay on your phone until you s
 
 ## What it does
 
+- **More than one card.** Keep a card for work, one for personal life, one for a project or an
+  event, each with its own name, title, photo, links and colour. Swipe your card (or tap `~/` at the
+  top) to switch; only you see the labels.
 - **Tap to share.** The other phone doesn't need Tilde or any other app. Phones read it the way they
   read an NFC tag.
 - **Or scan.** The same thing is on screen as a large QR code, for phones without NFC or people
@@ -31,13 +34,13 @@ internet: Tilde can't go online, and your details stay on your phone until you s
 - **Send it instead.** For someone who isn't in front of you, send the link or your contact card
   through WhatsApp, email or messages, or copy the link. Tilde stays offline: the app you choose
   does the sending.
-- **Remember who you met.** Every tap is listed under **Met** with the time and what you shared.
+- **Remember who you met.** Every tap is listed under **Met** with the time, which card and what you shared.
   Add a note so you remember who they were, and export the list as a spreadsheet (CSV).
 - **Events.** Add an event name and the links to your own website carry it, so you can see which
   event a visit came from.
-- **Write a card.** Put your link or your whole contact card on an NFC sticker or a printed NFC
-  business card, so it works even when your phone isn't there. Tilde never locks a tag, so you can
-  change it later.
+- **Write a sticker.** Put your link or your whole contact card on an NFC sticker, or on a printed
+  card with one inside, so it works even when your phone isn't there. Tilde never locks a tag, so
+  you can change it later.
 - **Receive.** Read other people's NFC cards, tags and phones running Tilde.
 
 ## Install
@@ -100,7 +103,7 @@ Things worth knowing:
 Tilde works on its own; you don't need a card. If you have a 3D printer and want something to hand
 out too, there's a free, open-source business card designed to go with it: a QR code on the front,
 and optionally an NFC tag sealed inside. Customise it with your name and colours, print it, then
-use **Settings → Write a card** to put your link or contact card on the tag. See
+use **Settings → Write a sticker** to put your link or contact card on the tag. See
 [tbutman/tilde-card](https://github.com/tbutman/tilde-card).
 
 ## Privacy
