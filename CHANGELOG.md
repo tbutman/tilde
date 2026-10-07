@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.0 (unreleased)
+## 1.2.0 (October 7, 2026)
 
 More than one card, a reorganized Settings with new options, backup and restore, a light theme, a
 home-screen widget, and Tilde in Portuguese. Installing it over 1.1 keeps everything: your profile,
@@ -78,6 +78,9 @@ photo, links and choices become your first card, "My card".
 - What a tap shares and the quick-switch chips stay above the bottom bar, and whatever is being
   shared always has a chip. The QR code is a little smaller so everything fits on one screen, and
   Send and Copy link are icons beside the "Opens …" line.
+- **Stars on the chips:** the chip for each starred option shows a small star, and the options list
+  says "Starred options appear as chips under your code." A chip that's there only because it's
+  being shared, such as Guest Wi-Fi, has no star.
 - Tap the status badge (Ready, NFC off, Taps off, No NFC) to see what it means, with the fix one
   tap away: turn on NFC, or turn Share by tap on or off. On a phone without NFC, it says to share
   with the code instead.
@@ -132,6 +135,7 @@ photo, links and choices become your first card, "My card".
   bigger and easier to see.
 - A card always keeps a name: clearing it in Edit card keeps the last one, with a note.
 - Name, title and company take up to 100 characters, and links and Met notes up to 500.
+- Tilde's English uses US spelling ("Rename and color", "Open-source licenses").
 
 ## 1.2.0-beta.3 (7 October 2026)
 
