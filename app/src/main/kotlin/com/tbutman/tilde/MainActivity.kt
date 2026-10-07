@@ -51,7 +51,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.FileProvider
+import androidx.core.os.LocaleListCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -844,6 +846,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         row(R.id.row_tile, R.drawable.ic_nav_settings, R.string.add_tile) { requestTile() }.visibility =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) View.VISIBLE else View.GONE
         row(R.id.row_theme, R.drawable.ic_theme, R.string.settings_theme) { chooseTheme() }
+        row(R.id.row_language, R.drawable.ic_language, R.string.settings_language) { chooseLanguage() }
         row(R.id.row_about, R.drawable.ic_info, R.string.settings_about) { openPage(SettingsPageActivity.PAGE_ABOUT) }
     }
 
@@ -861,6 +864,29 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 TildeApp.applyTheme(themes[which])
             }
             .show()
+    }
+
+    /**
+     * The interface language: the phone's, or English or Portuguese whatever the phone uses. AppCompat
+     * keeps the choice (Android 13 and later also show it in the system's per-app language setting).
+     */
+    private fun chooseLanguage() {
+        val tags = listOf("", "en", "pt-PT")
+        val names = arrayOf(getString(R.string.language_system), getString(R.string.language_en), getString(R.string.language_pt))
+        val current = AppCompatDelegate.getApplicationLocales().toLanguageTags()
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.settings_language)
+            .setSingleChoiceItems(names, tags.indexOf(current).coerceAtLeast(0)) { dialog, which ->
+                dialog.dismiss()
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tags[which]))
+            }
+            .show()
+    }
+
+    private fun languageName(): String = when (AppCompatDelegate.getApplicationLocales().toLanguageTags().substringBefore('-')) {
+        "en" -> getString(R.string.language_en)
+        "pt" -> getString(R.string.language_pt)
+        else -> getString(R.string.language_system)
     }
 
     private fun themeName(theme: String) = getString(
@@ -1097,6 +1123,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         summary(R.id.row_write, getString(R.string.row_write_summary))
         summary(R.id.row_tile, getString(R.string.row_tile_summary))
         summary(R.id.row_theme, themeName(prefs.theme))
+        summary(R.id.row_language, languageName())
         summary(R.id.row_about, getString(R.string.version, BuildConfig.VERSION_NAME))
     }
 

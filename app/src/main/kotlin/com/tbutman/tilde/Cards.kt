@@ -40,6 +40,7 @@ object Cards {
 
     fun colour(key: String): Colour = COLOURS.firstOrNull { it.key == key } ?: COLOURS.first()
 
+    /** The first card's label, "My card", is a string resource (it's translated); this is the English, for tests. */
     const val FIRST_LABEL = "My card"
 
     fun toJson(cards: List<Card>): String = JSONArray().apply {
@@ -87,7 +88,8 @@ object Cards {
         links: List<SavedLink>,
         pinned: List<String>?,
         greeting: String?,
-    ) = Card(id, FIRST_LABEL, COLOURS.first().key, profile, links, share, pinned, greeting)
+        label: String = FIRST_LABEL,
+    ) = Card(id, label, COLOURS.first().key, profile, links, share, pinned, greeting)
 
     /** A copy of `card` with a new id and label; its links and choices come along, independent from then on. */
     fun copy(card: Card, newId: String, label: String) = card.copy(id = newId, label = label)
@@ -100,9 +102,9 @@ object Cards {
     fun nextColour(cards: List<Card>): String =
         (COLOURS.firstOrNull { c -> cards.none { it.colour == c.key } } ?: COLOURS[cards.size % COLOURS.size]).key
 
-    /** "Card 2", "Card 3"…: the first such label not taken. */
-    fun nextLabel(cards: List<Card>): String =
-        generateSequence(cards.size + 1) { it + 1 }.map { "Card $it" }.first { label -> cards.none { it.label == label } }
+    /** "Card 2", "Card 3"… (`label` makes them, in the app's language): the first such label not taken. */
+    fun nextLabel(cards: List<Card>, label: (Int) -> String = { "Card $it" }): String =
+        generateSequence(cards.size + 1) { it + 1 }.map(label).first { label -> cards.none { it.label == label } }
 
     /**
      * Deletes a card, unless it's the last one. Returns the cards left and the active card's id: the

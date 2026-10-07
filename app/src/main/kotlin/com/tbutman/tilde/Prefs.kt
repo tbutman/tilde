@@ -10,6 +10,7 @@ class Prefs(context: Context) {
     val store: SharedPreferences = context.getSharedPreferences("tilde", Context.MODE_PRIVATE)
 
     private val filesDir = context.filesDir
+    private val firstLabel = context.getString(R.string.cards_first_label)
 
     // ---- Cards ----
     // Everything about an identity lives in a Card (see Cards.kt). `profile`, `links`, `share`,
@@ -28,7 +29,7 @@ class Prefs(context: Context) {
                 cachedJson = json
                 cachedCards = Cards.fromJson(json)
             }
-            return cachedCards.ifEmpty { listOf(Card(SavedLink.newId(emptyList()), Cards.FIRST_LABEL)).also { cards = it } }
+            return cachedCards.ifEmpty { listOf(Card(SavedLink.newId(emptyList()), firstLabel)).also { cards = it } }
         }
         set(value) = store.edit().putString(KEY_CARDS, Cards.toJson(value)).apply()
 
@@ -58,6 +59,7 @@ class Prefs(context: Context) {
             links = SavedLink.fromJson(store.getString(KEY_LINKS, null)),
             pinned = pinnedJson?.let { json -> runCatching { JSONArray(json).let { a -> (0 until a.length()).map { a.getString(it) } } }.getOrNull() },
             greeting = store.getString(KEY_WHATSAPP_GREETING, null),
+            label = firstLabel,
         )
         java.io.File(filesDir, Photo.LEGACY_FILE).takeIf { it.exists() }?.renameTo(Photo.file(filesDir, id))
         store.edit()
@@ -70,7 +72,7 @@ class Prefs(context: Context) {
     /** Debug builds' "Show the welcome screens": back to one empty card, photos deleted. */
     fun resetCards() {
         cards.forEach { Photo.file(filesDir, it.id).delete() }
-        val card = Card(SavedLink.newId(emptyList()), Cards.FIRST_LABEL)
+        val card = Card(SavedLink.newId(emptyList()), firstLabel)
         cards = listOf(card)
         activeCardId = card.id
     }

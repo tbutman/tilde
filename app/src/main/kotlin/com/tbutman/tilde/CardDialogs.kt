@@ -30,7 +30,7 @@ object CardDialogs {
         val cards = prefs.cards
         val active = prefs.activeCard
         val (labelLayout, label) = field(context, R.string.cards_new_label, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
-        label.setText(Cards.nextLabel(cards))
+        label.setText(Cards.nextLabel(cards) { context.getString(R.string.cards_next_label, it) })
         // Typing replaces the suggested "Card 2".
         label.setSelectAllOnFocus(true)
         val (nameLayout, name) = field(context, R.string.cards_new_name, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PERSON_NAME or InputType.TYPE_TEXT_FLAG_CAP_WORDS)
@@ -62,7 +62,7 @@ object CardDialogs {
                     return@setOnClickListener
                 }
                 val id = SavedLink.newId(cards.map { it.id })
-                val title = label.text.toString().trim().ifEmpty { Cards.nextLabel(cards) }
+                val title = label.text.toString().trim().ifEmpty { Cards.nextLabel(cards) { context.getString(R.string.cards_next_label, it) } }
                 val colour = Cards.nextColour(cards)
                 val card = if (copied) Cards.copy(active, id, title).copy(colour = colour) else Cards.blank(id, title, name.text.toString(), colour)
                 if (copied) Photo.copy(context, active.id, id)
