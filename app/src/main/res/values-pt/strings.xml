@@ -24,7 +24,7 @@
     <string name="welcome_title">O teu cartão de visita, no teu telemóvel</string>
     <string name="welcome_body">Partilha os teus dados com um toque. Grátis, sem conta e sem internet: nada sai do teu telemóvel até o partilhares. A outra pessoa não precisa de nenhuma app.</string>
     <string name="welcome_tap_title">Encosta os telemóveis para partilhar</string>
-    <string name="welcome_tap_detail">Aproxima o teu telemóvel do da outra pessoa. Funciona com iPhones e telemóveis Android.</string>
+    <string name="welcome_tap_detail">Encosta o teu telemóvel ao da outra pessoa. Os telemóveis Android recebem o teu cartão de contacto; os iPhones abrem o teu link, ou leem o código para guardar o cartão.</string>
     <string name="welcome_scan_title">Ou deixa que leiam o teu código</string>
     <string name="welcome_scan_detail">Qualquer câmara de telemóvel o consegue ler.</string>
     <string name="welcome_card_feature_title">Junta um autocolante ou um cartão Tilde</string>
