@@ -64,6 +64,7 @@
     <string name="welcome_mode_card_detail">A seguir, põe o teu link nele com Gravar um autocolante. Ainda não tens um? Salta esse passo e grava um quando quiseres nas Definições.</string>
     <string name="welcome_get_card">Ainda sem cartão Tilde? Imprime o teu</string>
     <string name="welcome_get_card_detail">Tens uma impressora 3D? O modelo do cartão Tilde é grátis: junta os teus dados, imprime-o e sela um autocolante NFC lá dentro.</string>
+    <string name="welcome_get_card_url">https://tbutman.com/pt/tilde#card</string>
     <!-- After the welcome screens: shown once over the Share screen -->
     <string name="ready_title">O teu cartão está pronto</string>
     <string name="ready_body">É assim que o partilhas.</string>

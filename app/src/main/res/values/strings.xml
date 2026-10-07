@@ -65,7 +65,7 @@
     <string name="welcome_mode_card_detail">Next, put your link on it with Write a sticker. Don\'t have one yet? Skip that step and write one any time from Settings.</string>
     <string name="welcome_get_card">No Tilde card yet? Print your own</string>
     <string name="welcome_get_card_detail">Got a 3D printer? The Tilde card design is free: add your details, print it, and seal an NFC sticker inside.</string>
-    <string name="welcome_get_card_url" translatable="false">https://tbutman.com/tilde#card</string>
+    <string name="welcome_get_card_url">https://tbutman.com/tilde#card</string>
     <!-- After the welcome screens: shown once over the Share screen -->
     <string name="ready_title">Your card is ready</string>
     <string name="ready_body">Here\'s how to share it.</string>
