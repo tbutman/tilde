@@ -131,7 +131,7 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             message() == null -> Triple(R.drawable.ic_tile, getString(R.string.write_nothing), getString(
                 if (choice == Presets.WIFI) R.string.write_nothing_wifi else R.string.write_nothing_link,
             ))
-            else -> when (val r = result) {
+            else -> when (result) {
                 TagWriter.Result.Written -> Triple(
                     R.drawable.ic_check, getString(R.string.write_done),
                     resources.getQuantityString(R.plurals.write_done_detail, written, written),
@@ -139,10 +139,7 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 TagWriter.Result.WrittenLocked -> Triple(R.drawable.ic_check, getString(R.string.write_done_locked), getString(R.string.write_done_locked_detail))
                 TagWriter.Result.WrittenNotLockable -> Triple(R.drawable.ic_check, getString(R.string.write_done), getString(R.string.write_not_lockable))
                 TagWriter.Result.Locked -> Triple(R.drawable.ic_tile, getString(R.string.write_locked), getString(R.string.write_locked_detail))
-                is TagWriter.Result.TooSmall -> Triple(
-                    R.drawable.ic_tile, getString(R.string.write_too_small),
-                    getString(R.string.write_too_small_detail, r.capacity, r.needed),
-                )
+                is TagWriter.Result.TooSmall -> Triple(R.drawable.ic_tile, getString(R.string.write_too_small), getString(R.string.write_too_small_detail))
                 TagWriter.Result.Unsupported -> Triple(R.drawable.ic_tile, getString(R.string.write_unsupported), getString(R.string.write_unsupported_detail))
                 TagWriter.Result.Failed -> Triple(R.drawable.ic_tile, getString(R.string.write_failed), getString(R.string.write_failed_detail))
                 null -> Triple(R.drawable.ic_tile, getString(R.string.write_ready), getString(R.string.write_ready_detail))

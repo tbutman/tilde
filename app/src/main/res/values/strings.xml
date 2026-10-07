@@ -27,7 +27,7 @@
     <string name="welcome_scan_title">Or let them scan your code</string>
     <string name="welcome_scan_detail">Any phone camera can read it.</string>
     <string name="welcome_card_feature_title">Add a sticker or Tilde card</string>
-    <string name="welcome_card_feature_detail">Put your link on any NFC card or sticker, or print a Tilde card, and it shares even when your phone stays in your pocket.</string>
+    <string name="welcome_card_feature_detail">Put your link on a tap-to-share sticker (NFC, the chip contactless cards use) or print a Tilde card, and it shares even when your phone stays in your pocket.</string>
     <string name="welcome_restore">Moving from another phone? Restore a backup</string>
     <string name="welcome_sample_name">Jane Doe</string>
     <string name="welcome_sample_title">Product designer</string>
@@ -302,7 +302,7 @@
     <string name="toggle_detail">Off: taps do nothing, the QR code still works.</string>
     <string name="settings_event">Event name</string>
     <string name="event_hint">lisbon-js</string>
-    <string name="event_detail">Added to links on your website as ?event=, so its log shows which event a visit came from.</string>
+    <string name="event_detail">Added to links to your own website (as ?event=websummit), so your site\'s statistics show which event a visitor came from.</string>
     <string name="whatsapp_same_as_mobile">Same as my mobile</string>
     <string name="whatsapp_invalid">That isn\'t a full number for this country. Check the number and the country code.</string>
     <!-- The default text typed into a WhatsApp chat: with their first name, or without one. -->
@@ -434,7 +434,7 @@
     <string name="write_locked">This one can\'t be changed</string>
     <string name="write_locked_detail">It\'s locked, or it\'s a phone rather than a sticker.</string>
     <string name="write_too_small">Not enough room on this sticker</string>
-    <string name="write_too_small_detail">It holds %1$d bytes and this needs %2$d. Choose a link instead, or use an NTAG215 sticker.</string>
+    <string name="write_too_small_detail">This sticker is too small for that. Choose a link instead, or use a bigger sticker (NTAG215 or larger).</string>
     <string name="write_unsupported">That\'s not a sticker Tilde can write</string>
     <string name="write_unsupported_detail">Use an NFC sticker. Bank, transport and ID cards can\'t be written.</string>
     <string name="write_failed">Didn\'t finish writing</string>

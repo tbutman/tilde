@@ -28,7 +28,7 @@
     <string name="welcome_scan_title">Ou deixa que leiam o teu código</string>
     <string name="welcome_scan_detail">Qualquer câmara de telemóvel o consegue ler.</string>
     <string name="welcome_card_feature_title">Junta um autocolante ou um cartão Tilde</string>
-    <string name="welcome_card_feature_detail">Põe o teu link em qualquer cartão ou autocolante NFC, ou imprime um cartão Tilde, e partilha mesmo com o telemóvel no bolso.</string>
+    <string name="welcome_card_feature_detail">Põe o teu link num autocolante que partilha com um toque (NFC, o chip dos cartões contactless) ou imprime um cartão Tilde, e partilha mesmo com o telemóvel no bolso.</string>
     <string name="welcome_restore">Vens de outro telemóvel? Restaura uma cópia de segurança</string>
     <string name="welcome_sample_name">Jane Doe</string>
     <string name="welcome_sample_title">Designer de produto</string>
@@ -297,7 +297,7 @@
     <string name="toggle_detail">Desligado: os toques não fazem nada, o código QR continua a funcionar.</string>
     <string name="settings_event">Nome do evento</string>
     <string name="event_hint">lisbon-js</string>
-    <string name="event_detail">Acrescentada aos links para o teu site como ?event=, para os registos do site mostrarem de que evento veio cada visita.</string>
+    <string name="event_detail">Acrescentado aos links para o teu próprio site (como ?event=websummit), para as estatísticas do site mostrarem de que evento veio cada visita.</string>
     <string name="whatsapp_same_as_mobile">O mesmo que o meu telemóvel</string>
     <string name="whatsapp_invalid">Isso não é um número completo para este país. Verifica o número e o indicativo.</string>
     <string name="whatsapp_greeting_default">Olá %1$s</string>
@@ -435,7 +435,7 @@
     <string name="write_locked">Este não pode ser alterado</string>
     <string name="write_locked_detail">Está bloqueado, ou é um telemóvel e não um autocolante.</string>
     <string name="write_too_small">Não há espaço suficiente neste autocolante</string>
-    <string name="write_too_small_detail">Tem %1$d bytes e isto precisa de %2$d. Escolhe antes um link, ou usa um autocolante NTAG215.</string>
+    <string name="write_too_small_detail">Este autocolante é pequeno demais para isso. Escolhe antes um link, ou usa um autocolante maior (NTAG215 ou superior).</string>
     <string name="write_unsupported">Isso não é um autocolante que a Tilde consiga gravar</string>
     <string name="write_unsupported_detail">Usa um autocolante NFC. Cartões bancários, de transportes e de identificação não podem ser gravados.</string>
     <string name="write_failed">A gravação não terminou</string>
