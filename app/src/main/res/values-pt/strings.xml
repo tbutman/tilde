@@ -22,15 +22,13 @@
     <string name="welcome_done">Criar o meu cartão</string>
     <!-- 1. What Tilde is -->
     <string name="welcome_title">O teu cartão de visita, no teu telemóvel</string>
-    <string name="welcome_body">Partilha os teus contactos com um toque. A outra pessoa não precisa da Tilde nem de nenhuma app.</string>
+    <string name="welcome_body">Partilha os teus dados com um toque. Grátis, sem conta e sem internet: nada sai do teu telemóvel até o partilhares. A outra pessoa não precisa de nenhuma app.</string>
     <string name="welcome_tap_title">Encosta os telemóveis para partilhar</string>
     <string name="welcome_tap_detail">Aproxima o teu telemóvel do da outra pessoa. Funciona com iPhones e telemóveis Android.</string>
     <string name="welcome_scan_title">Ou deixa que leiam o teu código</string>
     <string name="welcome_scan_detail">Qualquer câmara de telemóvel o consegue ler.</string>
     <string name="welcome_card_feature_title">Junta um autocolante ou um cartão Tilde</string>
     <string name="welcome_card_feature_detail">Põe o teu link em qualquer cartão ou autocolante NFC, ou imprime um cartão Tilde, e partilha mesmo com o telemóvel no bolso.</string>
-    <string name="welcome_private_title">Grátis, de código aberto e privada</string>
-    <string name="welcome_private_detail">Sem conta, sem subscrição, sem internet. Os teus dados ficam neste telemóvel até os partilhares.</string>
     <string name="welcome_sample_name">Jane Doe</string>
     <string name="welcome_sample_title">Designer de produto</string>
     <!-- 2. The card -->

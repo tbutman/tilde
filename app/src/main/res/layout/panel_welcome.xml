@@ -130,26 +130,6 @@
                         <TextView style="@style/RowDetail" android:text="@string/welcome_card_feature_detail" />
                     </LinearLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <ImageView style="@style/IconBox" android:importantForAccessibility="no" android:src="@drawable/ic_feature_lock" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView style="@style/RowTitle" android:text="@string/welcome_private_title" />
-                        <TextView style="@style/RowDetail" android:text="@string/welcome_private_detail" />
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 

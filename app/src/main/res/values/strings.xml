@@ -21,15 +21,13 @@
     <string name="welcome_done">Create my card</string>
     <!-- 1. What Tilde is -->
     <string name="welcome_title">Your business card, on your phone</string>
-    <string name="welcome_body">Share your details with a tap. The other person doesn\'t need Tilde, or any app.</string>
+    <string name="welcome_body">Share your details with a tap. Free, with no account and no internet: nothing leaves your phone until you share it. The other person doesn\'t need any app.</string>
     <string name="welcome_tap_title">Tap phones to share</string>
     <string name="welcome_tap_detail">Hold your phone to theirs. Works with iPhones and Android phones.</string>
     <string name="welcome_scan_title">Or let them scan your code</string>
     <string name="welcome_scan_detail">Any phone camera can read it.</string>
     <string name="welcome_card_feature_title">Add a sticker or Tilde card</string>
     <string name="welcome_card_feature_detail">Put your link on any NFC card or sticker, or print a Tilde card, and it shares even when your phone stays in your pocket.</string>
-    <string name="welcome_private_title">Free, open source and private</string>
-    <string name="welcome_private_detail">No account, no subscription, no internet. Your details stay on this phone until you share them.</string>
     <string name="welcome_sample_name">Jane Doe</string>
     <string name="welcome_sample_title">Product designer</string>
     <!-- 2. The card -->
