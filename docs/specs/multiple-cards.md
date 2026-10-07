@@ -1,6 +1,7 @@
 # Spec: multiple cards
 
 Status: **built on `feature/cards` for 1.2** (7 October 2026). All decisions are recorded below.
+Where the build differs from this plan, the code is right; those places are marked **As built**.
 
 ## Why
 
@@ -28,8 +29,8 @@ Exactly one card is **active**. The Share screen, taps, the QR code, Send/Copy, 
 | What a tap shares; quick-switch stars | **Card** | Work shows LinkedIn and LabTrails; Personal shows Instagram. |
 | Saved links | **Card** | Like the LinkedIn and website fields beside them. Each card is self-contained: editing one never changes another (see "Saved links: per card" below). |
 | Guest Wi-Fi | **Shared** | It's about the place, not the person. Each card can still star it. |
-| Event tag | **Shared** | It's about where you are now, whichever card you're using. It still only tags links to that card's own website. |
-| Share over NFC on/off, the tile, the current tab | **Shared** | Phone behaviour, not identity. |
+| Event name (called the event tag when this was written) | **Shared** | It's about where you are now, whichever card you're using. It's still only added to links to that card's own website. |
+| Share by tap (then Share over NFC) on/off, the tile, the current tab | **Shared** | Phone behaviour, not identity. |
 | Met | **Shared, with a Card column** | One list of people met; each entry records which card was shared. CSV export gets a `card` column. |
 | Receive history, the read count | **Shared** | Not about which card you are. |
 
@@ -85,6 +86,12 @@ Settings splits in two:
 
 That makes clear which edits affect only this card.
 
+**As built:** Settings is a short list in three groups. **This card**: the card (tap it for Edit
+card, which holds the profile, photo, handle, phone numbers, saved links and WhatsApp) and Your
+cards. **All cards**: Sharing (Share by tap, the event name, Share screen switches), Guest Wi-Fi,
+Met and Write a sticker. **App**: Backup and restore, Theme, Language, the Quick Settings tile and
+About. There's no "Stickers and cards" row; see `panel_settings.xml` and `MainActivity`.
+
 ### Welcome
 
 Unchanged: it creates the first card, labelled "My card", with the colour picked automatically. A short line on the "Your card is ready" sheet mentions that you can add more cards (for work, personal or an event) from the `~/handle` button.
@@ -115,6 +122,12 @@ Unchanged: it creates the first card, labelled "My card", with the colour picked
 - **`Card`** (plain Kotlin, unit-tested): `id`, `label`, `colour`, `profile: Profile`, `links: List<SavedLink>`, `share`, `pinned`, `whatsappGreeting`. Stored as a JSON list under `cards`, with `active_card` holding the id.
 - **Photos:** `photo-<cardId>.jpg`. The existing `profile_photo.jpg` is renamed during migration.
 - **`Prefs.profile`, `links`, `share`, `pinned` and `whatsappGreeting`** read and write the active card, so most screens and the tap service don't change. New: `cards`, `activeCard`, `switchTo(id)`, `newCard(from)`, `deleteCard(id)`.
+
+**As built** (see `Cards.kt` and `Prefs.kt`): `Card`'s greeting field is `greeting`, and it also
+has `hidden`, the details its contact card leaves out. `Prefs` has `cards`, `activeCardId` and
+`activeCard`, and there are no `switchTo`, `newCard` or `deleteCard`: screens set `activeCardId`
+and `cards` directly, using the rules in `Cards` (`copy`, `blank`, `delete`, `move`, `step`,
+`nextColour`, `nextLabel`).
 - **`Meeting`** gains `card` (the label at the time).
 - **Migration:** runs once, the first time cards are read, as the saved-links migration does.
 

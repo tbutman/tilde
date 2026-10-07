@@ -13,5 +13,5 @@ is picked up, it moves to a spec (docs/specs) or straight to a branch, and off t
 
 ## Done (moved out of the backlog)
 
-- Multiple cards, Settings reorganised, contact card choices, company, backup and restore, event tag
+- Multiple cards, Settings reorganised, contact card choices, company, backup and restore, event name
   auto-clear, Delete all data, Share screen and Met settings, logos for saved links, the photo in a sent contact card, a light theme, answering taps when closed and locking stickers (both need real-hardware testing), the home-screen widget, the Portuguese interface (awaiting a native speaker's review): 1.2.
