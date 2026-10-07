@@ -1,8 +1,11 @@
 # Changelog
 
-## Unreleased
+## 1.2.0-beta.2 (7 October 2026)
 
-Fixes from reviewing 1.2.0-beta.1:
+A second 1.2 beta with fixes from a review of 1.2.0-beta.1; everything in 1.2.0-beta.1 below still
+applies. Like it, it's a pre-release: Obtainium offers it with **Include prereleases** turned on.
+
+Fixes:
 
 - **Restoring a backup is safer:** a damaged or edited file can't store settings the app can't
   read, and if restoring fails nothing changes (your photos stay). A restored theme applies
