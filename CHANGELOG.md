@@ -1,11 +1,9 @@
 # Changelog
 
-## 1.1.0-beta.1 (7 October 2026)
+## 1.1.0 (7 October 2026)
 
-A beta of 1.1: a new first launch, saved links and quicker switching. It's a pre-release, so
-Obtainium only offers it with **Include prereleases** turned on, and the download link on
-tbutman.com/tilde stays on 1.0.0. It should install over 1.0.0 and keep your card; this beta is
-for testing exactly that.
+A new first launch, saved links and quicker switching. It installs over 1.0.0 and keeps your card
+(tested with 1.1.0-beta.1, updating through Obtainium).
 
 ### First launch
 
@@ -64,6 +62,11 @@ for testing exactly that.
 - An optional second email in Settings, for example work and personal; both go on the contact card.
 - Settings says **Full name** and **Job title**, to match.
 - Fixed: on a card without a job title, the name sat against the card's bottom edge.
+
+## 1.1.0-beta.1 (7 October 2026)
+
+A pre-release of 1.1.0 with the same changes, published to test the update from 1.0.0 before
+release.
 
 ## 1.0.0 (5 October 2026)
 
