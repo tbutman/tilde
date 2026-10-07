@@ -28,6 +28,7 @@
     <string name="welcome_scan_detail">Any phone camera can read it.</string>
     <string name="welcome_card_feature_title">Add a sticker or Tilde card</string>
     <string name="welcome_card_feature_detail">Put your link on any NFC card or sticker, or print a Tilde card, and it shares even when your phone stays in your pocket.</string>
+    <string name="welcome_restore">Moving from another phone? Restore a backup</string>
     <string name="welcome_sample_name">Jane Doe</string>
     <string name="welcome_sample_title">Product designer</string>
     <!-- 2. The card -->

@@ -29,6 +29,7 @@
     <string name="welcome_scan_detail">Qualquer câmara de telemóvel o consegue ler.</string>
     <string name="welcome_card_feature_title">Junta um autocolante ou um cartão Tilde</string>
     <string name="welcome_card_feature_detail">Põe o teu link em qualquer cartão ou autocolante NFC, ou imprime um cartão Tilde, e partilha mesmo com o telemóvel no bolso.</string>
+    <string name="welcome_restore">Vens de outro telemóvel? Restaura uma cópia de segurança</string>
     <string name="welcome_sample_name">Jane Doe</string>
     <string name="welcome_sample_title">Designer de produto</string>
     <!-- 2. The card -->

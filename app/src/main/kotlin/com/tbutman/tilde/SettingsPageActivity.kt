@@ -35,35 +35,7 @@ class SettingsPageActivity : AppCompatActivity() {
         Toast.makeText(this, if (saved) R.string.backup_saved else R.string.backup_failed, Toast.LENGTH_SHORT).show()
     }
     private val openBackup = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        uri ?: return@registerForActivityResult
-        val text = runCatching { contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() } }.getOrNull()
-        val backup = try {
-            text?.let { Backups.fromJson(it) }
-        } catch (e: Backups.Invalid) {
-            showRestoreProblem(when (e.reason) {
-                Backups.Reason.NOT_A_BACKUP -> R.string.backup_not_a_backup
-                Backups.Reason.TOO_NEW -> R.string.backup_too_new
-                Backups.Reason.NO_CARDS -> R.string.backup_no_cards
-                Backups.Reason.DAMAGED -> R.string.backup_damaged
-            })
-            return@registerForActivityResult
-        } ?: return@registerForActivityResult showRestoreProblem(R.string.backup_unreadable)
-        val date = android.text.format.DateUtils.formatDateTime(this, backup.created, android.text.format.DateUtils.FORMAT_SHOW_DATE or android.text.format.DateUtils.FORMAT_SHOW_YEAR)
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.backup_confirm_title)
-            .setMessage(getString(
-                R.string.backup_confirm, date,
-                resources.getQuantityString(R.plurals.backup_confirm_cards, backup.cards.size, backup.cards.size),
-                resources.getQuantityString(R.plurals.backup_confirm_met, backup.met.size, backup.met.size),
-            ))
-            .setPositiveButton(R.string.backup_restore) { _, _ ->
-                // Restore writes the photos before changing anything, so a failure (a full disk) leaves things as they were.
-                if (runCatching { prefs.restore(backup) }.isFailure) return@setPositiveButton showRestoreProblem(R.string.backup_restore_failed)
-                TildeApp.applyTheme(prefs.theme)
-                restartApp()
-            }
-            .setNegativeButton(R.string.met_cancel, null)
-            .show()
+        uri?.let { RestoreDialogs.restore(this, prefs, it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -143,17 +115,7 @@ class SettingsPageActivity : AppCompatActivity() {
     private fun setUpBackup() {
         setContentView(R.layout.page_backup)
         findViewById<View>(R.id.backup_export).setOnClickListener { saveBackup.launch(Backups.fileName(java.time.LocalDate.now())) }
-        findViewById<View>(R.id.backup_import).setOnClickListener { openBackup.launch(arrayOf("application/json", "application/octet-stream", "text/plain")) }
-    }
-
-    private fun showRestoreProblem(message: Int) {
-        MaterialAlertDialogBuilder(this).setMessage(message).setPositiveButton(R.string.done, null).show()
-    }
-
-    /** After restoring or deleting everything: start Tilde afresh, so every screen shows the new data. */
-    private fun restartApp() {
-        startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        finish()
+        findViewById<View>(R.id.backup_import).setOnClickListener { openBackup.launch(RestoreDialogs.TYPES) }
     }
 
     private fun setUpWifi() {
@@ -189,7 +151,7 @@ class SettingsPageActivity : AppCompatActivity() {
                     prefs.deleteEverything()
                     TildeApp.applyTheme(prefs.theme)
                     androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(androidx.core.os.LocaleListCompat.getEmptyLocaleList())
-                    restartApp()
+                    RestoreDialogs.restartApp(this)
                 }
                 .setNegativeButton(R.string.met_cancel, null)
                 .show()

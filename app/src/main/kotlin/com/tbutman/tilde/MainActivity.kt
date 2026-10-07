@@ -107,6 +107,11 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         if (result.resultCode == RESULT_OK) prefs.photoVersion += 1
     }
 
+    /** The welcome's "Restore a backup": moving from another phone without making a card first. */
+    private val openBackup = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri?.let { RestoreDialogs.restore(this, prefs, it) }
+    }
+
     private lateinit var nav: BottomNavigationView
 
     // Welcome: the step showing, each number's country, whether the second number is open, and
@@ -270,6 +275,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         }
         modes.forEachIndexed { i, mode -> mode.setOnClickListener { chooseMode(i == 1) } }
         findViewById<View>(R.id.welcome_get_card).setOnClickListener { open(getString(R.string.welcome_get_card_url)) }
+        findViewById<View>(R.id.welcome_restore).setOnClickListener { openBackup.launch(RestoreDialogs.TYPES) }
 
         // Enter (Next) goes field by field in reading order. Set here because a hardware keyboard's
         // Enter otherwise moves by position on screen, and can land on a button instead.
