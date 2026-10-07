@@ -35,7 +35,6 @@ import android.text.style.ForegroundColorSpan
 import android.util.Patterns
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.view.GestureDetector
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
@@ -618,26 +617,55 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         // The code: tap to show it bigger; swipe sideways to step through the quick-switch row.
         val qrCard = findViewById<View>(R.id.qr_card)
         qrCard.setOnClickListener { enlargeQr() }
-        var tapped = false
-        val gestures = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onDown(e: MotionEvent) = true
-            override fun onSingleTapUp(e: MotionEvent): Boolean {
-                tapped = true
-                return true
+        qrCard.setOnTouchListener(QrSwipe(qrCard))
+    }
+
+    /**
+     * Swipes on the code. The Share screen scrolls vertically, and its ScrollView takes over a touch
+     * as soon as it moves a little up or down, so a slightly diagonal swipe used to be lost. Once a
+     * touch is clearly sideways, the code keeps it (requestDisallowInterceptTouchEvent). A swipe
+     * counts by distance (a fifth of the card's width), not speed, so slow drags work too; the card
+     * follows the finger a little and springs back. A touch that barely moves is a tap.
+     */
+    private inner class QrSwipe(private val card: View) : View.OnTouchListener {
+        private val slop = android.view.ViewConfiguration.get(this@MainActivity).scaledTouchSlop
+        private var startX = 0f
+        private var startY = 0f
+        private var swiping = false
+        private var moved = false
+
+        override fun onTouch(view: View, event: MotionEvent): Boolean {
+            val dx = event.rawX - startX
+            val dy = event.rawY - startY
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    startX = event.rawX
+                    startY = event.rawY
+                    swiping = false
+                    moved = false
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (kotlin.math.abs(dx) > slop || kotlin.math.abs(dy) > slop) moved = true
+                    // Sideways more than up or down: keep the touch from the scrolling page.
+                    if (!swiping && kotlin.math.abs(dx) > slop && kotlin.math.abs(dx) > kotlin.math.abs(dy) && prefs.quickSwitch().size >= 2) {
+                        swiping = true
+                        view.parent.requestDisallowInterceptTouchEvent(true)
+                    }
+                    if (swiping) card.translationX = dx * 0.4f
+                }
+                MotionEvent.ACTION_UP -> {
+                    if (swiping && kotlin.math.abs(dx) > card.width / 5f) stepQuickSwitch(if (dx < 0) 1 else -1)
+                    else if (!moved) view.performClick()
+                    settle()
+                }
+                MotionEvent.ACTION_CANCEL -> settle()
             }
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-                if (kotlin.math.abs(velocityX) < 2 * kotlin.math.abs(velocityY)) return false
-                stepQuickSwitch(if (velocityX < 0) 1 else -1)
-                return true
-            }
-        })
-        qrCard.setOnTouchListener { view, event ->
-            val handled = gestures.onTouchEvent(event)
-            if (tapped) {
-                tapped = false
-                view.performClick()
-            }
-            handled
+            return true
+        }
+
+        private fun settle() {
+            swiping = false
+            card.animate().translationX(0f).setDuration(180).start()
         }
     }
 
