@@ -609,7 +609,9 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<View>(R.id.share_copy).setOnClickListener { copy(prefs.urlFor(prefs.share, event = "")) }
 
         // The code: tap to show it bigger; swipe sideways to step through the quick-switch row.
+        // About 70% of the screen's width: big enough to scan, small enough for the rows under it.
         val qrCard = findViewById<View>(R.id.qr_card)
+        qrCard.layoutParams.width = (minOf(resources.displayMetrics.widthPixels, resources.displayMetrics.heightPixels) * 0.7).toInt()
         qrCard.setOnClickListener { enlargeQr() }
         qrCard.setOnTouchListener(Swipe(qrCard, { prefs.quickSwitch().size >= 2 }, ::stepQuickSwitch))
 
