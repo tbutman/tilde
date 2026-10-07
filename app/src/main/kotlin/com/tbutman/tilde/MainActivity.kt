@@ -1320,12 +1320,20 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         field.setSelection(field.text?.length ?: 0)
     }
 
-    /** Hands the log to email, notes or a spreadsheet app as CSV text. */
+    /**
+     * Hands the log to email, Drive or a spreadsheet app as a CSV file (tilde-met-2026-10-07.csv),
+     * written where Send writes the contact card, so Sheets and Excel open it as a spreadsheet.
+     */
     private fun export() {
+        val file = File(cacheDir, "shared").apply { mkdirs() }.resolve("tilde-met-${java.time.LocalDate.now()}.csv")
+        file.writeText(MetLog.csv(prefs.met, shared = ::sharedName))
+        val uri = FileProvider.getUriForFile(this, "$packageName.files", file)
         val send = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
+            type = "text/csv"
             putExtra(Intent.EXTRA_SUBJECT, getString(R.string.met_export_subject))
-            putExtra(Intent.EXTRA_TEXT, MetLog.csv(prefs.met, shared = ::sharedName))
+            putExtra(Intent.EXTRA_STREAM, uri)
+            clipData = ClipData.newRawUri(file.name, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         startActivity(Intent.createChooser(send, getString(R.string.met_export)))
     }

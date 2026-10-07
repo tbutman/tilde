@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- What Send can hand to another app: only the contact card file it writes to the cache. -->
+<!-- What Send and Met's Export can hand to another app: only the contact card and CSV files they
+     write to the cache. -->
 <paths>
     <cache-path name="shared" path="shared/" />
 </paths>
