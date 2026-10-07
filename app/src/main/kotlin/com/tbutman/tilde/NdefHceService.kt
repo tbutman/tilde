@@ -32,6 +32,8 @@ class NdefHceService : HostApduService() {
                     prefs.met = MetLog.afterTap(prefs.met, System.currentTimeMillis(), prefs.event, labelOf(prefs.find(sharing)), prefs.activeCard.label)
                 }
                 prefs.reads += 1
+                // Guest Wi-Fi goes to one person: the next tap shares the card again.
+                if (sharing == Presets.WIFI) prefs.endWifi()
             }
         }.also { tag = it }
         return current.process(commandApdu)

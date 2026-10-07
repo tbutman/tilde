@@ -155,6 +155,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 R.id.nav_settings -> Prefs.TAB_SETTINGS
                 else -> Prefs.TAB_SHARE
             }
+            // Leaving Share ends a Guest Wi-Fi share (it's for one person).
+            if (prefs.tab != Prefs.TAB_SHARE) prefs.endWifi()
             applyNfcMode()
             applyBrightness()
             true
@@ -493,6 +495,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     override fun onPause() {
         resumed = false
+        // Guest Wi-Fi is a one-off: leaving the screen goes back to the card's usual option.
+        prefs.endWifi()
         adapter?.let { nfc ->
             nfc.disableReaderMode(this)
             CardEmulation.getInstance(nfc).unsetPreferredService(this)
@@ -1025,7 +1029,11 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             listOfNotNull(getString(R.string.qr_description), opens, getString(R.string.qr_enlarge)).joinToString(". ")
 
         // The quick-switch row: shown once there are two or more starred options ready to share.
-        val quick = prefs.quickSwitch()
+        // What's being shared always has a chip, starred or not (Guest Wi-Fi usually isn't).
+        val quick = prefs.quickSwitch().let { starred ->
+            if (starred.any { it.id == preset.id }) starred
+            else (starred.map { it.id } + preset.id).toSet().let { ids -> prefs.available().filter { it.id in ids } }
+        }
         val chips = findViewById<ChipGroup>(R.id.quick_switch)
         findViewById<View>(R.id.quick_switch_scroll).visibility = if (quick.size >= 2) View.VISIBLE else View.GONE
         chips.removeAllViews()

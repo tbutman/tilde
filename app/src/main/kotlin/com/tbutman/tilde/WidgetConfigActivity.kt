@@ -45,12 +45,28 @@ class WidgetConfigActivity : AppCompatActivity() {
             setBackgroundResource(ripple.resourceId)
             setOnClickListener { choose(prefs, null) }
         })
+        warnIfPersonal(list, prefs, prefs.activeCard)
         for (card in prefs.cards) {
             list.addView(CardDialogs.row(this, card, active = card.id == current).apply { setOnClickListener { choose(prefs, card.id) } })
+            warnIfPersonal(list, prefs, card)
         }
         setContentView(androidx.core.widget.NestedScrollView(this).apply {
             setBackgroundColor(getColor(R.color.bg))
             addView(list)
+        })
+    }
+
+    /**
+     * Under a card whose code is the contact card (phone number and email) or Guest Wi-Fi (the
+     * password): the widget puts that code on the home screen, for anyone who sees it.
+     */
+    private fun warnIfPersonal(list: LinearLayout, prefs: Prefs, card: Card) {
+        if (prefs.sharing(card) !in setOf(Presets.CONTACT, Presets.WIFI)) return
+        list.addView(TextView(this).apply {
+            setText(R.string.widget_home_screen_warning)
+            setTextColor(getColor(R.color.accent))
+            textSize = 13f
+            setPadding(dp(50), 0, dp(20), dp(10))
         })
     }
 

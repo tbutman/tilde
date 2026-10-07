@@ -122,10 +122,32 @@ class Prefs(context: Context) {
         get() = store.getString(KEY_TAB, TAB_SHARE) ?: TAB_SHARE
         set(value) = store.edit().putString(KEY_TAB, value).apply()
 
-    /** Which option a tap shares on the active card (see Presets): a fixed option's id, or "link:<id>". */
+    /**
+     * Which option a tap shares on the active card (see Presets): a fixed option's id, or "link:<id>".
+     * Choosing Guest Wi-Fi remembers what the card shared before, for [endWifi].
+     */
     var share: String
         get() = activeCard.share ?: Presets.WEBSITE
-        set(value) = updateActive { it.copy(share = value) }
+        set(value) {
+            if (value == Presets.WIFI && share != Presets.WIFI) store.edit().putString(KEY_WIFI_RETURN, "$activeCardId:$share").apply()
+            updateActive { it.copy(share = value) }
+        }
+
+    /**
+     * Guest Wi-Fi is shared once: after a tap, or on leaving the Share screen, a card sharing it goes
+     * back to what it shared before (or its default), so the next person gets the card, not the
+     * network. Does nothing when no card shares Wi-Fi.
+     */
+    fun endWifi() {
+        val back = store.getString(KEY_WIFI_RETURN, null)
+        if (cards.any { it.share == Presets.WIFI }) {
+            cards = cards.map { card ->
+                if (card.share != Presets.WIFI) card
+                else card.copy(share = back?.takeIf { it.startsWith("${card.id}:") }?.substringAfter(':')?.takeUnless { it == Presets.WIFI })
+            }
+        }
+        if (back != null) store.edit().remove(KEY_WIFI_RETURN).apply()
+    }
 
     /** The active card's saved links, each its own option, in the order they were added. */
     var links: List<SavedLink>
@@ -465,6 +487,7 @@ class Prefs(context: Context) {
         const val KEY_WIFI_SSID = "wifi_ssid"
         const val KEY_WIFI_PASSWORD = "wifi_password"
         const val KEY_WIFI_OPEN = "wifi_open"
+        const val KEY_WIFI_RETURN = "wifi_return"
         const val KEY_READS = "reads"
         const val KEY_RECEIVED = "received"
         const val KEY_MET = "met"

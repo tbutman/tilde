@@ -51,6 +51,10 @@
 
         <TextView style="@style/Hint" android:text="@string/wifi_detail" />
 
+        <TextView style="@style/Hint" android:layout_marginTop="8dp" android:text="@string/wifi_one_off" />
+
+        <TextView style="@style/Hint" android:layout_marginTop="8dp" android:text="@string/wifi_find_password" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/wifi_settings"
             style="@style/Widget.Material3.Button.TextButton"
