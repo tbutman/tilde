@@ -96,7 +96,7 @@
     <string name="state_ready_detail_closed">Hold the back of your phone to theirs and they get your active card\'s choice. It works with Tilde closed too, while your phone is unlocked (Settings → Sharing). The code works too.</string>
     <string name="state_nfc_off_detail">NFC is switched off on this phone, so taps can\'t work. Turn it on in Android\'s settings. The code works either way.</string>
     <string name="state_paused_detail">Share by tap is off (Settings → Sharing), so a phone nearby gets nothing. Your code still works.</string>
-    <string name="state_no_nfc_detail">This phone can\'t act as an NFC tag, so share with the code instead: any phone camera can scan it.</string>
+    <string name="state_no_nfc_detail">This phone can\'t share by tap, so share with the code instead: any phone camera can scan it.</string>
     <string name="state_pause">Turn off Share by tap</string>
     <string name="state_resume">Turn on Share by tap</string>
     <string name="iphone_scan_only">iPhone: scan the code</string>
@@ -413,7 +413,7 @@
     <string name="row_event_none">no event</string>
     <string name="row_event">event: %1$s</string>
     <string name="row_wifi_none">Not set up</string>
-    <string name="row_write_summary">Put your link on an NFC sticker or a printed card</string>
+    <string name="row_write_summary">Put your link on an NFC sticker or a Tilde card</string>
     <string name="row_tile_summary">Share from the Quick Settings panel</string>
     <plurals name="row_card_links">
         <item quantity="one">%d link</item>

@@ -95,7 +95,7 @@
     <string name="state_ready_detail_closed">Encosta as costas do teu telemóvel às do da outra pessoa e ela recebe o que escolheste no cartão ativo. Também funciona com a Tilde fechada, desde que o telemóvel esteja desbloqueado (Definições → Partilha). O código também funciona.</string>
     <string name="state_nfc_off_detail">O NFC está desligado neste telemóvel, por isso os toques não funcionam. Liga-o nas definições do Android. O código funciona na mesma.</string>
     <string name="state_paused_detail">Partilhar por toque está desligado (Definições → Partilha), por isso um telemóvel por perto não recebe nada. O teu código continua a funcionar.</string>
-    <string name="state_no_nfc_detail">Este telemóvel não consegue funcionar como etiqueta NFC, por isso partilha com o código: qualquer câmara de telemóvel o consegue ler.</string>
+    <string name="state_no_nfc_detail">Este telemóvel não consegue partilhar por toque, por isso partilha com o código: qualquer câmara de telemóvel o consegue ler.</string>
     <string name="state_pause">Desligar Partilhar por toque</string>
     <string name="state_resume">Ligar Partilhar por toque</string>
     <string name="iphone_scan_only">iPhone: ler o código</string>
@@ -412,7 +412,7 @@
     <string name="row_event_none">sem evento</string>
     <string name="row_event">evento: %1$s</string>
     <string name="row_wifi_none">Não configurado</string>
-    <string name="row_write_summary">Põe o teu link num autocolante NFC ou num cartão impresso</string>
+    <string name="row_write_summary">Põe o teu link num autocolante NFC ou num cartão Tilde</string>
     <string name="row_tile_summary">Partilha a partir do painel de Definições rápidas</string>
     <plurals name="row_card_links">
         <item quantity="one">%d link</item>
