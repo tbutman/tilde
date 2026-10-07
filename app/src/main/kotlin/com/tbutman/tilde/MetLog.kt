@@ -17,7 +17,6 @@ data class Meeting(val time: Long, val event: String, val shared: String, val no
 object MetLog {
     /** A phone often reads a tag more than once per tap; reads this close together are one person. */
     const val SAME_TAP_MS = 30_000L
-    const val MAX_ENTRIES = 500
     // What `shared` holds for entries that weren't a tap; the Met screen shows them in the app's language.
     const val RECEIVED = "received their contact"
     const val MANUAL = "added by hand"
@@ -29,7 +28,8 @@ object MetLog {
         return add(log, Meeting(now, event, shared, "", card))
     }
 
-    fun add(log: List<Meeting>, meeting: Meeting) = (listOf(meeting) + log).take(MAX_ENTRIES)
+    /** Newest first, with no limit: only "Delete entries older than" (or the owner) removes anyone. */
+    fun add(log: List<Meeting>, meeting: Meeting) = listOf(meeting) + log
 
     fun withNote(log: List<Meeting>, time: Long, note: String) = log.map { if (it.time == time) it.copy(note = note) else it }
 

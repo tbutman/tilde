@@ -28,11 +28,13 @@ class MetLogTest {
     }
 
     @Test
-    fun theLogIsCapped() {
+    fun moreThan500EntriesAreAllKept() {
         var log = emptyList<Meeting>()
-        repeat(MetLog.MAX_ENTRIES + 5) { log = MetLog.add(log, Meeting(t0 + it, "", "x", "")) }
-        assertEquals(MetLog.MAX_ENTRIES, log.size)
-        assertEquals(t0 + MetLog.MAX_ENTRIES + 4, log.first().time)
+        repeat(1_200) { log = MetLog.add(log, Meeting(t0 + it, "", "x", "")) }
+        assertEquals(1_200, log.size)
+        assertEquals(t0 + 1_199, log.first().time)
+        assertEquals("the oldest is still there", t0, log.last().time)
+        assertEquals(1_200, MetLog.fromJson(MetLog.toJson(log)).size)
     }
 
     @Test
