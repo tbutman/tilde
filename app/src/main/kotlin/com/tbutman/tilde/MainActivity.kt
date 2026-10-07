@@ -1035,6 +1035,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         }
 
         rows.bind(findViewById(R.id.share_row_content), preset, selected = false)
+        // The iPhone note is under the code already (iphone_hint): the pinned row stays one size.
+        findViewById<View>(R.id.share_row_content).findViewById<View>(R.id.note).visibility = View.GONE
 
         // What the code opens, for the other person, and as the code's description for screen readers.
         val opens = when (preset.id) {
