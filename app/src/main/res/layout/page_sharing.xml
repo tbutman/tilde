@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings → Sharing: taps on or off, and the event tag. Same for every card. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Panel"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView style="@style/StepTitle" android:text="@string/settings_sharing" android:textSize="22sp" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:minHeight="48dp"
+            android:text="@string/toggle"
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
+        <TextView style="@style/Hint" android:text="@string/toggle_detail" />
+
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/settings_event" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/event_hint"
+            android:labelFor="@id/event">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView style="@style/Hint" android:layout_marginTop="6dp" android:text="@string/event_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/page_done"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="24dp"
+            android:text="@string/write_close" />
+    </LinearLayout>
+</ScrollView>

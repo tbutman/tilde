@@ -95,9 +95,6 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     private var photo: Bitmap? = null
 
-    /** Settings' "This card" fields show this card; `filling` is true while they're being refilled. */
-    private var filledCardId = ""
-    private var filling = false
     private var photoLoaded = ""
 
     /** Android's photo picker: no permission needed, and the app only sees the photo chosen. */
@@ -113,6 +110,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     // Welcome: the step showing, each number's country, whether the second number is open, and
     // whether a printed card or sticker comes too. Kept across rotation in onSaveInstanceState.
     private var welcomeStep = 0
+    /** Set once this screen has shown the tabs; if the welcome is needed after that, it starts afresh. */
+    private var shownTabs = false
     private lateinit var phoneCountries: Array<Country>
     private val phoneFormatters = arrayOfNulls<TextWatcher>(2)
     private var secondPhone = false
@@ -194,7 +193,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         // Step 2: the live preview follows the name, title and handle as they're typed, and the
         // handle follows the name ("Jane Doe" → janedoe) until it's edited.
         val nameLayout = findViewById<TextInputLayout>(R.id.welcome_name_layout)
-        val handle = findViewById<TextInputEditText>(R.id.welcome_handle).apply { filters = handleFilters }
+        val handle = findViewById<TextInputEditText>(R.id.welcome_handle).apply { filters = handleFilters() }
         handleEdited = saved?.getBoolean(STATE_HANDLE_EDITED) == true
         findViewById<TextInputEditText>(R.id.welcome_name).addTextChangedListener(afterChange { name ->
             nameLayout.error = null
@@ -367,78 +366,22 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         phoneCountries[index] = country
         findViewById<MaterialButton>(if (index == 0) R.id.welcome_country1 else R.id.welcome_country2).apply {
             text = getString(R.string.welcome_country_code, country.flag, country.dial)
-            contentDescription = getString(R.string.welcome_country, countryName(country))
+            contentDescription = getString(R.string.welcome_country, PhoneUi.name(country))
         }
         val field = findViewById<TextInputEditText>(if (index == 0) R.id.welcome_phone1 else R.id.welcome_phone2)
         phoneFormatters[index]?.let(field::removeTextChangedListener)
         phoneFormatters[index] = PhoneNumberFormattingTextWatcher(country.iso).also(field::addTextChangedListener)
     }
 
-    private fun countryName(country: Country): String =
-        runCatching { Locale.Builder().setRegion(country.iso).build().displayCountry }.getOrNull()?.takeIf { it.isNotBlank() } ?: country.iso
-
-    /** A searchable list of countries; the ones already in use come first. */
-    private fun pickCountry(index: Int) {
-        val dialog = BottomSheetDialog(this)
-        val named = Countries.all.map { it to countryName(it) }.sortedBy { it.second.lowercase() }
-        val pinned = phoneCountries.distinct().map { it to countryName(it) }
-        val adapter = object : ArrayAdapter<Pair<Country, String>>(this, android.R.layout.simple_list_item_1) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
-                (super.getView(position, convertView, parent) as TextView).apply {
-                    val (country, name) = getItem(position)!!
-                    text = getString(R.string.welcome_country_row, country.flag, name, country.dial)
-                    setTextColor(getColor(R.color.text))
-                }
-        }
-        fun show(query: String) {
-            adapter.clear()
-            adapter.addAll(if (query.isBlank()) pinned + named.filterNot { it in pinned } else named.filter { (c, n) -> Countries.matches(c, n, query) })
-        }
-        val search = TextInputLayout(this, null, com.google.android.material.R.attr.textInputOutlinedStyle).apply {
-            hint = getString(R.string.welcome_country_search)
-        }
-        val query = TextInputEditText(search.context).apply {
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-            addTextChangedListener(afterChange { show(it) })
-        }
-        search.addView(query)
-        val list = ListView(this).apply {
-            this.adapter = adapter
-            divider = null
-            setOnItemClickListener { _, _, position, _ ->
-                adapter.getItem(position)?.let { setPhoneCountry(index, it.first) }
-                dialog.dismiss()
-            }
-        }
-        val sheet = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(24), dp(8), dp(24), 0)
-            addView(TextView(context).apply {
-                setText(R.string.welcome_country_title)
-                setTextColor(getColor(R.color.text))
-                textSize = 20f
-                setTypeface(typeface, android.graphics.Typeface.BOLD)
-            })
-            addView(search, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
-            addView(list, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (resources.displayMetrics.heightPixels * 0.6).toInt()))
-        }
-        show("")
-        dialog.setContentView(sheet)
-        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        dialog.behavior.skipCollapsed = true
-        dialog.show()
-    }
+    /** The welcome's country buttons: a searchable list, with the countries already in use first. */
+    private fun pickCountry(index: Int) = PhoneUi.pickCountry(this, phoneCountries.toList()) { setPhoneCountry(index, it) }
 
     /** A number as typed, in international form ("+351 912 345 678"), or null when it's empty. */
     private fun welcomePhone(index: Int): Pair<String, String>? {
         val typed = findViewById<TextInputEditText>(if (index == 0) R.id.welcome_phone1 else R.id.welcome_phone2).text.toString().trim()
         if (typed.isEmpty()) return null
         val country = phoneCountries[index]
-        val e164 = PhoneNumberUtils.formatNumberToE164(typed, country.iso)
-        // Formatting for a country with a different code gives the international layout, with spaces.
-        val other = if (country.dial == "44") "US" else "GB"
-        val pretty = e164?.let { PhoneNumberUtils.formatNumber(it, other) } ?: e164 ?: Countries.international(country, typed)
-        return country.iso to pretty
+        return PhoneUi.international(country, typed)?.let { country.iso to it }
     }
 
     private fun finishWelcome() {
@@ -481,16 +424,6 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(window.decorView.windowToken, 0)
     }
 
-    private fun afterChange(run: (String) -> Unit) = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-        override fun afterTextChanged(s: Editable?) = run(s?.toString().orEmpty())
-    }
-
-    /**
-     * Enter on a step's last field goes on to the next step: the on-screen keyboard's Done key, or
-     * Enter on a hardware keyboard (which arrives as IME_NULL with a key event).
-     */
     private fun TextInputEditText.onDone(run: () -> Unit) = setOnEditorActionListener { _, action, event ->
         val enter = action == EditorInfo.IME_ACTION_DONE ||
             action == EditorInfo.IME_NULL && event?.keyCode == android.view.KeyEvent.KEYCODE_ENTER
@@ -509,8 +442,14 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         lastReads = prefs.reads
         applyNfcMode()
         applyBrightness()
-        // The Cards screen may have switched or deleted the active card.
-        if (!welcoming && filledCardId != prefs.activeCardId) fillCardFields()
+        // Back from Edit card, a settings page or the Cards screen: show what changed there.
+        if (welcoming && shownTabs) {
+            // Debug "Show the welcome screens" (About) reset the cards: start the welcome afresh, as
+            // a new screen, so nothing from the last welcome (its step, what was typed) comes back.
+            startActivity(Intent(this, MainActivity::class.java).putExtra("demo", demo))
+            finish()
+            return
+        }
         render()
         // Only here: a redraw just before the welcome screens' recreate() would show it on the old screen.
         if (!welcoming && prefs.ready.isNotEmpty()) showReady()
@@ -628,6 +567,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         // The profile card: swipe to the next card (who), as the code swipes what's shared; tap to choose.
         val profileCard = findViewById<View>(R.id.profile_card)
         profileCard.setOnClickListener { showCardSwitcher() }
+        profileCard.setOnLongClickListener { editCard(); true }
+        findViewById<View>(R.id.card_edit).setOnClickListener { editCard() }
         profileCard.setOnTouchListener(Swipe(profileCard, { prefs.cards.size >= 2 }, ::stepCard))
         findViewById<View>(R.id.brand).setOnClickListener { showCardSwitcher() }
     }
@@ -725,7 +666,6 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private fun switchCard(id: String) {
         if (id == prefs.activeCardId) return
         prefs.activeCardId = id
-        fillCardFields()
         render()
         Snackbar.make(nav, getString(R.string.cards_switched, prefs.activeCard.label), Snackbar.LENGTH_SHORT).setAnchorView(nav).show()
     }
@@ -773,33 +713,10 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     /** New card, from the switcher or Settings. A blank card goes straight to Settings to be filled in. */
     private fun newCard() {
         CardDialogs.newCard(this, prefs) { card, copied ->
-            fillCardFields()
-            if (!copied) nav.selectedItemId = R.id.nav_settings
+            if (!copied) editCard()
             val message = getString(if (copied) R.string.cards_created_copy else R.string.cards_created_blank, card.label)
             Snackbar.make(nav, message, Snackbar.LENGTH_LONG).setAnchorView(nav).show()
         }
-    }
-
-    /**
-     * Puts the active card's values into Settings' "This card" fields: after switching, creating or
-     * deleting a card. `filling` stops the fields' save-as-you-type from writing them straight back.
-     */
-    private fun fillCardFields() {
-        val profile = prefs.profile
-        val values = mapOf(
-            R.id.profile_name to profile.name, R.id.profile_title to profile.title,
-            R.id.profile_email to profile.email, R.id.profile_email2 to profile.email2,
-            R.id.profile_website to profile.website, R.id.profile_handle to profile.handle,
-            R.id.profile_linkedin to profile.linkedin, R.id.profile_github to profile.github,
-            R.id.profile_instagram to profile.instagram, R.id.profile_x to profile.x,
-            R.id.profile_whatsapp to profile.whatsapp, R.id.whatsapp_greeting to prefs.whatsappGreeting,
-            R.id.phone1_label to profile.phones.getOrNull(0)?.first.orEmpty(), R.id.phone1_number to profile.phones.getOrNull(0)?.second.orEmpty(),
-            R.id.phone2_label to profile.phones.getOrNull(1)?.first.orEmpty(), R.id.phone2_number to profile.phones.getOrNull(1)?.second.orEmpty(),
-        )
-        filling = true
-        for ((id, value) in values) findViewById<TextInputEditText>(id).setText(value)
-        filling = false
-        filledCardId = prefs.activeCardId
     }
 
     /** The code full screen on its light background, for scanning from further away. Tap to close. */
@@ -859,21 +776,11 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         startActivity(Intent.createChooser(send, getString(R.string.share_send_title)))
     }
 
-    /** "Set up" in the picker: a quick dialog for a missing link or number, otherwise Settings. */
+    /** "Set up" in the picker: a quick dialog for a missing link or number; Wi-Fi and the contact card open their pages. */
     private fun setUpOption(preset: Presets.Preset) {
         val asked = LinkDialogs.setUpOption(this, prefs, preset) { prefs.share = preset.id }
         if (asked) return
-        nav.selectedItemId = R.id.nav_settings
-        val target = findViewById<View>(if (preset.id == Presets.WIFI) R.id.wifi_ssid else R.id.profile_name)
-        val scroll = findViewById<ScrollView>(R.id.settings_panel)
-        // Settings was hidden until now: measure once it has been laid out, just before it draws.
-        androidx.core.view.OneShotPreDrawListener.add(scroll) {
-            var top = 0
-            var view: View? = target
-            while (view != null && view != scroll) { top += view.top; view = view.parent as? View }
-            scroll.smoothScrollTo(0, (top - dp(96)).coerceAtLeast(0))
-        }
-        Snackbar.make(nav, R.string.setup_in_settings, Snackbar.LENGTH_LONG).setAnchorView(nav).show()
+        if (preset.id == Presets.WIFI) openPage(SettingsPageActivity.PAGE_WIFI) else editCard()
     }
 
     private fun setUpReceive() {
@@ -887,93 +794,29 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<View>(R.id.met_export).setOnClickListener { export() }
     }
 
+    /** Settings: the active card (opens Edit card) and short rows, each to its own page. */
     private fun setUpSettings() {
-        // Profile: each field rewrites the stored profile as you type.
-        val profile = prefs.profile
-        fun profileField(id: Int, value: String, update: Profile.(String) -> Profile) =
-            field(id, value) { text -> prefs.profile = prefs.profile.update(text.trim()) }
-        profileField(R.id.profile_name, profile.name) { copy(name = it) }
-        profileField(R.id.profile_title, profile.title) { copy(title = it) }
-        profileField(R.id.profile_email, profile.email) { copy(email = it) }
-        profileField(R.id.profile_email2, profile.email2) { copy(email2 = it) }
-        profileField(R.id.profile_website, profile.website) { copy(website = it) }
-        profileField(R.id.profile_handle, profile.handle) { copy(handle = it) }
-        findViewById<TextInputEditText>(R.id.profile_handle).filters = handleFilters
-        profileField(R.id.profile_linkedin, profile.linkedin) { copy(linkedin = it) }
-        profileField(R.id.profile_github, profile.github) { copy(github = it) }
-        profileField(R.id.profile_instagram, profile.instagram) { copy(instagram = it) }
-        profileField(R.id.profile_x, profile.x) { copy(x = it) }
-        profileField(R.id.profile_whatsapp, profile.whatsapp) { copy(whatsapp = it) }
-        findViewById<View>(R.id.photo_pick).setOnClickListener {
-            pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        findViewById<View>(R.id.settings_card).setOnClickListener { editCard() }
+        fun row(id: Int, icon: Int, title: Int, open: () -> Unit) = findViewById<View>(id).apply {
+            findViewById<ImageView>(R.id.setting_icon).setImageResource(icon)
+            findViewById<TextView>(R.id.setting_title).setText(title)
+            setOnClickListener { open() }
         }
-        findViewById<View>(R.id.photo_remove).setOnClickListener {
-            Photo.delete(this, prefs.activeCardId)
-            prefs.photoVersion += 1
+        row(R.id.row_cards, R.drawable.ic_feature_card, R.string.row_cards) { showCardSwitcher() }
+        row(R.id.row_sharing, R.drawable.ic_feature_tap, R.string.settings_sharing) { openPage(SettingsPageActivity.PAGE_SHARING) }
+        row(R.id.row_wifi, R.drawable.ic_opt_wifi, R.string.settings_wifi) { openPage(SettingsPageActivity.PAGE_WIFI) }
+        row(R.id.row_write, R.drawable.ic_edit, R.string.write_open) {
+            startActivity(Intent(this, WriteActivity::class.java).putExtra("demo", demo))
         }
-        val phoneFields = listOf(R.id.phone1_label, R.id.phone1_number, R.id.phone2_label, R.id.phone2_number)
-            .map { findViewById<TextInputEditText>(it) }
-        fun phonesFromFields() = phoneFields.chunked(2)
-            .map { (label, number) -> label.text.toString().trim() to number.text.toString().trim() }
-            .filter { it.second.isNotEmpty() }
-        phoneFields.forEachIndexed { i, view ->
-            val phone = profile.phones.getOrNull(i / 2)
-            field(view.id, if (i % 2 == 0) phone?.first.orEmpty() else phone?.second.orEmpty()) {
-                prefs.profile = prefs.profile.copy(phones = phonesFromFields())
-            }
-        }
-
-        findViewById<MaterialSwitch>(R.id.toggle).apply {
-            isChecked = prefs.enabled
-            setOnCheckedChangeListener { _, checked -> prefs.enabled = checked }
-        }
-        field(R.id.event, prefs.event) { prefs.event = it.trim() }
-        field(R.id.whatsapp_greeting, prefs.whatsappGreeting) { prefs.whatsappGreeting = it }
-        findViewById<View>(R.id.links_add).setOnClickListener { LinkDialogs.editLink(this, prefs, null) {} }
-        // Wi-Fi names and passwords can start or end with a space, so they stay exactly as typed.
-        field(R.id.wifi_ssid, prefs.wifiSsid) { prefs.wifiSsid = it }
-        field(R.id.wifi_password, prefs.wifiPassword) { prefs.wifiPassword = it }
-        findViewById<MaterialCheckBox>(R.id.wifi_open).apply {
-            isChecked = prefs.wifiOpen
-            setOnCheckedChangeListener { _, checked -> prefs.wifiOpen = checked }
-        }
-        // Android's own Wi-Fi screen can show any saved network's password (Share), which apps can't read.
-        findViewById<View>(R.id.wifi_settings).setOnClickListener { runCatching { startActivity(Intent(Settings.ACTION_WIFI_SETTINGS)) } }
-        findViewById<View>(R.id.tile_section).visibility =
+        row(R.id.row_tile, R.drawable.ic_nav_settings, R.string.add_tile) { requestTile() }.visibility =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) View.VISIBLE else View.GONE
-        findViewById<View>(R.id.write_card).setOnClickListener { startActivity(Intent(this, WriteActivity::class.java).putExtra("demo", demo)) }
-        findViewById<View>(R.id.add_tile).setOnClickListener { requestTile() }
-        findViewById<TextView>(R.id.version).text = getString(R.string.version, BuildConfig.VERSION_NAME)
-        findViewById<View>(R.id.settings_card_switch).setOnClickListener { showCardSwitcher() }
-        filledCardId = prefs.activeCardId
-        // Debug builds only: back to one empty card (photos deleted), and start the welcome screens again.
-        findViewById<View>(R.id.debug_welcome).apply {
-            visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
-            setOnClickListener {
-                prefs.resetCards()
-                prefs.photoVersion += 1
-                prefs.welcomed = false
-                recreate()
-            }
-        }
+        row(R.id.row_about, R.drawable.ic_info, R.string.settings_about) { openPage(SettingsPageActivity.PAGE_ABOUT) }
     }
 
-    /** Fields save as you type: switching tabs or scanning straight after typing must not lose text. */
-    private fun field(id: Int, value: String, save: (String) -> Unit) {
-        findViewById<TextInputEditText>(id).apply {
-            // The stored value is the truth. Restoring the view's own copy after a recreate would fire
-            // the watcher below with stale text and overwrite newer settings.
-            isSaveEnabled = false
-            setText(value)
-            addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-                override fun afterTextChanged(s: Editable?) {
-                    if (!filling) save(s?.toString().orEmpty())
-                }
-            })
-        }
-    }
+    private fun openPage(page: String) = startActivity(SettingsPageActivity.intent(this, page))
+
+    /** Edit card: everything on the active card. */
+    private fun editCard() = startActivity(Intent(this, CardEditActivity::class.java))
 
     // ---- Rendering ----
 
@@ -986,6 +829,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             bindWelcomePreview()
             return
         }
+        shownTabs = true
         val tab = prefs.tab
         for ((name, panel) in panels) panel.visibility = if (name == tab) View.VISIBLE else View.GONE
         if (nav.selectedItemId != navId(tab)) nav.selectedItemId = navId(tab)
@@ -1114,15 +958,6 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         append(handle.ifBlank { getString(R.string.brand_name) })
     }
 
-    /** Typing in a handle field: lower case and the allowed characters only, up to the maximum length. */
-    private val handleFilters = arrayOf(
-        InputFilter { source, start, end, _, _, _ ->
-            val typed = source.subSequence(start, end).toString()
-            Profile.handleChars(typed).takeIf { it != typed }
-        },
-        InputFilter.LengthFilter(Profile.HANDLE_MAX),
-    )
-
     /** "Your card is ready": once, after the welcome screens, with Write a card for those who chose a card. */
     private fun showReady() {
         val card = prefs.ready == Prefs.READY_CARD
@@ -1176,40 +1011,30 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             .ifEmpty { "~" }
     }
 
+    /** The Settings list shows what each row is set to now, so most things need no tap to check. */
     private fun renderSettings() {
-        prefs.activeCard.let { card ->
-            findViewById<TextView>(R.id.settings_card_label).text = card.label
-            findViewById<View>(R.id.settings_card_dot).backgroundTintList =
-                android.content.res.ColorStateList.valueOf(Cards.colour(card.colour).argb.toInt())
-        }
-        bindAvatar(findViewById(R.id.settings_avatar), prefs.profile)
-        findViewById<MaterialButton>(R.id.photo_pick).setText(if (photo != null) R.string.photo_change else R.string.photo_add)
-        findViewById<View>(R.id.photo_remove).visibility = if (photo != null) View.VISIBLE else View.GONE
-        findViewById<View>(R.id.whatsapp_section).visibility = if (prefs.profile.hasWhatsapp) View.VISIBLE else View.GONE
-        findViewById<MaterialSwitch>(R.id.toggle).let { if (it.isChecked != prefs.enabled) it.isChecked = prefs.enabled }
-        findViewById<TextInputLayout>(R.id.wifi_password_layout).isEnabled = !prefs.wifiOpen
-        findViewById<TextView>(R.id.reads).text = resources.getQuantityString(R.plurals.reads, prefs.reads, prefs.reads)
-        // Saved links: tap to edit; the checkbox puts it on the Share screen (the same as its star).
-        findViewById<LinearLayout>(R.id.links_list).apply {
-            removeAllViews()
-            for (link in prefs.links) {
-                val row = LinearLayout(context).apply {
-                    orientation = LinearLayout.HORIZONTAL
-                    gravity = android.view.Gravity.CENTER_VERTICAL
-                }
-                row.addView(listRow(link.name, PresetRows.bare(link.url), emptyList()).apply {
-                    setOnClickListener { LinkDialogs.editLink(this@MainActivity, prefs, link) {} }
-                }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-                row.addView(MaterialCheckBox(context).apply {
-                    isChecked = link.presetId in prefs.pinned
-                    contentDescription = getString(R.string.link_on_share, link.name)
-                    setOnCheckedChangeListener { _, on ->
-                        prefs.pinned = if (on) prefs.pinned + link.presetId else prefs.pinned - link.presetId
-                    }
-                })
-                addView(row)
-            }
-        }
+        val card = prefs.activeCard
+        val profile = card.profile
+        bindAvatar(findViewById(R.id.settings_avatar), profile)
+        findViewById<TextView>(R.id.settings_card_label).text = card.label
+        findViewById<View>(R.id.settings_card_dot).backgroundTintList =
+            android.content.res.ColorStateList.valueOf(Cards.colour(card.colour).argb.toInt())
+        findViewById<TextView>(R.id.settings_card_name).text = profile.name.ifBlank { getString(R.string.welcome_name) }
+        findViewById<TextView>(R.id.settings_card_summary).text = listOfNotNull(
+            profile.title.takeIf { it.isNotBlank() },
+            card.links.size.takeIf { it > 0 }?.let { resources.getQuantityString(R.plurals.row_card_links, it, it) },
+        ).joinToString(" · ")
+        fun summary(id: Int, text: String) { findViewById<View>(id).findViewById<TextView>(R.id.setting_summary).text = text }
+        val cards = prefs.cards
+        summary(R.id.row_cards, resources.getQuantityString(R.plurals.row_cards_summary, cards.size, cards.size))
+        summary(R.id.row_sharing, listOf(
+            getString(if (prefs.enabled) R.string.row_sharing_on else R.string.row_sharing_off),
+            prefs.event.takeIf { it.isNotBlank() }?.let { getString(R.string.row_event, it) } ?: getString(R.string.row_event_none),
+        ).joinToString(" · "))
+        summary(R.id.row_wifi, prefs.wifiSsid.takeIf { prefs.wifiReady } ?: getString(R.string.row_wifi_none))
+        summary(R.id.row_write, getString(R.string.row_write_summary))
+        summary(R.id.row_tile, getString(R.string.row_tile_summary))
+        summary(R.id.row_about, getString(R.string.version, BuildConfig.VERSION_NAME))
     }
 
     private fun renderReceived() {

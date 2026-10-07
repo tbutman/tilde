@@ -46,12 +46,31 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
-        <include
-            android:id="@+id/profile_card"
-            layout="@layout/view_card"
+        <!-- The card, with an edit button over its cover band. Tap the card for the card switcher,
+             long-press or tap the pencil to edit it, swipe it for the next card. -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp">
+
+            <include
+                android:id="@+id/profile_card"
+                layout="@layout/view_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/card_edit"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_edit_button"
+                android:contentDescription="@string/edit_card"
+                android:padding="11dp"
+                android:src="@drawable/ic_edit"
+                app:tint="@color/text" />
+        </FrameLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/set_up_profile"

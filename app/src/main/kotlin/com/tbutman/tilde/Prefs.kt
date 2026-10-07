@@ -122,7 +122,7 @@ class Prefs(context: Context) {
         if (store.contains(KEY_LINKS)) return
         val (links, share) = SavedLink.migrate(store.getString(KEY_URL, "") ?: "", store.getString(KEY_SHARE, null), SavedLink.newId(emptyList()))
         store.edit().putString(KEY_LINKS, SavedLink.toJson(links)).remove(KEY_URL)
-            .apply { if (share == null) remove(KEY_SHARE) else putString(KEY_SHARE, share) }.commit()
+            .apply { if (share == null) remove(KEY_SHARE) else putString(KEY_SHARE, share) }.apply()
     }
 
     /** The active card's quick-switch row (starred in the picker, ticked in Settings), in order. */

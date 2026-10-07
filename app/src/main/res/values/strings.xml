@@ -130,7 +130,6 @@
     <!-- Picker -->
     <string name="picker_title">What should a tap share?</string>
     <string name="picker_set_up">Set up</string>
-    <string name="setup_in_settings">Add it here, then choose it on the Share screen.</string>
     <string name="picker_add_link">Add a link</string>
     <string name="picker_more">More options (%1$d)</string>
     <string name="picker_less">Fewer options</string>
@@ -181,7 +180,7 @@
     <!-- Cards -->
     <string name="settings_this_card">This card</string>
     <string name="settings_all_cards">All cards</string>
-    <string name="settings_all_cards_detail">These apply whichever card is active.</string>
+    <string name="settings_app">App</string>
     <string name="cards_switch">Switch</string>
     <string name="cards_title">Your cards</string>
     <string name="cards_new">New card</string>
@@ -209,9 +208,18 @@
     <string name="cards_more_actions">More actions for %1$s</string>
     <string name="cards_copy_label">%1$s copy</string>
 
+    <!-- Edit card -->
+    <string name="edit_card_title">Edit card</string>
+    <string name="edit_card">Edit card</string>
+    <string name="edit_section_card">Card</string>
+    <string name="edit_section_contact">Contact</string>
+    <string name="edit_section_links">Links</string>
+    <string name="edit_section_whatsapp">WhatsApp</string>
+    <string name="edit_contact_detail">On your contact card, so only shared when you choose it. Leave out anything you don\'t want to share.</string>
+    <string name="edit_links_detail">What a tap or scan can open. Your website is on your contact card too.</string>
+    <string name="edit_phone_add">Add a number</string>
+
     <!-- Settings -->
-    <string name="settings_profile">Profile</string>
-    <string name="profile_detail">What you share. Stored only on this phone; leave out anything you don\'t want to share.</string>
     <string name="profile_name">Full name</string>
     <string name="profile_title">Job title</string>
     <string name="profile_email">Email</string>
@@ -232,10 +240,6 @@
     <string name="crop_hint">Pinch to zoom, drag to move, double-tap to reset</string>
     <string name="crop_rotate">Rotate</string>
     <string name="crop_done">Use photo</string>
-    <string name="settings_phones">Phone numbers</string>
-    <string name="phones_detail">On the contact card, so only shared in person. Use the international format, such as +351 900 000 000.</string>
-    <string name="phone_label">Label, such as mobile</string>
-    <string name="phone_number">Number</string>
     <string name="profile_whatsapp">WhatsApp number</string>
     <string name="settings_sharing">Sharing</string>
     <string name="toggle">Share over NFC</string>
@@ -243,10 +247,9 @@
     <string name="settings_event">Event tag</string>
     <string name="event_hint">lisbon-js</string>
     <string name="event_detail">Added to links on your website as ?event=, so its log shows which event a visit came from.</string>
-    <string name="settings_whatsapp">WhatsApp message</string>
     <string name="whatsapp_greeting_hint">Message</string>
     <string name="whatsapp_detail">Typed into the chat, never sent. Leave empty for an empty chat.</string>
-    <string name="settings_links">Links</string>
+    <string name="settings_links">Saved links</string>
     <string name="settings_links_detail">Links you\'d like to share, such as your projects. Ticked ones show on the Share screen for one-tap switching; untick one to keep it without showing it. Tap a link to change or delete it.</string>
     <string name="link_on_share">Show %1$s on the Share screen</string>
     <string name="settings_wifi">Guest Wi-Fi</string>
@@ -255,9 +258,31 @@
     <string name="wifi_open">Open network (no password)</string>
     <string name="wifi_detail">Stored only on this phone. Never shown on the Share screen. Android doesn\'t let apps read saved passwords: to find one, tap your network in Wi-Fi settings, then Share.</string>
     <string name="wifi_open_settings">Open Wi-Fi settings</string>
-    <string name="settings_shortcuts">Shortcuts</string>
     <string name="add_tile">Add to Quick Settings</string>
     <string name="settings_about">About</string>
+    <string name="about_privacy">Privacy</string>
+    <string name="about_privacy_detail">Tilde has no internet permission, no account, no analytics and no cloud backup. Your cards, photos and Met list stay on this phone until you share them, and uninstalling Tilde removes everything.</string>
+    <string name="about_source">Open source</string>
+    <string name="about_source_detail">Tilde is free and open source under the MIT licence.</string>
+    <string name="about_source_link">github.com/tbutman/tilde</string>
+    <string name="about_source_url" translatable="false">https://github.com/tbutman/tilde</string>
+    <!-- Settings list: what each row shows under its name -->
+    <string name="row_cards">Your cards</string>
+    <plurals name="row_cards_summary">
+        <item quantity="one">%d card</item>
+        <item quantity="other">%d cards</item>
+    </plurals>
+    <string name="row_sharing_on">Taps on</string>
+    <string name="row_sharing_off">Taps paused</string>
+    <string name="row_event_none">no event tag</string>
+    <string name="row_event">event: %1$s</string>
+    <string name="row_wifi_none">Not set up</string>
+    <string name="row_write_summary">Put your link on an NFC sticker or a printed card</string>
+    <string name="row_tile_summary">Share from the Quick Settings panel</string>
+    <plurals name="row_card_links">
+        <item quantity="one">%d link</item>
+        <item quantity="other">%d links</item>
+    </plurals>
     <string name="debug_welcome" translatable="false">Show the welcome screens (debug)</string>
     <plurals name="reads">
         <item quantity="one">Read %d time from this phone</item>
@@ -265,8 +290,6 @@
     </plurals>
     <string name="version">Version %1$s</string>
     <!-- Write a sticker (called Write a card before 1.2, when "card" came to mean one of your cards) -->
-    <string name="settings_write">Stickers and cards</string>
-    <string name="settings_write_detail">Put your link on an NFC sticker, or on a printed card with one inside, such as a Tilde card.</string>
     <string name="write_open">Write a sticker</string>
     <string name="write_title">Write a sticker</string>
     <string name="write_body">Put your link on an NFC sticker, or on a printed card with one inside, such as a Tilde card. Any phone that taps it opens your link, even when you and Tilde aren\'t there.</string>

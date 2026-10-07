@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings → About: version, privacy, source code. Debug builds add the welcome reset. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Panel"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView style="@style/StepTitle" android:text="@string/settings_about" android:textSize="22sp" />
+
+        <TextView android:id="@+id/version" style="@style/Hint" android:layout_marginTop="8dp" android:fontFamily="monospace" />
+
+        <TextView android:id="@+id/reads" style="@style/Hint" android:fontFamily="monospace" />
+
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/about_privacy" />
+
+        <TextView style="@style/Hint" android:text="@string/about_privacy_detail" />
+
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/about_source" />
+
+        <TextView style="@style/Hint" android:text="@string/about_source_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/about_source"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/about_source_link" />
+
+        <!-- Debug builds only: start the welcome screens again with an empty profile. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/debug_welcome"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/debug_welcome"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/page_done"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="24dp"
+            android:text="@string/write_close" />
+    </LinearLayout>
+</ScrollView>

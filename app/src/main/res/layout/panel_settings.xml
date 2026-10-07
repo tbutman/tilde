@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Settings: "This card" (the active card's details, links and greeting), then "All cards". It's
-     inflated once, so its size (over lint's 80 views) doesn't matter. -->
+<!-- Settings: the active card (tap to edit), then short rows that each open their own page and show
+     what they're set to now. The card's details live in Edit card; settings for every card live in
+     Sharing, Guest Wi-Fi and About. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Panel"
-    tools:ignore="TooManyViews">
+    style="@style/Panel">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,13 +20,17 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <!-- This card: which card the settings down to Links belong to, with Switch and Manage. -->
+        <TextView style="@style/Label" android:text="@string/settings_this_card" />
+
+        <!-- The active card: tap to edit everything on it. -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/settings_card"
             style="@style/Widget.Material3.CardView.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@color/panel"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/panel_raised"
             app:strokeColor="@color/line_strong">
 
             <LinearLayout
@@ -35,485 +38,80 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingTop="12dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="12dp">
+                android:padding="16dp">
 
-                <View
-                    android:id="@+id/settings_card_dot"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:background="@drawable/bg_dot" />
+                <include
+                    android:id="@+id/settings_avatar"
+                    layout="@layout/view_avatar"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="16dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:text="@string/settings_this_card"
-                        android:textColor="@color/dim"
-                        android:textSize="12sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/settings_card_dot"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:background="@drawable/bg_dot" />
+
+                        <TextView
+                            android:id="@+id/settings_card_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:fontFamily="monospace"
+                            android:textColor="@color/dim"
+                            android:textSize="12sp" />
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/settings_card_label"
-                        style="@style/RowTitle" />
+                        android:id="@+id/settings_card_name"
+                        style="@style/RowTitle"
+                        android:layout_marginTop="2dp" />
+
+                    <TextView
+                        android:id="@+id/settings_card_summary"
+                        style="@style/RowDetail"
+                        android:ellipsize="end"
+                        android:maxLines="1" />
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/settings_card_switch"
-                    style="@style/Widget.Material3.Button.TextButton"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/cards_switch" />
+                    android:layout_marginStart="8dp"
+                    android:text="@string/edit_card"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <TextView style="@style/Label" android:text="@string/settings_profile" />
+        <include android:id="@+id/row_cards" layout="@layout/row_setting" />
 
-        <TextView style="@style/Hint" android:text="@string/profile_detail" />
+        <TextView style="@style/Label" android:text="@string/settings_all_cards" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        <include android:id="@+id/row_sharing" layout="@layout/row_setting" />
 
-            <include
-                android:id="@+id/settings_avatar"
-                layout="@layout/view_avatar"
-                android:layout_width="72dp"
-                android:layout_height="72dp" />
+        <include android:id="@+id/row_wifi" layout="@layout/row_setting" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        <include android:id="@+id/row_write" layout="@layout/row_setting" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/photo_pick"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/photo_add" />
+        <TextView style="@style/Label" android:text="@string/settings_app" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/photo_remove"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/photo_remove" />
-            </LinearLayout>
-        </LinearLayout>
+        <include android:id="@+id/row_tile" layout="@layout/row_setting" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_name"
-            android:labelFor="@id/profile_name">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName|textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_title"
-            android:labelFor="@id/profile_title">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_email"
-            android:labelFor="@id/profile_email">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_email2"
-            android:labelFor="@id/profile_email2">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_email2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_website"
-            android:labelFor="@id/profile_website">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_website"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textUri" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_handle"
-            android:labelFor="@id/profile_handle"
-            app:helperText="@string/profile_handle_helper"
-            app:prefixText="@string/handle_prefix"
-            app:prefixTextColor="@color/accent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_handle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="text|textNoSuggestions" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_linkedin"
-            android:labelFor="@id/profile_linkedin">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_linkedin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textUri" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_github"
-            android:labelFor="@id/profile_github">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_github"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textUri" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_instagram"
-            android:labelFor="@id/profile_instagram">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_instagram"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textUri" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_x"
-            android:labelFor="@id/profile_x">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_x"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textUri" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView style="@style/Label" android:text="@string/settings_phones" />
-
-        <TextView style="@style/Hint" android:text="@string/phones_detail" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/phone_label"
-            android:labelFor="@id/phone1_label">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone1_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/phone_number"
-            android:labelFor="@id/phone1_number">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone1_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="phone" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/phone_label"
-            android:labelFor="@id/phone2_label">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone2_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/phone_number"
-            android:labelFor="@id/phone2_number">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone2_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="phone" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_whatsapp"
-            android:labelFor="@id/profile_whatsapp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_whatsapp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="phone" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:id="@+id/whatsapp_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView style="@style/Label" android:text="@string/settings_whatsapp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Field"
-                android:hint="@string/whatsapp_greeting_hint"
-                android:labelFor="@id/whatsapp_greeting">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/whatsapp_greeting"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionDone"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapSentences" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView style="@style/Hint" android:layout_marginTop="6dp" android:text="@string/whatsapp_detail" />
-        </LinearLayout>
-
-        <!-- Saved links: each one is an option on the Share screen. Rows are added in code. -->
-        <TextView style="@style/Label" android:text="@string/settings_links" />
-
-        <TextView style="@style/Hint" android:text="@string/settings_links_detail" />
-
-        <LinearLayout
-            android:id="@+id/links_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/links_add"
-            style="@style/Widget.Material3.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="-12dp"
-            android:text="@string/picker_add_link"
-            app:icon="@drawable/ic_add" />
-
-        <!-- Everything below applies whichever card is active. -->
-        <TextView
-            style="@style/StepTitle"
-            android:layout_marginTop="40dp"
-            android:text="@string/settings_all_cards"
-            android:textSize="20sp" />
-
-        <TextView style="@style/Hint" android:layout_marginTop="4dp" android:text="@string/settings_all_cards_detail" />
-
-        <TextView style="@style/Label" android:text="@string/settings_sharing" />
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/toggle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:text="@string/toggle"
-            android:textColor="@color/text"
-            android:textSize="16sp" />
-
-        <TextView style="@style/Hint" android:text="@string/toggle_detail" />
-
-        <TextView style="@style/Label" android:text="@string/settings_event" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/event_hint"
-            android:labelFor="@id/event">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/event"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView style="@style/Hint" android:layout_marginTop="6dp" android:text="@string/event_detail" />
-
-        <TextView style="@style/Label" android:text="@string/settings_wifi" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/wifi_ssid_label"
-            android:labelFor="@id/wifi_ssid">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/wifi_ssid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/wifi_password_layout"
-            style="@style/Field"
-            android:hint="@string/wifi_password_label"
-            android:labelFor="@id/wifi_password"
-            app:endIconMode="password_toggle">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/wifi_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/wifi_open"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wifi_open" />
-
-        <TextView style="@style/Hint" android:text="@string/wifi_detail" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/wifi_settings"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/wifi_open_settings" />
-
-        <TextView style="@style/Label" android:text="@string/settings_write" />
-
-        <TextView style="@style/Hint" android:text="@string/settings_write_detail" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/write_card"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/write_open" />
-
-        <LinearLayout
-            android:id="@+id/tile_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView style="@style/Label" android:text="@string/settings_shortcuts" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/add_tile"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_tile" />
-        </LinearLayout>
-
-        <TextView style="@style/Label" android:text="@string/settings_about" />
-
-        <TextView android:id="@+id/reads" style="@style/Hint" android:fontFamily="monospace" />
-
-        <TextView android:id="@+id/version" style="@style/Hint" android:fontFamily="monospace" />
-
-        <!-- Debug builds only: start the welcome screens again with an empty profile. -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/debug_welcome"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/debug_welcome"
-            android:visibility="gone" />
+        <include android:id="@+id/row_about" layout="@layout/row_setting" />
     </LinearLayout>
 </ScrollView>

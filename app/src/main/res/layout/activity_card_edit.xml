@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Edit card: everything on the active card, in sections. Fields save as they're typed. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Panel"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView style="@style/StepTitle" android:text="@string/edit_card_title" android:textSize="22sp" />
+
+        <!-- Which card this is: its colour and label, renamed and recoloured from here. -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/edit_card_header"
+            style="@style/Widget.Material3.CardView.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/panel"
+            app:strokeColor="@color/line_strong">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <View
+                    android:id="@+id/edit_card_dot"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/bg_dot" />
+
+                <TextView
+                    android:id="@+id/edit_card_label"
+                    style="@style/RowTitle"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cards_edit"
+                    android:textColor="@color/accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Card: what people see -->
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/edit_section_card" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/edit_avatar"
+                layout="@layout/view_avatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/photo_pick"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/photo_add" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/photo_remove"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/photo_remove" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_name"
+            android:labelFor="@id/profile_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName|textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_title"
+            android:labelFor="@id/profile_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_handle"
+            android:labelFor="@id/profile_handle"
+            app:helperText="@string/profile_handle_helper"
+            app:prefixText="@string/handle_prefix"
+            app:prefixTextColor="@color/accent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="text|textNoSuggestions" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Contact: on the contact card -->
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/edit_section_contact" />
+
+        <TextView style="@style/Hint" android:text="@string/edit_contact_detail" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_email"
+            android:labelFor="@id/profile_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_email2"
+            android:labelFor="@id/profile_email2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_email2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Phone numbers: rows (country, number, remove) are added in code. -->
+        <LinearLayout
+            android:id="@+id/phones_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/phone_add"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/edit_phone_add"
+            app:icon="@drawable/ic_add" />
+
+        <!-- Links: what a tap or scan can open -->
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/edit_section_links" />
+
+        <TextView style="@style/Hint" android:text="@string/edit_links_detail" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_website"
+            android:labelFor="@id/profile_website">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_website"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_linkedin"
+            android:labelFor="@id/profile_linkedin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_linkedin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_github"
+            android:labelFor="@id/profile_github">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_github"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_instagram"
+            android:labelFor="@id/profile_instagram">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_instagram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_x"
+            android:labelFor="@id/profile_x">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_x"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textUri" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView style="@style/Label" android:text="@string/settings_links" />
+
+        <TextView style="@style/Hint" android:text="@string/settings_links_detail" />
+
+        <LinearLayout
+            android:id="@+id/links_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/links_add"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/picker_add_link"
+            app:icon="@drawable/ic_add" />
+
+        <!-- WhatsApp -->
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/edit_section_whatsapp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/profile_whatsapp"
+            android:labelFor="@id/profile_whatsapp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_whatsapp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/whatsapp_greeting_hint"
+            android:labelFor="@id/whatsapp_greeting">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/whatsapp_greeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView style="@style/Hint" android:layout_marginTop="6dp" android:text="@string/whatsapp_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/edit_done"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/write_close" />
+    </LinearLayout>
+</ScrollView>

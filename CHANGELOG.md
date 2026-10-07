@@ -23,6 +23,19 @@ Not released yet. Tested on the emulator.
 - Updating from 1.1 keeps everything: your profile, photo, links and choices become your first
   card, "My card".
 
+### Settings, reorganised
+
+- **Settings is now a short list.** Your card (tap to edit it), then Your cards, Sharing, Guest Wi-Fi,
+  Write a sticker, the Quick Settings tile and About. Each row shows what it's set to now, such as
+  "Taps on · no event tag" or your Wi-Fi network's name, and opens its own page.
+- **Edit card** has everything on a card in sections: Card (photo, name, title, handle), Contact
+  (emails and phone numbers), Links (website, social profiles, saved links) and WhatsApp. Open it
+  from Settings, with the pencil on your card on the Share screen, or by long-pressing the card.
+- **Phone numbers** in Edit card use the country picker from the welcome, with up to three
+  numbers. Numbers saved before keep their country, and labels you typed yourself stay.
+- **About** has the version, a short privacy note and a link to the source code.
+- **Set up** on Guest Wi-Fi or the contact card opens the right page directly.
+
 ### Share screen
 
 - Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap

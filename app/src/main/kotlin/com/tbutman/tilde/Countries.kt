@@ -58,6 +58,44 @@ object Countries {
     }
 
     /**
+     * Where several countries share a dialling code, the one a number is assumed to be from unless
+     * the phone's own country also uses that code: +1 is the US, +44 the UK, +7 Russia, and so on.
+     */
+    private val MAIN = mapOf("1" to "US", "7" to "RU", "44" to "GB", "39" to "IT", "47" to "NO", "61" to "AU",
+        "212" to "MA", "262" to "RE", "290" to "SH", "358" to "FI", "590" to "GP", "599" to "CW")
+
+    /**
+     * Splits a saved number ("+351 912 345 678") into its country and the rest ("912 345 678"), for
+     * editing it with the country picker. The longest matching dialling code wins; `home` (the
+     * phone's country) breaks ties. A number without a + gives no country and the number as it was.
+     */
+    fun split(number: String, home: String? = null): Pair<Country?, String> {
+        val trimmed = number.trim()
+        if (!trimmed.startsWith("+")) return null to trimmed
+        val digits = trimmed.drop(1).filter { it.isDigit() }
+        val dial = (3 downTo 1).map { digits.take(it) }.firstOrNull { code -> all.any { it.dial == code } } ?: return null to trimmed
+        val candidates = all.filter { it.dial == dial }
+        val country = candidates.firstOrNull { it.iso == home?.uppercase() }
+            ?: candidates.firstOrNull { it.iso == MAIN[dial] } ?: candidates.first()
+        // Drop the + and the dialling code (however it was spaced), keep the rest as written.
+        var seen = 0
+        val rest = trimmed.drop(1).dropWhile { c -> if (seen < dial.length) { if (c.isDigit()) seen++; true } else false }
+        return country to rest.trim().trimStart('-', '.', ')').trim()
+    }
+
+    /** Labels Tilde made itself ("mobile", "mobile (PT)"), which it may redo; anything else was typed. */
+    fun isAutoLabel(label: String) = label == "mobile" || Regex("^mobile \\([A-Z]{2}\\)$").matches(label)
+
+    /**
+     * Labels for edited numbers: a label typed by hand stays; Tilde's own ones are redone, so a
+     * second number's country appears when it differs ("mobile (US)", "mobile (PT)").
+     */
+    fun labelsKeeping(old: List<String>, isos: List<String>): List<String> {
+        val auto = phoneLabels(isos)
+        return isos.indices.map { i -> old.getOrNull(i)?.takeUnless { it.isBlank() || isAutoLabel(it) } ?: auto[i] }
+    }
+
+    /**
      * A number in international form when Android can't format it: the dialling code plus what was
      * typed. A typed "+" means the person already gave a full international number.
      */

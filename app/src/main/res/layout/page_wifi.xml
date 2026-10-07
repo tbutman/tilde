@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings → Guest Wi-Fi: the network a tap or scan can join. Same for every card. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Panel"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView style="@style/StepTitle" android:text="@string/settings_wifi" android:textSize="22sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
+            android:hint="@string/wifi_ssid_label"
+            android:labelFor="@id/wifi_ssid">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/wifi_ssid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/wifi_password_layout"
+            style="@style/Field"
+            android:hint="@string/wifi_password_label"
+            android:labelFor="@id/wifi_password"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/wifi_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/wifi_open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wifi_open" />
+
+        <TextView style="@style/Hint" android:text="@string/wifi_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/wifi_settings"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/wifi_open_settings" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/page_done"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="24dp"
+            android:text="@string/write_close" />
+    </LinearLayout>
+</ScrollView>

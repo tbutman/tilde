@@ -36,6 +36,16 @@
             android:name=".CardsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".CardEditActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".SettingsPageActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Send hands the contact card to another app as a .vcf file (see res/xml/file_paths.xml). -->
         <provider
             android:name="androidx.core.content.FileProvider"
