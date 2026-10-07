@@ -10,6 +10,7 @@ class Prefs(context: Context) {
     val store: SharedPreferences = context.getSharedPreferences("tilde", Context.MODE_PRIVATE)
 
     private val filesDir = context.filesDir
+    private val cacheDir = context.cacheDir
     private val firstLabel = context.getString(R.string.cards_first_label)
 
     // ---- Cards ----
@@ -48,6 +49,7 @@ class Prefs(context: Context) {
     }
 
     /** Version 1.1 (and 1.0) kept one profile in separate keys: it becomes card 1, once, photo included. */
+    @android.annotation.SuppressLint("ApplySharedPref") // committed before files move, see below
     private fun migrateToCards() {
         migrateLinks()
         val id = SavedLink.newId(emptyList())
@@ -61,12 +63,14 @@ class Prefs(context: Context) {
             greeting = store.getString(KEY_WHATSAPP_GREETING, null),
             label = firstLabel,
         )
-        java.io.File(filesDir, Photo.LEGACY_FILE).takeIf { it.exists() }?.renameTo(Photo.file(filesDir, id))
+        // Saved before the photo moves: if Tilde stopped in between, the next start would migrate
+        // again under a new id and leave the photo behind.
         store.edit()
             .putString(KEY_CARDS, Cards.toJson(listOf(card)))
             .putString(KEY_ACTIVE_CARD, id)
             .remove(KEY_PROFILE).remove(KEY_SHARE).remove(KEY_LINKS).remove(KEY_PINNED).remove(KEY_WHATSAPP_GREETING).remove("mode")
-            .apply()
+            .commit()
+        java.io.File(filesDir, Photo.LEGACY_FILE).takeIf { it.exists() }?.renameTo(Photo.file(filesDir, id))
     }
 
     /** Debug builds' "Show the welcome screens": back to one empty card, photos deleted. */
@@ -161,7 +165,10 @@ class Prefs(context: Context) {
     var event: String
         get() {
             val tag = store.getString(KEY_EVENT, "") ?: ""
-            if (tag.isNotEmpty() && EventTag.expired(store.getString(KEY_EVENT_DAY, null), today(), eventAutoClear)) {
+            val day = store.getString(KEY_EVENT_DAY, null)
+            // A tag set before 1.2 has no day: it counts from today.
+            if (tag.isNotEmpty() && day == null) store.edit().putString(KEY_EVENT_DAY, today()).apply()
+            if (tag.isNotEmpty() && EventTag.expired(day, today(), eventAutoClear)) {
                 store.edit().remove(KEY_EVENT).remove(KEY_EVENT_DAY).apply()
                 return ""
             }
@@ -236,6 +243,7 @@ class Prefs(context: Context) {
         met = met,
         enabled = enabled,
         event = event,
+        eventDay = store.getString(KEY_EVENT_DAY, null).takeIf { event.isNotEmpty() },
         wifiSsid = wifiSsid,
         wifiPassword = wifiPassword.takeIf { includeWifiPassword },
         wifiOpen = wifiOpen,
@@ -251,20 +259,33 @@ class Prefs(context: Context) {
      * only if the backup has one) and the switches. Receive history and the read count stay as
      * they are.
      */
+    @android.annotation.SuppressLint("ApplySharedPref") // committed before files move, see below
     fun restore(backup: Backup) {
-        cards.forEach { Photo.file(filesDir, it.id).delete() }
-        backup.photos.forEach { (id, bytes) -> Photo.file(filesDir, id).writeBytes(bytes) }
+        // The new photos go to temporary files first: if writing fails (a full disk), nothing has changed yet.
+        val incoming = backup.photos.map { (id, bytes) ->
+            val temp = java.io.File(filesDir, "restore-$id.tmp")
+            temp.writeBytes(bytes)
+            temp to Photo.file(filesDir, id)
+        }
+        val oldPhotos = cards.map { Photo.file(filesDir, it.id) }
+        // An event tag only comes back with the day it was set, so it can still clear itself.
+        val event = backup.event.takeIf { backup.eventDay != null }.orEmpty()
         val edit = store.edit()
             .putString(KEY_CARDS, Cards.toJson(backup.cards))
             .putString(KEY_ACTIVE_CARD, backup.activeCardId)
             .putString(KEY_MET, MetLog.toJson(backup.met))
             .putBoolean(KEY_ENABLED, backup.enabled)
-            .putString(KEY_EVENT, backup.event).putString(KEY_EVENT_DAY, today())
+            .putString(KEY_EVENT, event)
             .putString(KEY_WIFI_SSID, backup.wifiSsid)
             .putBoolean(KEY_WIFI_OPEN, backup.wifiOpen)
             .putBoolean(KEY_WELCOMED, true)
             .putInt(KEY_PHOTO_VERSION, photoVersion + 1)
-        backup.wifiPassword?.let { edit.putString(KEY_WIFI_PASSWORD, it) }
+        if (event.isEmpty()) edit.remove(KEY_EVENT_DAY) else edit.putString(KEY_EVENT_DAY, backup.eventDay)
+        // A backup without the password keeps this phone's, but only for the same network.
+        when {
+            backup.wifiPassword != null -> edit.putString(KEY_WIFI_PASSWORD, backup.wifiPassword)
+            backup.wifiSsid != wifiSsid -> edit.remove(KEY_WIFI_PASSWORD)
+        }
         backup.settings.forEach { (key, value) ->
             when (value) {
                 is Boolean -> edit.putBoolean(key, value)
@@ -272,13 +293,18 @@ class Prefs(context: Context) {
                 is String -> edit.putString(key, value)
             }
         }
-        edit.apply()
+        edit.commit()
+        cachedJson = null
+        oldPhotos.forEach { it.delete() }
+        incoming.forEach { (temp, photo) -> temp.renameTo(photo) }
     }
 
     /** Delete all data: every card, photo, Met entry and setting. Tilde starts again at the welcome. */
     fun deleteEverything() {
         cards.forEach { Photo.file(filesDir, it.id).delete() }
         java.io.File(filesDir, Photo.LEGACY_FILE).delete()
+        // Contact cards made for Send (they can hold the photo).
+        java.io.File(cacheDir, "shared").deleteRecursively()
         store.edit().clear().apply()
     }
 
@@ -323,10 +349,19 @@ class Prefs(context: Context) {
      * What a card's code shows, for any card (the home-screen widget can show one that isn't
      * active): its chosen option, or its first ready one when that can't share.
      */
+    /**
+     * What a card actually shares: its chosen option when that's ready, otherwise its first ready
+     * one (as the Share screen shows), or null when nothing is. Taps, the tile, the widget and the
+     * code all use this, so they always agree.
+     */
+    fun sharing(card: Card = activeCard): String? {
+        val chosen = card.share ?: Presets.WEBSITE
+        if (Presets.isReady(chosen, card.profile, card.links, wifiReady)) return chosen
+        return Presets.available(card.profile, card.links, wifiReady).firstOrNull()?.id
+    }
+
     fun qrTextFor(card: Card): String {
-        val ready = { id: String -> Presets.isReady(id, card.profile, card.links, wifiReady) }
-        val share = (card.share ?: Presets.WEBSITE).takeIf(ready)
-            ?: Presets.available(card.profile, card.links, wifiReady).firstOrNull()?.id ?: return ""
+        val share = sharing(card) ?: return ""
         return when (share) {
             Presets.CONTACT -> card.profile.forContactCard(card.hidden).vcard(compact = true)
             Presets.WIFI -> Wifi.qrText(wifiSsid, wifiPassword, wifiOpen)
@@ -342,7 +377,7 @@ class Prefs(context: Context) {
         get() = wifiSsid.isNotBlank() && (wifiOpen || wifiPassword.length >= 8)
 
     /** The NDEF message a tap reads. */
-    fun message(): ByteArray = messageFor(share)
+    fun message(): ByteArray = messageFor(sharing() ?: share)
 
     /** The NDEF message for any option. Written cards pass no event: they outlive it. */
     fun messageFor(id: String, event: String = this.event): ByteArray {

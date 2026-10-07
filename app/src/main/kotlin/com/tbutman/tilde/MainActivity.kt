@@ -165,7 +165,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         setUpMet()
         setUpSettings()
         setUpWelcome(savedInstanceState)
-        if (savedInstanceState == null) openCardFrom(intent)
+        // Reopened from Recents, the launch intent is the widget's again: don't switch back to its card.
+        if (savedInstanceState == null && intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY == 0) openCardFrom(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -562,7 +563,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                     // "Ask for a note after each tap": a moment of Sent for both of you, then who was it?
                     main.postAtTime({
                         sent.visibility = View.GONE
-                        prefs.met.firstOrNull()?.let { editNote(it) }
+                        // The screen may have been rotated or closed in the meantime.
+                        if (!isFinishing && !isDestroyed) prefs.met.firstOrNull()?.let { editNote(it) }
                     }, SENT_TOKEN, SystemClock.uptimeMillis() + 1500)
                 } else {
                     // Long enough to reach for "Add a note".
@@ -623,6 +625,14 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         private var startY = 0f
         private var swiping = false
         private var moved = false
+        private var longPressed = false
+        // The touch listener takes every event, so a long press (Edit card) is detected here.
+        private val longPress = Runnable {
+            if (!moved && !swiping) {
+                longPressed = true
+                card.performLongClick()
+            }
+        }
 
         override fun onTouch(view: View, event: MotionEvent): Boolean {
             val dx = event.rawX - startX
@@ -633,9 +643,14 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                     startY = event.rawY
                     swiping = false
                     moved = false
+                    longPressed = false
+                    card.postDelayed(longPress, android.view.ViewConfiguration.getLongPressTimeout().toLong())
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    if (kotlin.math.abs(dx) > slop || kotlin.math.abs(dy) > slop) moved = true
+                    if (kotlin.math.abs(dx) > slop || kotlin.math.abs(dy) > slop) {
+                        moved = true
+                        card.removeCallbacks(longPress)
+                    }
                     // Sideways more than up or down: keep the touch from the scrolling page.
                     if (!swiping && kotlin.math.abs(dx) > slop && kotlin.math.abs(dx) > kotlin.math.abs(dy) && canSwipe()) {
                         swiping = true
@@ -644,11 +659,15 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                     if (swiping) card.translationX = dx * 0.4f
                 }
                 MotionEvent.ACTION_UP -> {
+                    card.removeCallbacks(longPress)
                     if (swiping && kotlin.math.abs(dx) > card.width / 5f) onSwipe(if (dx < 0) 1 else -1)
-                    else if (!moved) view.performClick()
+                    else if (!moved && !longPressed) view.performClick()
                     settle()
                 }
-                MotionEvent.ACTION_CANCEL -> settle()
+                MotionEvent.ACTION_CANCEL -> {
+                    card.removeCallbacks(longPress)
+                    settle()
+                }
             }
             return true
         }

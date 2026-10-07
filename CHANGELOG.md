@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+Fixes from reviewing 1.2.0-beta.1:
+
+- **Restoring a backup is safer:** a damaged or edited file can't store settings the app can't
+  read, and if restoring fails nothing changes (your photos stay). A restored theme applies
+  straight away, an event tag keeps the day it was set, and a backup without the Wi-Fi password
+  no longer pairs another network with this phone's password. Problems are explained in Portuguese
+  too.
+- **Taps never answer from the lock screen,** even without a PIN or while Smart Lock keeps the
+  phone unlocked.
+- **Taps, the tile and the widget share the same thing as the Share screen** when a card's chosen
+  option isn't set up (they fall back to its first ready one).
+- **Long-press your card on the Share screen** to edit it, as described below (it didn't work).
+- **The event tag** set before 1.2 now clears itself too, isn't cleared early after flying west, and
+  the widget drops it just after midnight.
+- **A card always keeps a name:** clearing it in Edit card keeps the last one, with a note.
+- **Delete all data** also removes contact cards made for Send and resets the language.
+- A sticker that took your link but couldn't be locked says so, instead of "failed".
+- No crash when the "who was it?" note opens just as the screen rotates or closes; reopening Tilde
+  from Recents no longer switches back to a widget's card.
+
 ## 1.2.0-beta.1 (7 October 2026)
 
 A beta of 1.2: more than one card, a reorganised Settings with new options, a light theme, a

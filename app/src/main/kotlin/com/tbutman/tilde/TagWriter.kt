@@ -57,7 +57,8 @@ object TagWriter {
                 ndef.connect()
                 check(ndefMessage.byteArrayLength, ndef.maxSize, ndef.isWritable)?.let { return it }
                 ndef.writeNdefMessage(ndefMessage)
-                locked(lock, lock && ndef.canMakeReadOnly() && ndef.makeReadOnly())
+                // The link is on the sticker now; if locking it fails, say that rather than "failed".
+                locked(lock, lock && ndef.canMakeReadOnly() && runCatching { ndef.makeReadOnly() }.getOrDefault(false))
             } ?: NdefFormatable.get(tag)?.use { blank ->
                 blank.connect()
                 if (lock) blank.formatReadOnly(ndefMessage) else blank.format(ndefMessage)

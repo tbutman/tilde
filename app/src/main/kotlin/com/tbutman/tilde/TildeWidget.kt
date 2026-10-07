@@ -11,11 +11,13 @@ import android.widget.RemoteViews
 /**
  * The home-screen widget: one card's QR code, or the active card's. It redraws whenever a Tilde
  * screen closes (see TildeApp), so it follows changes made in the app. Tapping it opens Tilde on
- * that card.
+ * that card. While an event tag is set to clear itself, it also redraws just after midnight, so the
+ * code stops carrying yesterday's tag.
  */
 class TildeWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
         ids.forEach { update(context, manager, it) }
+        redrawAtMidnight(context, ids)
     }
 
     override fun onDeleted(context: Context, ids: IntArray) {
@@ -27,7 +29,25 @@ class TildeWidget : AppWidgetProvider() {
         /** Redraws every Tilde widget. Cheap when there are none. */
         fun updateAll(context: Context) {
             val manager = AppWidgetManager.getInstance(context) ?: return
-            manager.getAppWidgetIds(ComponentName(context, TildeWidget::class.java)).forEach { update(context, manager, it) }
+            val ids = manager.getAppWidgetIds(ComponentName(context, TildeWidget::class.java))
+            ids.forEach { update(context, manager, it) }
+            redrawAtMidnight(context, ids)
+        }
+
+        /** An inexact alarm (no permission needed) just after midnight, only while a self-clearing event tag is set. */
+        private fun redrawAtMidnight(context: Context, ids: IntArray) {
+            val alarms = context.getSystemService(android.app.AlarmManager::class.java) ?: return
+            val redraw = PendingIntent.getBroadcast(
+                context, 0,
+                Intent(context, TildeWidget::class.java)
+                    .setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+                    .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+            val prefs = Prefs(context)
+            if (ids.isEmpty() || prefs.event.isEmpty() || !prefs.eventAutoClear) return alarms.cancel(redraw)
+            val midnight = java.time.LocalDate.now().plusDays(1).atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
+            alarms.set(android.app.AlarmManager.RTC, midnight + 60_000, redraw)
         }
 
         fun update(context: Context, manager: AppWidgetManager, id: Int) {

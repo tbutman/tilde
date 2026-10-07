@@ -38,6 +38,7 @@
     <string name="welcome_card_body">É isto que as pessoas veem quando partilhas.</string>
     <string name="welcome_name">Nome completo</string>
     <string name="welcome_name_helper">Como queres que apareça no cartão</string>
+    <string name="card_name_missing">Um cartão precisa de um nome. Até escreveres um, fica com o anterior.</string>
     <string name="welcome_name_missing">Adiciona o teu nome para continuar</string>
     <string name="welcome_title_field">Cargo</string>
     <string name="welcome_title_placeholder">Designer de produto na Acme</string>
@@ -339,6 +340,11 @@
     </plurals>
     <string name="backup_confirm">Cópia de %1$s: %2$s e %3$s. Tudo neste telemóvel é substituído.</string>
     <string name="backup_restore">Restaurar</string>
+    <string name="backup_not_a_backup">Esse ficheiro não é uma cópia de segurança da Tilde.</string>
+    <string name="backup_too_new">Essa cópia de segurança é de uma versão mais recente da Tilde. Atualiza a Tilde primeiro.</string>
+    <string name="backup_no_cards">Essa cópia de segurança não tem cartões.</string>
+    <string name="backup_damaged">Essa cópia de segurança está danificada, por isso nada foi alterado.</string>
+    <string name="backup_restore_failed">Não foi possível restaurar a cópia de segurança, por isso nada foi alterado. Verifica se há espaço neste telemóvel.</string>
     <string name="backup_unreadable">Não foi possível ler esse ficheiro.</string>
     <string name="row_backup_summary">Guarda os teus cartões num ficheiro, ou restaura-os</string>
     <string name="row_met_keep_all">Mantém toda a gente</string>

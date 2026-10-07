@@ -57,7 +57,15 @@ class CardEditActivity : AppCompatActivity() {
         val profile = prefs.profile
         fun profileField(id: Int, value: String, update: Profile.(String) -> Profile) =
             findViewById<TextInputEditText>(id).saveAsYouType(value) { text -> prefs.profile = prefs.profile.update(text.trim()) }
-        profileField(R.id.profile_name, profile.name) { copy(name = it) }
+        // A card always has a name (its contact card needs one): clearing the field keeps the last one.
+        findViewById<TextInputEditText>(R.id.profile_name).apply {
+            val layout = parent.parent as? com.google.android.material.textfield.TextInputLayout
+            saveAsYouType(profile.name) { text ->
+                val name = text.trim()
+                layout?.error = if (name.isEmpty()) getString(R.string.card_name_missing) else null
+                if (name.isNotEmpty()) prefs.profile = prefs.profile.copy(name = name)
+            }
+        }
         profileField(R.id.profile_title, profile.title) { copy(title = it) }
         profileField(R.id.profile_company, profile.company) { copy(company = it) }
         findViewById<TextInputEditText>(R.id.profile_handle).filters = handleFilters()

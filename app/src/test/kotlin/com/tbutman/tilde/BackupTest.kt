@@ -20,6 +20,7 @@ class BackupTest {
         met = listOf(Meeting(1_791_331_200_000, "web-summit", "Website", "Bob, payments", "Work")),
         enabled = false,
         event = "web-summit",
+        eventDay = "2026-10-07",
         wifiSsid = "Jane Guest",
         wifiPassword = "correct horse",
         wifiOpen = false,
@@ -49,6 +50,20 @@ class BackupTest {
     }
 
     @Test
+    fun aDamagedOrHandEditedFileCantStoreBadData() {
+        val json = org.json.JSONObject(Backups.toJson(backup))
+        // Settings: unknown keys and wrong types are dropped, so the app never reads a value it can't use.
+        json.put("settings", org.json.JSONObject("""{"theme":true,"met_keep_months":"6","cards":"x","vibrate":false,"full_brightness":"yes"}"""))
+        assertEquals(mapOf("vibrate" to false), Backups.fromJson(json.toString()).settings)
+        // A photo that isn't base64.
+        val badPhoto = org.json.JSONObject(Backups.toJson(backup)).put("photos", org.json.JSONObject("""{"w1":"not base64!"}"""))
+        assertEquals(Backups.Reason.DAMAGED, assertThrows(Backups.Invalid::class.java) { Backups.fromJson(badPhoto.toString()) }.reason)
+        // A card id that would be a path.
+        val badId = Backups.toJson(backup.copy(cards = listOf(work.copy(id = "../x")), activeCardId = "../x", photos = emptyMap()))
+        assertEquals(Backups.Reason.DAMAGED, assertThrows(Backups.Invalid::class.java) { Backups.fromJson(badId) }.reason)
+    }
+
+    @Test
     fun aMissingActiveCardFallsBackToTheFirst() {
         val json = Backups.toJson(backup.copy(activeCardId = "gone"))
         assertEquals("w1", Backups.fromJson(json).activeCardId)
@@ -61,6 +76,8 @@ class BackupTest {
         assertFalse(EventTag.expired("2026-10-07", "2026-10-07", autoClear = true))
         assertFalse(EventTag.expired("2026-10-07", "2026-10-08", autoClear = false))
         assertFalse(EventTag.expired(null, "2026-10-08", autoClear = true))
+        // Flying west after midnight: today is earlier than the day it was set.
+        assertFalse(EventTag.expired("2026-10-08", "2026-10-07", autoClear = true))
     }
 
     @Test

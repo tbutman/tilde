@@ -38,6 +38,7 @@
     <string name="welcome_name">Full name</string>
     <string name="welcome_name_helper">As you\'d like it on your card</string>
     <string name="welcome_name_missing">Add your name to continue</string>
+    <string name="card_name_missing">A card needs a name. Until you add one, it keeps the last one.</string>
     <string name="welcome_title_field">Job title</string>
     <string name="welcome_title_placeholder">Product designer at Acme</string>
     <string name="welcome_handle_placeholder">yourname</string>
@@ -341,6 +342,11 @@
     <string name="backup_confirm">Saved %1$s: %2$s and %3$s. Everything on this phone is replaced.</string>
     <string name="backup_restore">Restore</string>
     <string name="backup_unreadable">Couldn\'t read that file.</string>
+    <string name="backup_not_a_backup">That file isn\'t a Tilde backup.</string>
+    <string name="backup_too_new">That backup is from a newer version of Tilde. Update Tilde first.</string>
+    <string name="backup_no_cards">That backup has no cards in it.</string>
+    <string name="backup_damaged">That backup is damaged, so nothing was changed.</string>
+    <string name="backup_restore_failed">Couldn\'t restore the backup, so nothing was changed. Check there\'s space on this phone.</string>
     <string name="row_backup_summary">Save your cards to a file, or restore them</string>
     <string name="row_met_keep_all">Keeps everyone</string>
     <string name="row_met_keep">Deletes after %1$s</string>
