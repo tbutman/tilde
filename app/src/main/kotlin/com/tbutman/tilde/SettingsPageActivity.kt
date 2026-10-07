@@ -86,6 +86,7 @@ class SettingsPageActivity : AppCompatActivity() {
         toggle(R.id.full_brightness, prefs.fullBrightness) { prefs.fullBrightness = it }
         toggle(R.id.keep_screen_on, prefs.keepScreenOn) { prefs.keepScreenOn = it }
         toggle(R.id.vibrate, prefs.vibrate) { prefs.vibrate = it }
+        toggle(R.id.send_photo, prefs.sendPhoto) { prefs.sendPhoto = it }
     }
 
     private fun setUpMet() {

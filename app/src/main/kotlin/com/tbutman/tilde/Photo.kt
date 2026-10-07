@@ -38,6 +38,14 @@ object Photo {
         file(context.filesDir, cardId).delete()
     }
 
+    /** The card's photo as a small JPEG (at most 400 px), for a sent contact card; null without one. */
+    fun smallJpeg(context: Context, cardId: String): ByteArray? {
+        val photo = load(context, cardId) ?: return null
+        val scale = minOf(1f, 400f / maxOf(photo.width, photo.height))
+        val small = if (scale < 1f) Bitmap.createScaledBitmap(photo, (photo.width * scale).toInt(), (photo.height * scale).toInt(), true) else photo
+        return java.io.ByteArrayOutputStream().also { small.compress(Bitmap.CompressFormat.JPEG, 80, it) }.toByteArray()
+    }
+
     /** For copying a card: the copy gets its own file, so deleting one photo leaves the other. */
     fun copy(context: Context, fromCardId: String, toCardId: String) {
         val from = file(context.filesDir, fromCardId)

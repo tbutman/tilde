@@ -5,9 +5,6 @@ is picked up, it moves to a spec (docs/specs) or straight to a branch, and off t
 
 ## Polish
 
-- **Include the photo when sending the contact card.** A tap stays photo-free (a photo makes a tag
-  slow to read), but a `.vcf` sent through another app can carry it (vCard `PHOTO`). Off by default;
-  check the size stays reasonable (resize to about 400 px).
 - **Theme: light, or follow the system.** Tilde is dark-only. A light theme helps outdoors and in
   bright venues. Needs: light values for every colour token; the QR card is light already.
 
@@ -29,4 +26,4 @@ is picked up, it moves to a spec (docs/specs) or straight to a branch, and off t
 ## Done (moved out of the backlog)
 
 - Multiple cards, Settings reorganised, contact card choices, company, backup and restore, event tag
-  auto-clear, Delete all data, Share screen and Met settings, logos for saved links: 1.2.
+  auto-clear, Delete all data, Share screen and Met settings, logos for saved links, the photo in a sent contact card: 1.2.

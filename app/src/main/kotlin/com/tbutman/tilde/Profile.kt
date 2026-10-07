@@ -96,7 +96,7 @@ data class Profile(
      * vCard 3.0, which Android and iOS contacts both import. `compact` keeps only the website, for
      * the on-screen QR code: the full card makes a code too dense to scan easily.
      */
-    fun vcard(compact: Boolean = false): String {
+    fun vcard(compact: Boolean = false, photoJpeg: ByteArray? = null): String {
         var item = 0
         val lines = mutableListOf("BEGIN:VCARD", "VERSION:3.0", "N:${escape(lastName)};${escape(firstName)};;;", "FN:${escape(name.trim())}")
         if (company.isNotBlank()) lines += "ORG:${escape(company.trim())}"
@@ -117,6 +117,8 @@ data class Profile(
             lines += "item$item.URL:$href"
             lines += "item$item.X-ABLabel:${escape(label)}"
         }
+        // Only in a sent file: a tap stays small and quick to read.
+        if (photoJpeg != null && !compact) lines += fold("PHOTO;ENCODING=b;TYPE=JPEG:" + java.util.Base64.getEncoder().encodeToString(photoJpeg))
         lines += "END:VCARD"
         return lines.joinToString("\r\n") + "\r\n"
     }
@@ -220,6 +222,10 @@ data class Profile(
             val text = URLEncoder.encode(greeting, "UTF-8").replace("+", "%20")
             return "https://wa.me/$digits?text=$text"
         }
+
+        /** vCard line folding: lines of at most 75 characters, continued on lines starting with a space. */
+        fun fold(line: String): String =
+            if (line.length <= 75) line else (listOf(line.take(75)) + line.drop(75).chunked(74).map { " $it" }).joinToString("\r\n")
 
         private fun escape(value: String) =
             value.replace("\\", "\\\\").replace(",", "\\,").replace(";", "\\;").replace("\n", "\\n")

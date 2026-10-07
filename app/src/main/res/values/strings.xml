@@ -275,6 +275,8 @@
     <string name="about_delete_confirm_title">Delete everything?</string>
     <string name="about_delete_confirm">All your cards, photos, the Met list and your settings are removed from this phone. This can\'t be undone. Make a backup first if you might want them back.</string>
     <string name="settings_share_screen">Share screen</string>
+    <string name="send_photo">Include your photo when you send your contact card</string>
+    <string name="send_photo_detail">Only when you use Send. A tap never includes it, so it stays quick to read.</string>
     <string name="event_auto_clear">Clear it at the end of the day</string>
     <string name="share_full_brightness">Full brightness on the Share screen</string>
     <string name="share_full_brightness_detail">Helps the code scan in dim rooms. Your usual brightness comes back on the other tabs.</string>

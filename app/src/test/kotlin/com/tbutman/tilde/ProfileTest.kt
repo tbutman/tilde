@@ -154,4 +154,21 @@ class ProfileTest {
         // The name always stays: a contact card needs one.
         assertEquals("Jane Doe", full.forContactCard(Profile.CONTACT_FIELDS).name)
     }
+
+    @Test
+    fun aSentContactCardCanCarryThePhoto() {
+        val jane = Profile(name = "Jane Doe")
+        val photo = ByteArray(300) { it.toByte() }
+        val card = jane.vcard(photoJpeg = photo)
+        assertTrue(card.contains("PHOTO;ENCODING=b;TYPE=JPEG:"))
+        // Folded: no line longer than 75, continuations start with a space, and it unfolds to the photo.
+        val lines = card.split("\r\n")
+        assertTrue(lines.all { it.length <= 75 })
+        val unfolded = card.replace("\r\n ", "")
+        val encoded = unfolded.substringAfter("TYPE=JPEG:").substringBefore("\r\n")
+        assertTrue(java.util.Base64.getDecoder().decode(encoded).contentEquals(photo))
+        // Never on the compact card (the QR code), and not unless asked for.
+        assertFalse(jane.vcard(compact = true, photoJpeg = photo).contains("PHOTO"))
+        assertFalse(jane.vcard().contains("PHOTO"))
+    }
 }

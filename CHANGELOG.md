@@ -60,6 +60,9 @@ Not released yet. Tested on the emulator.
   GitLab and Figma (and LinkedIn, GitHub, Instagram, X and WhatsApp links), instead of the first
   letter of the link's name.
 
+- **Your photo in a sent contact card,** if you switch it on (Settings → Sharing). A tap never
+  includes it, so it stays quick to read.
+
 ### Share screen
 
 - Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap

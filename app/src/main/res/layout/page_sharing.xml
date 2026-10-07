@@ -51,6 +51,19 @@
             android:layout_marginTop="4dp"
             android:text="@string/event_auto_clear" />
 
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/share_send" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/send_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/send_photo"
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
+        <TextView style="@style/Hint" android:text="@string/send_photo_detail" />
+
         <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/settings_share_screen" />
 
         <com.google.android.material.materialswitch.MaterialSwitch

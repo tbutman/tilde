@@ -780,7 +780,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             val profile = prefs.profile
             val name = profile.name.filter { it.isLetterOrDigit() || it == ' ' }.trim().ifEmpty { "contact" }
             val file = File(cacheDir, "shared").apply { mkdirs() }.resolve("$name.vcf")
-            file.writeText(prefs.contactProfile.vcard())
+            val photo = if (prefs.sendPhoto) Photo.smallJpeg(this, prefs.activeCardId) else null
+            file.writeText(prefs.contactProfile.vcard(photoJpeg = photo))
             Intent(Intent.ACTION_SEND)
                 .setType("text/x-vcard")
                 .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, "$packageName.files", file))
