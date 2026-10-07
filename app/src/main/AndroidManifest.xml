@@ -3,7 +3,9 @@
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-feature android:name="android.hardware.nfc.hce" android:required="true" />
+    <!-- Optional: without NFC, Share shows "No NFC" and the code still works (and Receive says
+         to scan instead), so Play shouldn't hide Tilde from those phones. -->
+    <uses-feature android:name="android.hardware.nfc.hce" android:required="false" />
 
     <!-- No cloud backup: the profile, Wi-Fi password and Met notes stay on the phone. -->
     <application
