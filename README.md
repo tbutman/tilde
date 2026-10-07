@@ -133,7 +133,7 @@ Things worth knowing:
 
 Tilde works on its own; you don't need a card. If you have a 3D printer and want something to hand
 out too, the **Tilde card** is a free, open-source business card designed to go with it: a QR code
-on the front, and optionally an NFC sticker sealed inside. Customise it with your name and colours,
+on the front, and optionally an NFC sticker sealed inside. Customize it with your name and colours,
 print it, then use **Settings → Write a sticker** to put your link or contact card on the sticker.
 See [tbutman/tilde-card](https://github.com/tbutman/tilde-card).
 
