@@ -1,8 +1,13 @@
 # Changelog
 
-## Unreleased (1.2)
+## 1.2.0-beta.1 (7 October 2026)
 
-Not released yet. Tested on the emulator.
+A beta of 1.2: more than one card, a reorganised Settings with new options, a light theme, a
+home-screen widget, and Tilde in Portuguese. It's a pre-release, so Obtainium only offers it with
+**Include prereleases** turned on, and the download link on tbutman.com/tilde stays on 1.1.0.
+Installing it over 1.1 turns your profile into your first card, "My card", with everything kept;
+this beta is for testing that, and the features that need a real phone (answering taps with Tilde
+closed, locking stickers, the widget).
 
 ### More than one card
 
