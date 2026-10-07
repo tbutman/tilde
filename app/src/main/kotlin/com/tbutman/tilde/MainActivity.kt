@@ -855,6 +855,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     private fun setUpReceive() {
         findViewById<View>(R.id.clear_received).setOnClickListener { prefs.received = emptyList() }
+        findViewById<View>(R.id.receive_nfc_settings).setOnClickListener { runCatching { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) } }
     }
 
     private fun setUpMet() {
@@ -1173,6 +1174,19 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun renderReceived() {
+        // Receive needs NFC: without it, say what works instead; with it off, offer to turn it on.
+        val nfc = adapter
+        val (title, detail) = when {
+            nfc == null && !demo -> R.string.receive_no_nfc to null
+            nfc != null && !nfc.isEnabled && !demo -> R.string.receive_nfc_off to null
+            else -> R.string.receive_title to R.string.receive_detail
+        }
+        findViewById<TextView>(R.id.receive_title).setText(title)
+        findViewById<TextView>(R.id.receive_detail).apply {
+            visibility = if (detail == null) View.GONE else View.VISIBLE
+            detail?.let(::setText)
+        }
+        findViewById<View>(R.id.receive_nfc_settings).visibility = if (title == R.string.receive_nfc_off) View.VISIBLE else View.GONE
         val items = prefs.received
         findViewById<View>(R.id.received_empty).visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         findViewById<View>(R.id.clear_received).visibility = if (items.isEmpty()) View.GONE else View.VISIBLE

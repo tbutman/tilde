@@ -155,6 +155,9 @@
     <!-- Receive -->
     <string name="receive_title">Hold an NFC tag or another phone to the back of yours.</string>
     <string name="receive_detail">Tags, NFC business cards and Android phones running this app all work. iPhones can\'t send this way.</string>
+    <string name="receive_no_nfc">This phone can\'t receive taps. Scan their code with your camera instead.</string>
+    <string name="receive_nfc_off">NFC is off. Turn it on to receive taps.</string>
+    <string name="receive_turn_on">Turn on</string>
     <string name="received_label">Received</string>
     <string name="received_empty">Nothing yet.</string>
     <string name="received_nothing">That tag has no readable content.</string>

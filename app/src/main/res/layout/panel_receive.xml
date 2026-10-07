@@ -8,7 +8,9 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- What to do, or, without NFC (or with it off), why it can't. -->
         <TextView
+            android:id="@+id/receive_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/receive_title"
@@ -17,9 +19,19 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/receive_detail"
             style="@style/Hint"
             android:layout_marginTop="8dp"
             android:text="@string/receive_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/receive_nfc_settings"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/receive_turn_on"
+            android:visibility="gone" />
 
         <TextView style="@style/Label" android:text="@string/received_label" />
 

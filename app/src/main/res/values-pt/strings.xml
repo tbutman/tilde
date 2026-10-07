@@ -154,6 +154,9 @@
     <!-- Receive -->
     <string name="receive_title">Encosta uma etiqueta NFC ou outro telemóvel às costas do teu.</string>
     <string name="receive_detail">Funcionam etiquetas, cartões de visita NFC e telemóveis Android com esta app. Os iPhones não conseguem enviar desta forma.</string>
+    <string name="receive_no_nfc">Este telemóvel não consegue receber toques. Lê o código da outra pessoa com a câmara.</string>
+    <string name="receive_nfc_off">O NFC está desligado. Liga-o para receberes toques.</string>
+    <string name="receive_turn_on">Ligar</string>
     <string name="received_label">Recebido</string>
     <string name="received_empty">Ainda nada.</string>
     <string name="received_wifi">Wi-Fi: %1$s</string>
