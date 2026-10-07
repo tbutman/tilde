@@ -46,7 +46,7 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             if (!checked) { lock = false; return@setOnCheckedChangeListener }
             com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.write_lock_confirm_title)
-                .setMessage(R.string.write_lock_confirm)
+                .setMessage(listOfNotNull(getString(R.string.write_lock_confirm), whoGetsWhat()).joinToString("\n\n"))
                 .setPositiveButton(R.string.write_lock_yes) { _, _ -> lock = true }
                 .setNegativeButton(R.string.met_cancel) { _, _ -> box.isChecked = false }
                 .setOnCancelListener { box.isChecked = false }
@@ -69,6 +69,28 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     override fun onPause() {
         adapter?.disableReaderMode(this)
         super.onPause()
+    }
+
+    /**
+     * Who gets what from a sticker with the contact card or Guest Wi-Fi on it: anyone who taps it,
+     * for as long as it exists. Null for a link.
+     */
+    private fun whoGetsWhat(): String? = when (choice) {
+        Presets.WIFI -> getString(R.string.write_warning_wifi)
+        Presets.CONTACT -> {
+            val profile = prefs.contactProfile
+            val phone = profile.phones.any { it.second.isNotBlank() }
+            val email = profile.email.isNotBlank() || profile.email2.isNotBlank()
+            getString(
+                when {
+                    phone && email -> R.string.write_warning_contact
+                    phone -> R.string.write_warning_contact_phone
+                    email -> R.string.write_warning_contact_email
+                    else -> R.string.write_warning_contact_card
+                },
+            )
+        }
+        else -> null
     }
 
     /** What would be written, or null when the choice has nothing to write yet. */
@@ -97,6 +119,10 @@ class WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             visibility = if (prefs.cards.size > 1) View.VISIBLE else View.GONE
         }
         rows.bind(findViewById(R.id.write_choice_content), prefs.find(choice), selected = false)
+        findViewById<TextView>(R.id.write_warning).apply {
+            text = whoGetsWhat()
+            visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+        }
         val nfc = adapter
         val nfcOn = demo || nfc?.isEnabled == true
         val (icon, title, detail) = when {

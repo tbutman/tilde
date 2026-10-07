@@ -427,6 +427,11 @@
     <string name="write_nothing_link">Adiciona este link nas Definições, ou escolhe outra coisa.</string>
     <string name="write_nothing_wifi">Configura primeiro o Wi-Fi para convidados nas Definições.</string>
     <string name="write_note">Podes mudar um autocolante quando quiseres, gravando-o outra vez, a não ser que o bloqueies. Mudar de cartão ou editá-lo não altera os autocolantes já gravados.</string>
+    <string name="write_warning_contact">Quem encostar o telemóvel a este autocolante recebe o teu número de telefone e o teu email.</string>
+    <string name="write_warning_contact_phone">Quem encostar o telemóvel a este autocolante recebe o teu número de telefone.</string>
+    <string name="write_warning_contact_email">Quem encostar o telemóvel a este autocolante recebe o teu email.</string>
+    <string name="write_warning_contact_card">Quem encostar o telemóvel a este autocolante recebe o teu cartão de contacto.</string>
+    <string name="write_warning_wifi">Quem encostar o telemóvel a este autocolante pode ligar-se ao teu Wi-Fi.</string>
     <string name="write_lock">Bloquear depois de gravar, para ninguém o poder alterar</string>
     <string name="write_lock_confirm_title">Bloquear autocolantes de vez?</string>
     <string name="write_lock_confirm">Um autocolante bloqueado nunca mais pode ser alterado nem apagado, por ninguém, nem por ti. Se o teu link mudar, vais precisar de um autocolante novo. Enquanto isto estiver marcado, todos os autocolantes que gravares ficam bloqueados.</string>

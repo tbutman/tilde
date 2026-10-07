@@ -424,6 +424,11 @@
     <string name="write_nothing_link">Add this link under Settings, or choose something else.</string>
     <string name="write_nothing_wifi">Set up guest Wi-Fi under Settings first.</string>
     <string name="write_note">You can change a sticker any time by writing it again, unless you lock it. Switching or editing your card doesn\'t change stickers already written.</string>
+    <string name="write_warning_contact">Anyone who taps this sticker gets your phone number and email.</string>
+    <string name="write_warning_contact_phone">Anyone who taps this sticker gets your phone number.</string>
+    <string name="write_warning_contact_email">Anyone who taps this sticker gets your email.</string>
+    <string name="write_warning_contact_card">Anyone who taps this sticker gets your contact card.</string>
+    <string name="write_warning_wifi">Anyone who taps this sticker can join your Wi-Fi.</string>
     <string name="write_lock">Lock it after writing, so nobody can change it</string>
     <string name="write_lock_confirm_title">Lock stickers for good?</string>
     <string name="write_lock_confirm">A locked sticker can never be changed or erased again, by anyone, including you. If your link changes, you\'ll need a new sticker. While this is ticked, every sticker you write is locked.</string>

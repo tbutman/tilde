@@ -48,6 +48,14 @@
             <include android:id="@+id/write_choice_content" layout="@layout/row_preset" />
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- The contact card or Guest Wi-Fi: who can read it once it's on a sticker. -->
+        <TextView
+            android:id="@+id/write_warning"
+            style="@style/Hint"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/accent"
+            android:visibility="gone" />
+
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.Material3.CardView.Filled"
             android:layout_width="match_parent"
