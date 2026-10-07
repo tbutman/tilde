@@ -33,6 +33,19 @@
             android:layout_marginStart="-12dp"
             android:text="@string/about_source_link" />
 
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/about_delete_title" />
+
+        <TextView style="@style/Hint" android:text="@string/about_delete_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete_all"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/about_delete"
+            android:textColor="@color/danger" />
+
         <!-- Debug builds only: start the welcome screens again with an empty profile. -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/debug_welcome"

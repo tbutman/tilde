@@ -36,7 +36,7 @@ class PresetRows(private val context: Context, private val prefs: Prefs, private
         row.findViewById<TextView>(R.id.note).apply {
             visibility = if (preset.iphoneTap) View.GONE else View.VISIBLE
             val contact = preset.id == Presets.CONTACT
-            val opens = iphoneOpens(context, prefs.profile)
+            val opens = iphoneOpens(context, prefs.contactProfile)
             text = when {
                 writing && !contact -> context.getString(R.string.write_iphone_wifi)
                 writing && opens == null -> context.getString(R.string.write_iphone_contact_none)

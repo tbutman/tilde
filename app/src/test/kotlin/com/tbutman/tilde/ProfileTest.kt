@@ -126,4 +126,32 @@ class ProfileTest {
         // What's typed is cleaned without the length cut, so the field's own limit applies.
         assertEquals("ab", Profile.handleChars("A B"))
     }
+
+    @Test
+    fun theCompanyIsOnTheCardAndTheContactCard() {
+        val profile = Profile(name = "Jane Doe", title = "Product designer", company = "Acme")
+        assertEquals("Product designer · Acme", profile.titleLine)
+        assertEquals("Acme", Profile(name = "Jane", company = "Acme").titleLine)
+        assertTrue(profile.vcard().contains("ORG:Acme\r\nTITLE:Product designer\r\n"))
+        assertEquals(profile, Profile.parse(profile.toText()))
+    }
+
+    @Test
+    fun aCardCanLeaveDetailsOffItsContactCard() {
+        val full = Profile(
+            name = "Jane Doe", title = "Designer", company = "Acme", email = "jane@example.com", email2 = "jd@work.example",
+            website = "https://example.com", linkedin = "https://www.linkedin.com/in/janedoe", phones = listOf("mobile" to "+1 555 0100"),
+        )
+        val event = full.forContactCard(listOf(Profile.FIELD_PHONES, Profile.FIELD_EMAIL))
+        val card = event.vcard()
+        assertFalse(card.contains("TEL"))
+        assertFalse(card.contains("EMAIL"))
+        assertTrue(card.contains("ORG:Acme"))
+        // Without the website, the link an iPhone opens falls back to the next one.
+        val noSite = full.forContactCard(listOf(Profile.FIELD_WEBSITE))
+        assertEquals("LinkedIn", noSite.contactLink?.first)
+        assertEquals(null, full.forContactCard(listOf(Profile.FIELD_WEBSITE, Profile.FIELD_SOCIALS)).contactLink)
+        // The name always stays: a contact card needs one.
+        assertEquals("Jane Doe", full.forContactCard(Profile.CONTACT_FIELDS).name)
+    }
 }

@@ -7,7 +7,7 @@ import org.junit.Test
 class CardsTest {
     private val jane = Profile(name = "Jane Doe", title = "Product designer", website = "https://example.com", handle = "janedoe")
     private val tilde = SavedLink("a1", "Tilde", "https://tbutman.com/tilde")
-    private val work = Card("w1", "Work", "amber", jane, listOf(tilde), share = "link:a1", pinned = listOf("hello", "link:a1"), greeting = "Hello")
+    private val work = Card("w1", "Work", "amber", jane, listOf(tilde), share = "link:a1", pinned = listOf("hello", "link:a1"), greeting = "Hello", hidden = listOf("phones"))
     private val personal = Card("p2", "Personal", "teal", jane.copy(title = ""))
     private val event = Card("e3", "Web Summit", "blue", jane)
 

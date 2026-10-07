@@ -7,24 +7,65 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.TextView
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 /**
- * The settings that apply to every card, one short page each: Sharing (taps on or off, the event
- * tag), Guest Wi-Fi, and About. Fields save as they're typed.
+ * The settings that apply to every card, one short page each: Sharing (taps, the event tag, the
+ * Share screen's brightness, screen and vibration), Guest Wi-Fi, Met, Backup and restore, and
+ * About (with Delete all data). Fields save as they're typed.
  */
 class SettingsPageActivity : AppCompatActivity() {
     private val prefs by lazy { Prefs(this) }
+
+    // Backup and restore go through Android's own file picker: no storage permission, and the
+    // owner chooses where the file lives (Downloads, Drive, a USB stick…).
+    private val saveBackup = registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+        uri ?: return@registerForActivityResult
+        val json = Backups.toJson(prefs.backup(findViewById<MaterialCheckBox>(R.id.backup_wifi_password).isChecked))
+        val saved = runCatching { contentResolver.openOutputStream(uri)?.use { it.write(json.toByteArray()) } != null }.getOrDefault(false)
+        Toast.makeText(this, if (saved) R.string.backup_saved else R.string.backup_failed, Toast.LENGTH_SHORT).show()
+    }
+    private val openBackup = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri ?: return@registerForActivityResult
+        val text = runCatching { contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() } }.getOrNull()
+        val backup = try {
+            Backups.fromJson(text ?: throw Backups.Invalid(getString(R.string.backup_unreadable)))
+        } catch (e: Backups.Invalid) {
+            MaterialAlertDialogBuilder(this).setMessage(e.message).setPositiveButton(R.string.done, null).show()
+            return@registerForActivityResult
+        }
+        val date = android.text.format.DateUtils.formatDateTime(this, backup.created, android.text.format.DateUtils.FORMAT_SHOW_DATE or android.text.format.DateUtils.FORMAT_SHOW_YEAR)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.backup_confirm_title)
+            .setMessage(getString(
+                R.string.backup_confirm, date,
+                resources.getQuantityString(R.plurals.backup_confirm_cards, backup.cards.size, backup.cards.size),
+                resources.getQuantityString(R.plurals.backup_confirm_met, backup.met.size, backup.met.size),
+            ))
+            .setPositiveButton(R.string.backup_restore) { _, _ ->
+                prefs.restore(backup)
+                restartApp()
+            }
+            .setNegativeButton(R.string.met_cancel, null)
+            .show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         when (intent.getStringExtra(EXTRA_PAGE)) {
             PAGE_WIFI -> setUpWifi()
             PAGE_ABOUT -> setUpAbout()
+            PAGE_MET -> setUpMet()
+            PAGE_BACKUP -> setUpBackup()
             else -> setUpSharing()
         }
         findViewById<View>(R.id.page_done).setOnClickListener { finish() }
@@ -37,6 +78,44 @@ class SettingsPageActivity : AppCompatActivity() {
             setOnCheckedChangeListener { _, checked -> prefs.enabled = checked }
         }
         findViewById<TextInputEditText>(R.id.event).saveAsYouType(prefs.event) { prefs.event = it.trim() }
+        fun toggle(id: Int, value: Boolean, save: (Boolean) -> Unit) = findViewById<android.widget.CompoundButton>(id).apply {
+            isChecked = value
+            setOnCheckedChangeListener { _, checked -> save(checked) }
+        }
+        toggle(R.id.event_auto_clear, prefs.eventAutoClear) { prefs.eventAutoClear = it }
+        toggle(R.id.full_brightness, prefs.fullBrightness) { prefs.fullBrightness = it }
+        toggle(R.id.keep_screen_on, prefs.keepScreenOn) { prefs.keepScreenOn = it }
+        toggle(R.id.vibrate, prefs.vibrate) { prefs.vibrate = it }
+    }
+
+    private fun setUpMet() {
+        setContentView(R.layout.page_met)
+        findViewById<MaterialSwitch>(R.id.met_ask_note).apply {
+            isChecked = prefs.metAskNote
+            setOnCheckedChangeListener { _, checked -> prefs.metAskNote = checked }
+        }
+        val group = findViewById<RadioGroup>(R.id.met_keep)
+        for (months in MET_KEEP_CHOICES) {
+            group.addView(RadioButton(this).apply {
+                id = View.generateViewId()
+                text = if (months == 0) getString(R.string.met_keep_never) else resources.getQuantityString(R.plurals.met_keep_months, months, months)
+                setTextColor(getColor(R.color.text))
+                isChecked = prefs.metKeepMonths == months
+                setOnCheckedChangeListener { _, checked -> if (checked) prefs.metKeepMonths = months }
+            })
+        }
+    }
+
+    private fun setUpBackup() {
+        setContentView(R.layout.page_backup)
+        findViewById<View>(R.id.backup_export).setOnClickListener { saveBackup.launch(Backups.fileName(java.time.LocalDate.now())) }
+        findViewById<View>(R.id.backup_import).setOnClickListener { openBackup.launch(arrayOf("application/json", "application/octet-stream", "text/plain")) }
+    }
+
+    /** After restoring or deleting everything: start Tilde afresh, so every screen shows the new data. */
+    private fun restartApp() {
+        startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        finish()
     }
 
     private fun setUpWifi() {
@@ -64,6 +143,17 @@ class SettingsPageActivity : AppCompatActivity() {
         findViewById<View>(R.id.about_source).setOnClickListener {
             runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.about_source_url)))) }
         }
+        findViewById<View>(R.id.delete_all).setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.about_delete_confirm_title)
+                .setMessage(R.string.about_delete_confirm)
+                .setPositiveButton(R.string.about_delete) { _, _ ->
+                    prefs.deleteEverything()
+                    restartApp()
+                }
+                .setNegativeButton(R.string.met_cancel, null)
+                .show()
+        }
         // Debug builds only: back to one empty card (photos deleted), and the welcome screens again.
         findViewById<View>(R.id.debug_welcome).apply {
             visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
@@ -82,6 +172,11 @@ class SettingsPageActivity : AppCompatActivity() {
         const val PAGE_SHARING = "sharing"
         const val PAGE_WIFI = "wifi"
         const val PAGE_ABOUT = "about"
+        const val PAGE_MET = "met"
+        const val PAGE_BACKUP = "backup"
+
+        /** "Delete entries older than": never, or this many months. */
+        val MET_KEEP_CHOICES = listOf(0, 3, 6, 12)
 
         fun intent(context: Context, page: String): Intent = Intent(context, SettingsPageActivity::class.java).putExtra(EXTRA_PAGE, page)
     }

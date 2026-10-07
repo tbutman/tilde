@@ -437,7 +437,14 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         super.onResume()
         resumed = true
         // Card emulation only works with the screen on, so keep it on while the app is open.
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // Unless switched off in Settings → Sharing.
+        if (prefs.keepScreenOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // "Delete entries older than…" (Settings → Met).
+        prefs.metKeepMonths.takeIf { it > 0 }?.let { months ->
+            val kept = MetLog.keepMonths(prefs.met, System.currentTimeMillis(), months)
+            if (kept.size != prefs.met.size) prefs.met = kept
+        }
         prefs.store.registerOnSharedPreferenceChangeListener(prefsListener)
         lastReads = prefs.reads
         applyNfcMode()
@@ -499,7 +506,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     /** Full brightness on the Share tab, so the QR code scans in dim rooms; the system's level elsewhere. */
     private fun applyBrightness() {
         window.attributes = window.attributes.apply {
-            screenBrightness = if (resumed && prefs.tab == Prefs.TAB_SHARE) 1f else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
+            screenBrightness = if (resumed && prefs.tab == Prefs.TAB_SHARE && prefs.fullBrightness) 1f else WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
         }
     }
 
@@ -534,8 +541,16 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             if (prefs.tab != Prefs.TAB_RECEIVE) {
                 sent.visibility = View.VISIBLE
                 main.removeCallbacksAndMessages(SENT_TOKEN)
-                // Long enough to reach for "Add a note".
-                main.postAtTime({ sent.visibility = View.GONE }, SENT_TOKEN, SystemClock.uptimeMillis() + 8000)
+                if (prefs.metAskNote) {
+                    // "Ask for a note after each tap": a moment of Sent for both of you, then who was it?
+                    main.postAtTime({
+                        sent.visibility = View.GONE
+                        prefs.met.firstOrNull()?.let { editNote(it) }
+                    }, SENT_TOKEN, SystemClock.uptimeMillis() + 1500)
+                } else {
+                    // Long enough to reach for "Add a note".
+                    main.postAtTime({ sent.visibility = View.GONE }, SENT_TOKEN, SystemClock.uptimeMillis() + 8000)
+                }
             }
         }
         lastReads = now
@@ -765,7 +780,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             val profile = prefs.profile
             val name = profile.name.filter { it.isLetterOrDigit() || it == ' ' }.trim().ifEmpty { "contact" }
             val file = File(cacheDir, "shared").apply { mkdirs() }.resolve("$name.vcf")
-            file.writeText(profile.vcard())
+            file.writeText(prefs.contactProfile.vcard())
             Intent(Intent.ACTION_SEND)
                 .setType("text/x-vcard")
                 .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, "$packageName.files", file))
@@ -805,6 +820,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         row(R.id.row_cards, R.drawable.ic_feature_card, R.string.row_cards) { showCardSwitcher() }
         row(R.id.row_sharing, R.drawable.ic_feature_tap, R.string.settings_sharing) { openPage(SettingsPageActivity.PAGE_SHARING) }
         row(R.id.row_wifi, R.drawable.ic_opt_wifi, R.string.settings_wifi) { openPage(SettingsPageActivity.PAGE_WIFI) }
+        row(R.id.row_met, R.drawable.ic_nav_met, R.string.tab_met) { openPage(SettingsPageActivity.PAGE_MET) }
+        row(R.id.row_backup, R.drawable.ic_backup, R.string.settings_backup) { openPage(SettingsPageActivity.PAGE_BACKUP) }
         row(R.id.row_write, R.drawable.ic_edit, R.string.write_open) {
             startActivity(Intent(this, WriteActivity::class.java).putExtra("demo", demo))
         }
@@ -888,7 +905,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         if (!wifiMissing) findViewById<ImageView>(R.id.qr).setImageBitmap(prefs.qrText().takeIf { it.isNotEmpty() }?.let(::qrBitmap))
         findViewById<TextView>(R.id.iphone_hint).apply {
             visibility = if (tapping && !preset.iphoneTap && !wifiMissing) View.VISIBLE else View.GONE
-            val opens = PresetRows.iphoneOpens(this@MainActivity, profile)
+            val opens = PresetRows.iphoneOpens(this@MainActivity, prefs.contactProfile)
             text = when {
                 preset.id == Presets.WIFI -> getString(R.string.iphone_hint_wifi)
                 opens != null -> getString(R.string.iphone_hint_contact_link, opens)
@@ -985,8 +1002,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         card.findViewById<View>(R.id.card_band).setBackgroundColor(Cards.colour(colour ?: Cards.COLOURS.first().key).argb.toInt())
         card.findViewById<TextView>(R.id.name).text = profile.name
         card.findViewById<TextView>(R.id.card_title).apply {
-            text = profile.title
-            visibility = if (profile.title.isBlank()) View.GONE else View.VISIBLE
+            text = profile.titleLine
+            visibility = if (profile.titleLine.isBlank()) View.GONE else View.VISIBLE
         }
         bindAvatar(card.findViewById(R.id.card_avatar), profile, usePhoto)
     }
@@ -1021,7 +1038,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             android.content.res.ColorStateList.valueOf(Cards.colour(card.colour).argb.toInt())
         findViewById<TextView>(R.id.settings_card_name).text = profile.name.ifBlank { getString(R.string.welcome_name) }
         findViewById<TextView>(R.id.settings_card_summary).text = listOfNotNull(
-            profile.title.takeIf { it.isNotBlank() },
+            profile.titleLine.takeIf { it.isNotBlank() },
             card.links.size.takeIf { it > 0 }?.let { resources.getQuantityString(R.plurals.row_card_links, it, it) },
         ).joinToString(" · ")
         fun summary(id: Int, text: String) { findViewById<View>(id).findViewById<TextView>(R.id.setting_summary).text = text }
@@ -1032,6 +1049,12 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             prefs.event.takeIf { it.isNotBlank() }?.let { getString(R.string.row_event, it) } ?: getString(R.string.row_event_none),
         ).joinToString(" · "))
         summary(R.id.row_wifi, prefs.wifiSsid.takeIf { prefs.wifiReady } ?: getString(R.string.row_wifi_none))
+        summary(R.id.row_met, listOfNotNull(
+            prefs.metKeepMonths.takeIf { it > 0 }?.let { getString(R.string.row_met_keep, resources.getQuantityString(R.plurals.met_keep_months, it, it)) }
+                ?: getString(R.string.row_met_keep_all),
+            getString(R.string.row_met_note).takeIf { prefs.metAskNote },
+        ).joinToString(" · "))
+        summary(R.id.row_backup, getString(R.string.row_backup_summary))
         summary(R.id.row_write, getString(R.string.row_write_summary))
         summary(R.id.row_tile, getString(R.string.row_tile_summary))
         summary(R.id.row_about, getString(R.string.version, BuildConfig.VERSION_NAME))

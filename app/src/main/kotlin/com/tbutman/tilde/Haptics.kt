@@ -7,8 +7,9 @@ import android.os.Vibrator
 import android.os.VibratorManager
 
 object Haptics {
-    /** The double buzz for "done": a tap was read, or a card was written. */
+    /** The double buzz for "done": a tap was read, or a sticker written. Unless switched off in Settings. */
     fun buzz(context: Context) {
+        if (!Prefs(context).vibrate) return
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             context.getSystemService(VibratorManager::class.java).defaultVibrator
         } else {

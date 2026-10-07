@@ -36,6 +36,23 @@ Not released yet. Tested on the emulator.
 - **About** has the version, a short privacy note and a link to the source code.
 - **Set up** on Guest Wi-Fi or the contact card opens the right page directly.
 
+### New settings
+
+- **Company:** a field next to your job title, shown on your card ("Product designer · Acme") and on
+  the contact card.
+- **What each card's contact card includes:** untick details a card should leave out, such as your
+  phone number on a card for events. Taps, the QR code, Send and the link iPhones open all follow it.
+- **Backup and restore:** save everything (cards, photos, Met and settings) to a file you keep, and
+  restore it on a new phone. The guest Wi-Fi password is only included if you tick it. Tilde still
+  has no cloud backup and no storage permission: you choose where the file goes.
+- **The event tag clears itself** at the end of the day you set it, so yesterday's event doesn't
+  tag today's links. You can switch that off.
+- **Delete all data** in About, which removes everything as uninstalling would.
+- **Share screen switches** (Settings → Sharing): full brightness, keeping the screen on, and
+  vibrating when a tap is read. All on, as before, until you change them.
+- **Met** (Settings → Met): ask for a note after each tap, and delete entries older than 3, 6 or 12
+  months.
+
 ### Share screen
 
 - Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap

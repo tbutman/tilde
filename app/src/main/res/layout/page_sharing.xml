@@ -44,6 +44,49 @@
 
         <TextView style="@style/Hint" android:layout_marginTop="6dp" android:text="@string/event_detail" />
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/event_auto_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/event_auto_clear" />
+
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/settings_share_screen" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/full_brightness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="@string/share_full_brightness"
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
+        <TextView style="@style/Hint" android:text="@string/share_full_brightness_detail" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/keep_screen_on"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="@string/share_keep_screen_on"
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
+        <TextView style="@style/Hint" android:text="@string/share_keep_screen_on_detail" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/vibrate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="@string/share_vibrate"
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/page_done"
             style="@style/Widget.Material3.Button.TextButton"

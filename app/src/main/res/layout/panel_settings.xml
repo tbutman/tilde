@@ -106,9 +106,13 @@
 
         <include android:id="@+id/row_wifi" layout="@layout/row_setting" />
 
+        <include android:id="@+id/row_met" layout="@layout/row_setting" />
+
         <include android:id="@+id/row_write" layout="@layout/row_setting" />
 
         <TextView style="@style/Label" android:text="@string/settings_app" />
+
+        <include android:id="@+id/row_backup" layout="@layout/row_setting" />
 
         <include android:id="@+id/row_tile" layout="@layout/row_setting" />
 

@@ -13,6 +13,8 @@ import java.util.Properties
 data class Profile(
     val name: String = "",
     val title: String = "",
+    /** Where they work; on the card next to the title, and the contact card's organisation (ORG). */
+    val company: String = "",
     val email: String = "",
     /** An optional second address, such as work and personal; on the contact card only. */
     val email2: String = "",
@@ -31,6 +33,27 @@ data class Profile(
     val isSet: Boolean get() = name.isNotBlank()
     val firstName: String get() = name.trim().substringBefore(' ')
     val lastName: String get() = name.trim().substringAfter(' ', "")
+
+    /** The card's second line: "Product designer · Acme", or whichever of the two there is. */
+    val titleLine: String get() = listOf(title, company).map { it.trim() }.filter { it.isNotEmpty() }.joinToString(" · ")
+
+    /**
+     * This profile as its contact card shows it, leaving out the details in `hidden` (see
+     * [CONTACT_FIELDS]): an event card without the phone number, say. The contact card, its QR code,
+     * Send and the link iPhones open all use this.
+     */
+    fun forContactCard(hidden: Collection<String>): Profile = copy(
+        title = if (FIELD_TITLE in hidden) "" else title,
+        company = if (FIELD_COMPANY in hidden) "" else company,
+        email = if (FIELD_EMAIL in hidden) "" else email,
+        email2 = if (FIELD_EMAIL in hidden) "" else email2,
+        phones = if (FIELD_PHONES in hidden) emptyList() else phones,
+        website = if (FIELD_WEBSITE in hidden) "" else website,
+        linkedin = if (FIELD_SOCIALS in hidden) "" else linkedin,
+        github = if (FIELD_SOCIALS in hidden) "" else github,
+        instagram = if (FIELD_SOCIALS in hidden) "" else instagram,
+        x = if (FIELD_SOCIALS in hidden) "" else x,
+    )
 
     /**
      * The link a contact card carries for phones that only follow links (iPhones, on a tap): the
@@ -76,6 +99,7 @@ data class Profile(
     fun vcard(compact: Boolean = false): String {
         var item = 0
         val lines = mutableListOf("BEGIN:VCARD", "VERSION:3.0", "N:${escape(lastName)};${escape(firstName)};;;", "FN:${escape(name.trim())}")
+        if (company.isNotBlank()) lines += "ORG:${escape(company.trim())}"
         if (title.isNotBlank()) lines += "TITLE:${escape(title.trim())}"
         for (address in listOf(email, email2).map { it.trim() }.filter { it.isNotEmpty() }.distinct()) {
             lines += "EMAIL;TYPE=INTERNET:$address"
@@ -101,7 +125,7 @@ data class Profile(
     fun toText(): String {
         val props = Properties()
         fun put(key: String, value: String) { if (value.isNotBlank()) props.setProperty(key, value) }
-        put("name", name); put("title", title); put("email", email); put("email.2", email2); put("website", website); put("handle", handle)
+        put("name", name); put("title", title); put("company", company); put("email", email); put("email.2", email2); put("website", website); put("handle", handle)
         put("linkedin", linkedin); put("github", github); put("instagram", instagram); put("x", x); put("whatsapp.number", whatsapp)
         phones.forEachIndexed { i, (label, number) -> put("phone.${i + 1}.label", label); put("phone.${i + 1}.number", number) }
         return StringWriter().also { props.store(it, null) }.toString()
@@ -124,6 +148,16 @@ data class Profile(
     }
 
     companion object {
+        const val FIELD_TITLE = "title"
+        const val FIELD_COMPANY = "company"
+        const val FIELD_EMAIL = "email"
+        const val FIELD_PHONES = "phones"
+        const val FIELD_WEBSITE = "website"
+        const val FIELD_SOCIALS = "socials"
+
+        /** What a card can leave off its contact card, in the order Edit card lists them. */
+        val CONTACT_FIELDS = listOf(FIELD_TITLE, FIELD_COMPANY, FIELD_EMAIL, FIELD_PHONES, FIELD_WEBSITE, FIELD_SOCIALS)
+
         /** The longest tilde handle (the name after ~/ on the Share screen). */
         const val HANDLE_MAX = 20
 
@@ -169,7 +203,7 @@ data class Profile(
                 .takeWhile { it.second.isNotEmpty() }
                 .toList()
             return Profile(
-                name = get("name"), title = get("title"), email = get("email"), email2 = get("email.2"), website = get("website"),
+                name = get("name"), title = get("title"), company = get("company"), email = get("email"), email2 = get("email.2"), website = get("website"),
                 handle = get("handle"), linkedin = get("linkedin"), github = get("github"),
                 instagram = get("instagram"), x = get("x"), phones = phones, whatsapp = get("whatsapp.number"),
             )

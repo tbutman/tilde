@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings → Backup and restore: everything to a file the owner keeps, and back. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Panel"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView style="@style/StepTitle" android:text="@string/settings_backup" android:textSize="22sp" />
+
+        <TextView style="@style/StepBody" android:text="@string/backup_body" />
+
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/backup_export_title" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/backup_wifi_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_include_wifi" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backup_export"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/backup_export" />
+
+        <TextView style="@style/Hint" android:layout_marginTop="8dp" android:text="@string/backup_private" />
+
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/backup_import_title" />
+
+        <TextView style="@style/Hint" android:text="@string/backup_import_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backup_import"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/backup_import" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/page_done"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="24dp"
+            android:text="@string/write_close" />
+    </LinearLayout>
+</ScrollView>

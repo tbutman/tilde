@@ -1,7 +1,10 @@
 package com.tbutman.tilde
 
+import org.json.JSONArray
+import org.json.JSONObject
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 /**
@@ -29,6 +32,28 @@ object MetLog {
     fun withNote(log: List<Meeting>, time: Long, note: String) = log.map { if (it.time == time) it.copy(note = note) else it }
 
     fun without(log: List<Meeting>, time: Long) = log.filterNot { it.time == time }
+
+    /**
+     * Keeps the entries from the last `months` months (0: keep everything), for the "Delete entries
+     * older than" setting.
+     */
+    fun keepMonths(log: List<Meeting>, now: Long, months: Int, zone: ZoneId = ZoneId.systemDefault()): List<Meeting> {
+        if (months <= 0) return log
+        val cutoff = ZonedDateTime.ofInstant(Instant.ofEpochMilli(now), zone).minusMonths(months.toLong()).toInstant().toEpochMilli()
+        return log.filter { it.time >= cutoff }
+    }
+
+    fun toJson(log: List<Meeting>): String = JSONArray().apply {
+        log.forEach { m -> put(JSONObject().put("time", m.time).put("event", m.event).put("shared", m.shared).put("note", m.note).put("card", m.card)) }
+    }.toString()
+
+    fun fromJson(json: String?): List<Meeting> = runCatching {
+        val array = JSONArray(json ?: "[]")
+        (0 until array.length()).map { i ->
+            val o = array.getJSONObject(i)
+            Meeting(o.getLong("time"), o.optString("event"), o.optString("shared"), o.optString("note"), o.optString("card"))
+        }
+    }.getOrDefault(emptyList())
 
     /** CSV, oldest first, for pasting into a spreadsheet or CRM. */
     fun csv(log: List<Meeting>, zone: ZoneId = ZoneId.systemDefault()): String {

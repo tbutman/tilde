@@ -124,6 +124,20 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Field"
+            android:hint="@string/profile_company"
+            android:labelFor="@id/profile_company">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/profile_company"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Field"
             android:hint="@string/profile_handle"
             android:labelFor="@id/profile_handle"
             app:helperText="@string/profile_handle_helper"
@@ -314,6 +328,18 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView style="@style/Hint" android:layout_marginTop="6dp" android:text="@string/whatsapp_detail" />
+
+        <!-- What this card's contact card includes: checkboxes added in code. -->
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/edit_section_contact_card" />
+
+        <TextView style="@style/Hint" android:text="@string/edit_contact_card_detail" />
+
+        <LinearLayout
+            android:id="@+id/contact_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/edit_done"

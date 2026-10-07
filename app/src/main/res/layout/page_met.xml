@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings → Met: a note prompt after each tap, and deleting old entries. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Panel"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView style="@style/StepTitle" android:text="@string/tab_met" android:textSize="22sp" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/met_ask_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="@string/met_ask_note"
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
+        <TextView style="@style/Hint" android:text="@string/met_ask_note_detail" />
+
+        <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/met_keep" />
+
+        <RadioGroup
+            android:id="@+id/met_keep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView style="@style/Hint" android:text="@string/met_keep_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/page_done"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="24dp"
+            android:text="@string/write_close" />
+    </LinearLayout>
+</ScrollView>

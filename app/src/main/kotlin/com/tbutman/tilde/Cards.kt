@@ -20,6 +20,8 @@ data class Card(
     val share: String? = null,
     val pinned: List<String>? = null,
     val greeting: String? = null,
+    /** Details this card leaves off its contact card (Profile.CONTACT_FIELDS); everything is on by default. */
+    val hidden: List<String> = emptyList(),
 )
 
 /** Cards as stored, and the rules for adding, copying, deleting and ordering them. Unit-tested. */
@@ -51,6 +53,7 @@ object Cards {
                 card.share?.let { put("share", it) }
                 card.pinned?.let { put("pinned", JSONArray(it)) }
                 card.greeting?.let { put("greeting", it) }
+                if (card.hidden.isNotEmpty()) put("hidden", JSONArray(card.hidden))
             })
         }
     }.toString()
@@ -68,6 +71,7 @@ object Cards {
                 share = o.optString("share").takeIf { o.has("share") },
                 pinned = o.optJSONArray("pinned")?.let { a -> (0 until a.length()).map { a.getString(it) } },
                 greeting = o.optString("greeting").takeIf { o.has("greeting") },
+                hidden = o.optJSONArray("hidden")?.let { a -> (0 until a.length()).map { a.getString(it) } }.orEmpty(),
             )
         }
     }.getOrDefault(emptyList())

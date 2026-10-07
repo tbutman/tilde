@@ -75,6 +75,15 @@ class Prefs(context: Context) {
         activeCardId = card.id
     }
 
+    /** What the active card leaves off its contact card (see Profile.CONTACT_FIELDS). */
+    var contactHidden: List<String>
+        get() = activeCard.hidden
+        set(value) = updateActive { it.copy(hidden = value.distinct()) }
+
+    /** The active card's profile as its contact card shows it: without the details it leaves off. */
+    val contactProfile: Profile
+        get() = activeCard.let { it.profile.forContactCard(it.hidden) }
+
     /** The active card's profile: what it shows and shares. Edited in Settings. */
     var profile: Profile
         get() = activeCard.profile
@@ -146,9 +155,104 @@ class Prefs(context: Context) {
     fun quickSwitch(): List<Presets.Preset> = pinned.toSet().let { pins -> available().filter { it.id in pins } }
 
     /** Optional tag added to links on the profile's website as ?event=, e.g. the meetup's name. */
+    /** Cleared at the end of the day it was set (see [eventAutoClear]), so yesterday's tag doesn't linger. */
     var event: String
-        get() = store.getString(KEY_EVENT, "") ?: ""
-        set(value) = store.edit().putString(KEY_EVENT, value).apply()
+        get() {
+            val tag = store.getString(KEY_EVENT, "") ?: ""
+            if (tag.isNotEmpty() && EventTag.expired(store.getString(KEY_EVENT_DAY, null), today(), eventAutoClear)) {
+                store.edit().remove(KEY_EVENT).remove(KEY_EVENT_DAY).apply()
+                return ""
+            }
+            return tag
+        }
+        set(value) = store.edit().putString(KEY_EVENT, value).putString(KEY_EVENT_DAY, today()).apply()
+
+    private fun today() = java.time.LocalDate.now().toString()
+
+    /** Whether the event tag clears itself at the end of the day. On unless switched off. */
+    var eventAutoClear: Boolean
+        get() = store.getBoolean(KEY_EVENT_AUTO_CLEAR, true)
+        set(value) = store.edit().putBoolean(KEY_EVENT_AUTO_CLEAR, value).putString(KEY_EVENT_DAY, today()).apply()
+
+    /** Full brightness on the Share screen, so the code scans in dim rooms. */
+    var fullBrightness: Boolean
+        get() = store.getBoolean(KEY_FULL_BRIGHTNESS, true)
+        set(value) = store.edit().putBoolean(KEY_FULL_BRIGHTNESS, value).apply()
+
+    /** Keep the screen on while Tilde is open: taps only work with the screen on. */
+    var keepScreenOn: Boolean
+        get() = store.getBoolean(KEY_KEEP_SCREEN_ON, true)
+        set(value) = store.edit().putBoolean(KEY_KEEP_SCREEN_ON, value).apply()
+
+    /** A short vibration when a tap is read, or a sticker written. */
+    var vibrate: Boolean
+        get() = store.getBoolean(KEY_VIBRATE, true)
+        set(value) = store.edit().putBoolean(KEY_VIBRATE, value).apply()
+
+    /** After each tap, ask who it was (the note) straight away. */
+    var metAskNote: Boolean
+        get() = store.getBoolean(KEY_MET_ASK_NOTE, false)
+        set(value) = store.edit().putBoolean(KEY_MET_ASK_NOTE, value).apply()
+
+    /** Met entries older than this many months are deleted; 0 keeps everything. */
+    var metKeepMonths: Int
+        get() = store.getInt(KEY_MET_KEEP_MONTHS, 0)
+        set(value) = store.edit().putInt(KEY_MET_KEEP_MONTHS, value).apply()
+
+    // ---- Backup, restore and deleting everything ----
+
+    /** Everything worth keeping, for a backup file. The Wi-Fi password only when asked for. */
+    fun backup(includeWifiPassword: Boolean): Backup = Backup(
+        created = System.currentTimeMillis(),
+        cards = cards,
+        activeCardId = activeCardId,
+        photos = cards.mapNotNull { card -> Photo.file(filesDir, card.id).takeIf { it.exists() }?.let { card.id to it.readBytes() } }.toMap(),
+        met = met,
+        enabled = enabled,
+        event = event,
+        wifiSsid = wifiSsid,
+        wifiPassword = wifiPassword.takeIf { includeWifiPassword },
+        wifiOpen = wifiOpen,
+        settings = mapOf(
+            KEY_EVENT_AUTO_CLEAR to eventAutoClear, KEY_FULL_BRIGHTNESS to fullBrightness, KEY_KEEP_SCREEN_ON to keepScreenOn,
+            KEY_VIBRATE to vibrate, KEY_MET_ASK_NOTE to metAskNote, KEY_MET_KEEP_MONTHS to metKeepMonths,
+        ),
+    )
+
+    /**
+     * Replaces everything with a backup: cards and their photos, Met, sharing, Wi-Fi (its password
+     * only if the backup has one) and the switches. Receive history and the read count stay as
+     * they are.
+     */
+    fun restore(backup: Backup) {
+        cards.forEach { Photo.file(filesDir, it.id).delete() }
+        backup.photos.forEach { (id, bytes) -> Photo.file(filesDir, id).writeBytes(bytes) }
+        val edit = store.edit()
+            .putString(KEY_CARDS, Cards.toJson(backup.cards))
+            .putString(KEY_ACTIVE_CARD, backup.activeCardId)
+            .putString(KEY_MET, MetLog.toJson(backup.met))
+            .putBoolean(KEY_ENABLED, backup.enabled)
+            .putString(KEY_EVENT, backup.event).putString(KEY_EVENT_DAY, today())
+            .putString(KEY_WIFI_SSID, backup.wifiSsid)
+            .putBoolean(KEY_WIFI_OPEN, backup.wifiOpen)
+            .putBoolean(KEY_WELCOMED, true)
+            .putInt(KEY_PHOTO_VERSION, photoVersion + 1)
+        backup.wifiPassword?.let { edit.putString(KEY_WIFI_PASSWORD, it) }
+        backup.settings.forEach { (key, value) ->
+            when (value) {
+                is Boolean -> edit.putBoolean(key, value)
+                is Int -> edit.putInt(key, value)
+            }
+        }
+        edit.apply()
+    }
+
+    /** Delete all data: every card, photo, Met entry and setting. Tilde starts again at the welcome. */
+    fun deleteEverything() {
+        cards.forEach { Photo.file(filesDir, it.id).delete() }
+        java.io.File(filesDir, Photo.LEGACY_FILE).delete()
+        store.edit().clear().apply()
+    }
 
     /** Text the active card types into a WhatsApp chat for them to send or not; blank for an empty chat. */
     var whatsappGreeting: String
@@ -178,7 +282,7 @@ class Prefs(context: Context) {
             Presets.CUSTOM -> links.firstOrNull()?.url.orEmpty()
             Presets.WHATSAPP -> Profile.whatsappUrl(profile.whatsapp, whatsappGreeting) ?: ""
             // The contact card carries a link too, for readers that only act on links (iPhones).
-            Presets.CONTACT -> profile.contactLink?.second.orEmpty()
+            Presets.CONTACT -> profile.forContactCard(activeCard.hidden).contactLink?.second.orEmpty()
             Presets.WIFI -> profile.website
             else -> SavedLink.idOf(id)?.let { linkId -> links.firstOrNull { it.id == linkId }?.url }
                 ?: Presets.profileUrl(id, profile) ?: ""
@@ -204,7 +308,7 @@ class Prefs(context: Context) {
             // fallback for readers that only act on URLs.
             Presets.CONTACT -> Ndef.message(
                 listOfNotNull(
-                    Ndef.mimeRecord("text/vcard", profile.vcard().toByteArray(Charsets.UTF_8)),
+                    Ndef.mimeRecord("text/vcard", contactProfile.vcard().toByteArray(Charsets.UTF_8)),
                     url.takeIf { it.isNotEmpty() }?.let { Ndef.uriRecord(it) },
                 ),
             )
@@ -215,27 +319,15 @@ class Prefs(context: Context) {
 
     /** What the on-screen QR code encodes, for phones without NFC. */
     fun qrText(): String = when (share) {
-        Presets.CONTACT -> profile.vcard(compact = true)
+        Presets.CONTACT -> contactProfile.vcard(compact = true)
         Presets.WIFI -> Wifi.qrText(wifiSsid, wifiPassword, wifiOpen)
         else -> url
     }
 
     /** People met: one entry per completed tap or manual entry, newest first. Only on this phone. */
     var met: List<Meeting>
-        get() = runCatching {
-            val array = JSONArray(store.getString(KEY_MET, "[]"))
-            (0 until array.length()).map { i ->
-                val o = array.getJSONObject(i)
-                Meeting(o.getLong("time"), o.optString("event"), o.optString("shared"), o.optString("note"), o.optString("card"))
-            }
-        }.getOrDefault(emptyList())
-        set(value) {
-            val array = JSONArray()
-            value.forEach { m ->
-                array.put(JSONObject().put("time", m.time).put("event", m.event).put("shared", m.shared).put("note", m.note).put("card", m.card))
-            }
-            store.edit().putString(KEY_MET, array.toString()).apply()
-        }
+        get() = MetLog.fromJson(store.getString(KEY_MET, "[]"))
+        set(value) = store.edit().putString(KEY_MET, MetLog.toJson(value)).apply()
 
     /** Things Receive mode has read, newest first; at most HISTORY_SIZE. */
     var received: List<Received>
@@ -276,6 +368,13 @@ class Prefs(context: Context) {
         const val KEY_LINKS = "links"
         const val KEY_PINNED = "pinned"
         const val KEY_EVENT = "event"
+        const val KEY_EVENT_DAY = "event_day"
+        const val KEY_EVENT_AUTO_CLEAR = "event_auto_clear"
+        const val KEY_FULL_BRIGHTNESS = "full_brightness"
+        const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
+        const val KEY_VIBRATE = "vibrate"
+        const val KEY_MET_ASK_NOTE = "met_ask_note"
+        const val KEY_MET_KEEP_MONTHS = "met_keep_months"
         const val KEY_WHATSAPP_GREETING = "whatsapp_greeting"
         const val KEY_WIFI_SSID = "wifi_ssid"
         const val KEY_WIFI_PASSWORD = "wifi_password"

@@ -59,6 +59,7 @@ class CardEditActivity : AppCompatActivity() {
             findViewById<TextInputEditText>(id).saveAsYouType(value) { text -> prefs.profile = prefs.profile.update(text.trim()) }
         profileField(R.id.profile_name, profile.name) { copy(name = it) }
         profileField(R.id.profile_title, profile.title) { copy(title = it) }
+        profileField(R.id.profile_company, profile.company) { copy(company = it) }
         findViewById<TextInputEditText>(R.id.profile_handle).filters = handleFilters()
         profileField(R.id.profile_handle, profile.handle) { copy(handle = it) }
         profileField(R.id.profile_email, profile.email) { copy(email = it) }
@@ -90,6 +91,24 @@ class CardEditActivity : AppCompatActivity() {
             addPhoneRow(country ?: home, if (country == null) number else rest, label, focus = false)
         }
         if (phoneRows.isEmpty()) addPhoneRow(home, "", "", focus = false)
+
+        // What the contact card includes: everything, unless this card leaves something out.
+        val labels = mapOf(
+            Profile.FIELD_TITLE to R.string.contact_field_title, Profile.FIELD_COMPANY to R.string.contact_field_company,
+            Profile.FIELD_EMAIL to R.string.contact_field_email, Profile.FIELD_PHONES to R.string.contact_field_phones,
+            Profile.FIELD_WEBSITE to R.string.contact_field_website, Profile.FIELD_SOCIALS to R.string.contact_field_socials,
+        )
+        val fields = findViewById<LinearLayout>(R.id.contact_fields)
+        for (key in Profile.CONTACT_FIELDS) {
+            fields.addView(MaterialCheckBox(this).apply {
+                setText(labels.getValue(key))
+                setTextColor(getColor(R.color.text))
+                isChecked = key !in prefs.contactHidden
+                setOnCheckedChangeListener { _, on ->
+                    prefs.contactHidden = if (on) prefs.contactHidden - key else prefs.contactHidden + key
+                }
+            })
+        }
     }
 
     override fun onResume() {

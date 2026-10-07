@@ -14,5 +14,6 @@
     <color name="qr_light">#F1EFE8</color>
     <color name="qr_hint">#5B6470</color>
     <color name="ok">#7BD88F</color>
+    <color name="danger">#FF8A7A</color>
     <color name="sent_scrim">#F20B0D10</color>
 </resources>
