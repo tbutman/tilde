@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Settings → About: version, privacy, source code. Debug builds add the welcome reset. -->
+<!-- Settings → About: version, the website, privacy, source code, reporting a problem and the
+     licences. Debug builds add the welcome reset. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Panel"
@@ -17,9 +18,28 @@
 
         <TextView android:id="@+id/reads" style="@style/Hint" android:fontFamily="monospace" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/about_website"
+            android:gravity="start|center_vertical"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/about_website" />
+
         <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/about_privacy" />
 
         <TextView style="@style/Hint" android:text="@string/about_privacy_detail" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/about_privacy"
+            android:gravity="start|center_vertical"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/about_privacy_link" />
 
         <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/about_source" />
 
@@ -27,11 +47,30 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/about_source"
+            android:gravity="start|center_vertical"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="-12dp"
             android:text="@string/about_source_link" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/about_issues"
+            android:gravity="start|center_vertical"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/about_issues" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/about_licences"
+            android:gravity="start|center_vertical"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/about_licences" />
 
         <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/about_delete_title" />
 

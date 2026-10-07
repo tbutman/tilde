@@ -392,6 +392,13 @@
     <string name="about_source">Código aberto</string>
     <string name="about_source_detail">A Tilde é grátis e de código aberto, com licença MIT.</string>
     <string name="about_source_link">github.com/tbutman/tilde</string>
+    <string name="about_website">Site · tbutman.com/pt/tilde</string>
+    <string name="about_website_url">https://tbutman.com/pt/tilde</string>
+    <string name="about_privacy_link">Privacidade · tbutman.com/pt/tilde/privacy</string>
+    <string name="about_privacy_url">https://tbutman.com/pt/tilde/privacy</string>
+    <string name="about_issues">Comunicar um problema · github.com/tbutman/tilde/issues</string>
+    <string name="about_licences">Licenças de código aberto</string>
+    <string name="about_licences_detail">A Tilde é feita com:\n\n• ZXing, para o código QR: Apache License 2.0\n• AndroidX e Material Components for Android: Apache License 2.0\n• Simple Icons, para os logótipos: CC0 1.0 (domínio público)\n\nA Apache License 2.0 está em apache.org/licenses/LICENSE-2.0. A própria Tilde tem licença MIT.</string>
     <!-- Settings list: what each row shows under its name -->
     <string name="row_cards">Os teus cartões</string>
     <plurals name="row_cards_summary">

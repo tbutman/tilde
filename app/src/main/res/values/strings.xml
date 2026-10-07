@@ -394,6 +394,14 @@
     <string name="about_source_detail">Tilde is free and open source under the MIT licence.</string>
     <string name="about_source_link">github.com/tbutman/tilde</string>
     <string name="about_source_url" translatable="false">https://github.com/tbutman/tilde</string>
+    <string name="about_website">Website · tbutman.com/tilde</string>
+    <string name="about_website_url">https://tbutman.com/tilde</string>
+    <string name="about_privacy_link">Privacy · tbutman.com/tilde/privacy</string>
+    <string name="about_privacy_url">https://tbutman.com/tilde/privacy</string>
+    <string name="about_issues">Report a problem · github.com/tbutman/tilde/issues</string>
+    <string name="about_issues_url" translatable="false">https://github.com/tbutman/tilde/issues</string>
+    <string name="about_licences">Open-source licences</string>
+    <string name="about_licences_detail">Tilde is built with:\n\n• ZXing, for the QR code: Apache License 2.0\n• AndroidX and Material Components for Android: Apache License 2.0\n• Simple Icons, for the logos: CC0 1.0 (public domain)\n\nThe Apache License 2.0 is at apache.org/licenses/LICENSE-2.0. Tilde itself is under the MIT licence.</string>
     <!-- Settings list: what each row shows under its name -->
     <string name="row_cards">Your cards</string>
     <plurals name="row_cards_summary">

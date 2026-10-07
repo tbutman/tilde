@@ -140,8 +140,15 @@ class SettingsPageActivity : AppCompatActivity() {
         setContentView(R.layout.page_about)
         findViewById<TextView>(R.id.version).text = getString(R.string.version, BuildConfig.VERSION_NAME)
         findViewById<TextView>(R.id.reads).text = resources.getQuantityString(R.plurals.reads, prefs.reads, prefs.reads)
-        findViewById<View>(R.id.about_source).setOnClickListener {
-            runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.about_source_url)))) }
+        // Links open in the browser; Tilde itself still never goes online. The site's pages are in the app's language.
+        for ((button, url) in listOf(
+            R.id.about_website to R.string.about_website_url, R.id.about_privacy to R.string.about_privacy_url,
+            R.id.about_source to R.string.about_source_url, R.id.about_issues to R.string.about_issues_url,
+        )) {
+            findViewById<View>(button).setOnClickListener { runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(url)))) } }
+        }
+        findViewById<View>(R.id.about_licences).setOnClickListener {
+            MaterialAlertDialogBuilder(this).setTitle(R.string.about_licences).setMessage(R.string.about_licences_detail).setPositiveButton(R.string.done, null).show()
         }
         findViewById<View>(R.id.delete_all).setOnClickListener {
             MaterialAlertDialogBuilder(this)
