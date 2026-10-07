@@ -26,7 +26,7 @@
     <string name="welcome_tap_detail">Hold your phone to theirs. Works with iPhones and Android phones.</string>
     <string name="welcome_scan_title">Or let them scan your code</string>
     <string name="welcome_scan_detail">Any phone camera can read it.</string>
-    <string name="welcome_card_feature_title">Add a card or sticker</string>
+    <string name="welcome_card_feature_title">Add a sticker or Tilde card</string>
     <string name="welcome_card_feature_detail">Put your link on any NFC card or sticker, or print a Tilde card, and it shares even when your phone stays in your pocket.</string>
     <string name="welcome_private_title">Free, open source and private</string>
     <string name="welcome_private_detail">No account, no subscription, no internet. Your details stay on this phone until you share them.</string>
@@ -59,12 +59,12 @@
     <string name="welcome_website_helper">Optional. Your website, portfolio or LinkedIn: what a tap or a scan opens. Leave it empty and a tap shares your contact card instead.</string>
     <!-- 4. Phone only, or a card too -->
     <string name="welcome_mode_title">How will you share?</string>
-    <string name="welcome_mode_body">Your phone is all you need. An NFC card or sticker can share your link too, even when your phone stays in your pocket.</string>
+    <string name="welcome_mode_body">Your phone is all you need. An NFC sticker or a Tilde card can share your link too, even when your phone stays in your pocket.</string>
     <string name="welcome_mode_phone">Just my phone</string>
     <string name="welcome_mode_phone_detail">Tap phones, or show your code. Nothing else needed.</string>
-    <string name="welcome_mode_card">My phone and a card or sticker</string>
+    <string name="welcome_mode_card">My phone and a sticker or Tilde card</string>
     <string name="welcome_mode_card_detail">Next, put your link on it with Write a sticker. Don\'t have one yet? Skip that step and write one any time from Settings.</string>
-    <string name="welcome_get_card">No card yet? Print your own</string>
+    <string name="welcome_get_card">No Tilde card yet? Print your own</string>
     <string name="welcome_get_card_detail">Got a 3D printer? The Tilde card design is free: add your details, print it, and seal an NFC sticker inside.</string>
     <string name="welcome_get_card_url" translatable="false">https://tbutman.com/tilde#card</string>
     <!-- After the welcome screens: shown once over the Share screen -->
@@ -226,7 +226,7 @@
     <string name="cards_move_down">Move down</string>
     <string name="cards_delete">Delete</string>
     <string name="cards_delete_title">Delete %1$s?</string>
-    <string name="cards_delete_body">Its details, links and photo are removed from this phone. Tags you\'ve already written keep what\'s on them.</string>
+    <string name="cards_delete_body">Its details, links and photo are removed from this phone. Stickers you\'ve already written keep what\'s on them.</string>
     <string name="cards_colour">Colour</string>
     <string name="cards_colour_selected">Selected</string>
     <string name="colour_amber">Amber</string>
@@ -290,7 +290,7 @@
     <string name="settings_sharing">Sharing</string>
     <string name="toggle">Share over NFC</string>
     <string name="toggle_detail">Off: taps do nothing, the QR code still works.</string>
-    <string name="settings_event">Event tag</string>
+    <string name="settings_event">Event name</string>
     <string name="event_hint">lisbon-js</string>
     <string name="event_detail">Added to links on your website as ?event=, so its log shows which event a visit came from.</string>
     <string name="whatsapp_same_as_mobile">Same as my mobile</string>
@@ -389,7 +389,7 @@
     </plurals>
     <string name="row_sharing_on">Taps on</string>
     <string name="row_sharing_off">Taps paused</string>
-    <string name="row_event_none">no event tag</string>
+    <string name="row_event_none">no event</string>
     <string name="row_event">event: %1$s</string>
     <string name="row_wifi_none">Not set up</string>
     <string name="row_write_summary">Put your link on an NFC sticker or a printed card</string>
@@ -411,7 +411,7 @@
     <string name="write_from">From your card: %1$s</string>
     <string name="write_what">What the sticker opens</string>
     <string name="write_picker_title">What should the sticker open?</string>
-    <string name="write_ready">Hold the sticker or card to the back of your phone</string>
+    <string name="write_ready">Hold the sticker or Tilde card to the back of your phone</string>
     <string name="write_ready_detail">Keep it still until your phone buzzes.</string>
     <string name="write_done">Written</string>
     <plurals name="write_done_detail">
@@ -419,10 +419,10 @@
         <item quantity="other">%d stickers written. To write another, just hold it to your phone.</item>
     </plurals>
     <string name="write_locked">This one can\'t be changed</string>
-    <string name="write_locked_detail">It\'s locked, or it\'s a phone rather than a tag.</string>
-    <string name="write_too_small">Not enough room on this tag</string>
+    <string name="write_locked_detail">It\'s locked, or it\'s a phone rather than a sticker.</string>
+    <string name="write_too_small">Not enough room on this sticker</string>
     <string name="write_too_small_detail">It holds %1$d bytes and this needs %2$d. Choose a link instead, or use an NTAG215 sticker.</string>
-    <string name="write_unsupported">That\'s not a tag Tilde can write</string>
+    <string name="write_unsupported">That\'s not a sticker Tilde can write</string>
     <string name="write_unsupported_detail">Use an NFC sticker. Bank, transport and ID cards can\'t be written.</string>
     <string name="write_failed">Didn\'t finish writing</string>
     <string name="write_failed_detail">Hold it still against your phone and try again.</string>
@@ -451,5 +451,5 @@
     <string name="write_later">No sticker yet? Write one any time from Settings → Write a sticker.</string>
     <string name="write_iphone_contact">iPhone: opens %1$s instead</string>
     <string name="write_iphone_contact_none">iPhone: a tap does nothing. Add a website in Settings for iPhones to open.</string>
-    <string name="write_iphone_wifi">iPhone: can\'t join Wi-Fi from a tag</string>
+    <string name="write_iphone_wifi">iPhone: can\'t join Wi-Fi from a sticker</string>
 </resources>

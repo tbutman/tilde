@@ -27,7 +27,7 @@
     <string name="welcome_tap_detail">Aproxima o teu telemóvel do da outra pessoa. Funciona com iPhones e telemóveis Android.</string>
     <string name="welcome_scan_title">Ou deixa que leiam o teu código</string>
     <string name="welcome_scan_detail">Qualquer câmara de telemóvel o consegue ler.</string>
-    <string name="welcome_card_feature_title">Junta um cartão ou autocolante</string>
+    <string name="welcome_card_feature_title">Junta um autocolante ou um cartão Tilde</string>
     <string name="welcome_card_feature_detail">Põe o teu link em qualquer cartão ou autocolante NFC, ou imprime um cartão Tilde, e partilha mesmo com o telemóvel no bolso.</string>
     <string name="welcome_private_title">Grátis, de código aberto e privada</string>
     <string name="welcome_private_detail">Sem conta, sem subscrição, sem internet. Os teus dados ficam neste telemóvel até os partilhares.</string>
@@ -58,12 +58,12 @@
     <string name="welcome_website_helper">Opcional. O teu site, portefólio ou LinkedIn: o que abre com um toque ou ao ler o código. Se o deixares vazio, um toque partilha o teu cartão de contacto.</string>
     <!-- 4. Phone only, or a card too -->
     <string name="welcome_mode_title">Como vais partilhar?</string>
-    <string name="welcome_mode_body">Só precisas do teu telemóvel. Um cartão ou autocolante NFC também pode partilhar o teu link, mesmo com o telemóvel no bolso.</string>
+    <string name="welcome_mode_body">Só precisas do teu telemóvel. Um autocolante NFC ou um cartão Tilde também pode partilhar o teu link, mesmo com o telemóvel no bolso.</string>
     <string name="welcome_mode_phone">Só o meu telemóvel</string>
     <string name="welcome_mode_phone_detail">Encosta os telemóveis ou mostra o teu código. Não precisas de mais nada.</string>
-    <string name="welcome_mode_card">O meu telemóvel e um cartão ou autocolante</string>
+    <string name="welcome_mode_card">O meu telemóvel e um autocolante ou cartão Tilde</string>
     <string name="welcome_mode_card_detail">A seguir, põe o teu link nele com Gravar um autocolante. Ainda não tens um? Salta esse passo e grava um quando quiseres nas Definições.</string>
-    <string name="welcome_get_card">Ainda sem cartão? Imprime o teu</string>
+    <string name="welcome_get_card">Ainda sem cartão Tilde? Imprime o teu</string>
     <string name="welcome_get_card_detail">Tens uma impressora 3D? O modelo do cartão Tilde é grátis: junta os teus dados, imprime-o e sela um autocolante NFC lá dentro.</string>
     <!-- After the welcome screens: shown once over the Share screen -->
     <string name="ready_title">O teu cartão está pronto</string>
@@ -223,7 +223,7 @@
     <string name="cards_move_down">Mover para baixo</string>
     <string name="cards_delete">Apagar</string>
     <string name="cards_delete_title">Apagar %1$s?</string>
-    <string name="cards_delete_body">Os dados, links e fotografia do cartão são removidos deste telemóvel. As etiquetas que já gravaste mantêm o que têm.</string>
+    <string name="cards_delete_body">Os dados, links e fotografia do cartão são removidos deste telemóvel. Os autocolantes que já gravaste mantêm o que têm.</string>
     <string name="cards_colour">Cor</string>
     <string name="cards_colour_selected">Selecionada</string>
     <string name="colour_amber">Âmbar</string>
@@ -286,7 +286,7 @@
     <string name="settings_sharing">Partilha</string>
     <string name="toggle">Partilhar por NFC</string>
     <string name="toggle_detail">Desligado: os toques não fazem nada, o código QR continua a funcionar.</string>
-    <string name="settings_event">Etiqueta de evento</string>
+    <string name="settings_event">Nome do evento</string>
     <string name="event_hint">lisbon-js</string>
     <string name="event_detail">Acrescentada aos links para o teu site como ?event=, para os registos do site mostrarem de que evento veio cada visita.</string>
     <string name="whatsapp_same_as_mobile">O mesmo que o meu telemóvel</string>
@@ -390,7 +390,7 @@
     </plurals>
     <string name="row_sharing_on">Toques ligados</string>
     <string name="row_sharing_off">Toques em pausa</string>
-    <string name="row_event_none">sem etiqueta de evento</string>
+    <string name="row_event_none">sem evento</string>
     <string name="row_event">evento: %1$s</string>
     <string name="row_wifi_none">Não configurado</string>
     <string name="row_write_summary">Põe o teu link num autocolante NFC ou num cartão impresso</string>
@@ -413,7 +413,7 @@
     <string name="write_from">Do teu cartão: %1$s</string>
     <string name="write_what">O que o autocolante abre</string>
     <string name="write_picker_title">O que deve abrir o autocolante?</string>
-    <string name="write_ready">Encosta o autocolante ou o cartão às costas do teu telemóvel</string>
+    <string name="write_ready">Encosta o autocolante ou o cartão Tilde às costas do teu telemóvel</string>
     <string name="write_ready_detail">Mantém-no parado até o telemóvel vibrar.</string>
     <string name="write_done">Gravado</string>
     <plurals name="write_done_detail" tools:ignore="ImpliedQuantity">
@@ -422,10 +422,10 @@
         <item quantity="other">%d autocolantes gravados. Para gravar outro, basta encostá-lo ao teu telemóvel.</item>
     </plurals>
     <string name="write_locked">Este não pode ser alterado</string>
-    <string name="write_locked_detail">Está bloqueado, ou é um telemóvel e não uma etiqueta.</string>
-    <string name="write_too_small">Não há espaço suficiente nesta etiqueta</string>
+    <string name="write_locked_detail">Está bloqueado, ou é um telemóvel e não um autocolante.</string>
+    <string name="write_too_small">Não há espaço suficiente neste autocolante</string>
     <string name="write_too_small_detail">Tem %1$d bytes e isto precisa de %2$d. Escolhe antes um link, ou usa um autocolante NTAG215.</string>
-    <string name="write_unsupported">Essa não é uma etiqueta que a Tilde consiga gravar</string>
+    <string name="write_unsupported">Isso não é um autocolante que a Tilde consiga gravar</string>
     <string name="write_unsupported_detail">Usa um autocolante NFC. Cartões bancários, de transportes e de identificação não podem ser gravados.</string>
     <string name="write_failed">A gravação não terminou</string>
     <string name="write_failed_detail">Mantém-no parado, encostado ao telemóvel, e tenta outra vez.</string>
@@ -454,5 +454,5 @@
     <string name="write_later">Ainda sem autocolante? Grava um quando quiseres em Definições → Gravar um autocolante.</string>
     <string name="write_iphone_contact">iPhone: abre %1$s</string>
     <string name="write_iphone_contact_none">iPhone: um toque não faz nada. Adiciona um site nas Definições para os iPhones abrirem.</string>
-    <string name="write_iphone_wifi">iPhone: não se liga a Wi-Fi a partir de uma etiqueta</string>
+    <string name="write_iphone_wifi">iPhone: não se liga a Wi-Fi a partir de um autocolante</string>
 </resources>
