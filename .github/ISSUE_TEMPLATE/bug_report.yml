@@ -1,0 +1,37 @@
+name: Bug report
+description: Something in Tilde doesn't work as it should.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead. A screenshot helps (use made-up details, not your own).
+    validations:
+      required: true
+  - type: input
+    id: phone
+    attributes:
+      label: Your phone
+      description: Make and model, for example "Pixel 8" or "Nothing Phone (2)".
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+      description: Settings → About phone → Android version.
+    validations:
+      required: true
+  - type: input
+    id: tilde
+    attributes:
+      label: Tilde version
+      description: Shown beside About in Tilde's Settings, for example 1.2.0.
+    validations:
+      required: true
+  - type: input
+    id: other-phone
+    attributes:
+      label: The other phone or sticker
+      description: For tap problems, the phone that tapped yours (make, model and Android or iOS version), or the NFC sticker you wrote. Leave empty if it doesn't apply.
