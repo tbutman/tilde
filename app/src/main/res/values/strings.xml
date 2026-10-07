@@ -225,10 +225,10 @@
     <string name="version">Version %1$s</string>
     <!-- Write a card -->
     <string name="settings_write">Cards and stickers</string>
-    <string name="settings_write_detail">Put your link on an NFC sticker, or on a printed card with one inside.</string>
+    <string name="settings_write_detail">Put your link on any NFC card or sticker, including a printed Tilde card.</string>
     <string name="write_open">Write a card</string>
     <string name="write_title">Write a card</string>
-    <string name="write_body">Put your link on an NFC sticker, or on a printed card with one inside. Any phone that taps it opens your link, even when you and Tilde aren\'t there.</string>
+    <string name="write_body">Put your link on any NFC card or sticker, including a printed Tilde card. Any phone that taps it opens your link, even when you and Tilde aren\'t there.</string>
     <string name="write_what">What the card opens</string>
     <string name="write_picker_title">What should the card open?</string>
     <string name="write_ready">Hold the card or sticker to the back of your phone</string>

@@ -1,8 +1,11 @@
 # Changelog
 
-## Unreleased
+## 1.1.0-beta.1 (7 October 2026)
 
-Not released yet: changes collected for the next version, tested locally on the emulator.
+A beta of 1.1: a new first launch, saved links and quicker switching. It's a pre-release, so
+Obtainium only offers it with **Include prereleases** turned on, and the download link on
+tbutman.com/tilde stays on 1.0.0. It should install over 1.0.0 and keep your card; this beta is
+for testing exactly that.
 
 ### First launch
 

@@ -1,6 +1,6 @@
 # Spec: multiple cards
 
-Status: **draft, for review** (7 October 2026). Decided: naming, switching, cover colours and release (see Decisions). Links per card is proposed, waiting for Thomas's confirmation.
+Status: **agreed, to build for 1.2** (7 October 2026). All decisions are recorded below.
 
 ## Why
 
@@ -26,7 +26,7 @@ Exactly one card is **active**. The Share screen, taps, the QR code, Send/Copy, 
 | Cover colour | **Card** | Tells cards apart at a glance; good for a project or company's colour. |
 | WhatsApp greeting | **Card** | It uses the card's first name ("Hi Thomas"). |
 | What a tap shares; quick-switch stars | **Card** | Work shows LinkedIn and LabTrails; Personal shows Instagram. |
-| Saved links | **Card (proposed)** | Like the LinkedIn and website fields beside them. Each card is self-contained: editing one never changes another (see "Saved links: per card" below). |
+| Saved links | **Card** | Like the LinkedIn and website fields beside them. Each card is self-contained: editing one never changes another (see "Saved links: per card" below). |
 | Guest Wi-Fi | **Shared** | It's about the place, not the person. Each card can still star it. |
 | Event tag | **Shared** | It's about where you are now, whichever card you're using. It still only tags links to that card's own website. |
 | Share over NFC on/off, the tile, the current tab | **Shared** | Phone behaviour, not identity. |
@@ -35,7 +35,7 @@ Exactly one card is **active**. The Share screen, taps, the QR code, Send/Copy, 
 
 ## How it works
 
-### Saved links: per card (proposed)
+### Saved links: per card
 
 Each card has its own saved links, as it has its own LinkedIn link and website.
 
@@ -127,16 +127,14 @@ Unchanged: it creates the first card, labelled "My card", with the colour picked
 
 ## Decisions
 
-Decided by Thomas on 7 October 2026:
+Decided by Thomas on 7 October 2026 (links per card after a second look):
 
 1. **Naming:** identities are **cards**. The writing feature is renamed **Write a sticker** ("an NFC sticker, or a printed card with one inside"); the printable product stays the **Tilde card**.
 2. **Switching:** the `~/handle` button opens the switcher, **and** swiping the profile card steps through cards.
 3. **Cover colour:** yes, per card, from six colours (Tilde amber plus five that suit the dark theme).
 4. **Release:** ship `release/1.1.0` first (beta, then 1.1.0), then build cards on their own branch for **1.2**.
 
-Proposed, waiting for confirmation:
-
-5. **Saved links per card**, with Copy card copying them and Add a link suggesting links from other cards (see "Saved links: per card"). Thomas asked for more thought on shared versus isolated; this was the outcome. The alternative is a shared library starred per card: one place to edit, but it behaves differently from the per-card social links, and an edit can affect other cards.
+5. **Saved links per card**, with Copy card copying them and Add a link suggesting links from other cards (see "Saved links: per card"). Chosen over a shared library starred per card, which has one place to edit but behaves differently from the per-card social links, and where an edit can affect other cards.
 
 ## Build plan (once decided)
 
