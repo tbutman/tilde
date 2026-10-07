@@ -19,6 +19,17 @@ class MetLogTest {
     }
 
     @Test
+    fun twoTapsTenSecondsApartAreTwoPeople() {
+        // Two visitors tap the same card 10 s apart: two HCE sessions, two entries (and two notes).
+        var log = MetLog.afterTap(emptyList(), t0, "websummit", "Contact card", "Work")
+        log = MetLog.afterTap(log, t0 + 10_000, "websummit", "Contact card", "Work")
+        assertEquals(2, log.size)
+        // A phone that drops out of range and reads again a moment later is still one person.
+        log = MetLog.afterTap(log, t0 + 13_000, "websummit", "Contact card", "Work")
+        assertEquals(2, log.size)
+    }
+
+    @Test
     fun notesAttachToTheRightEntryAndEntriesCanBeRemoved() {
         var log = MetLog.afterTap(emptyList(), t0, "", "tbutman.com/hello")
         log = MetLog.afterTap(log, t0 + 60_000, "", "tbutman.com/hello")

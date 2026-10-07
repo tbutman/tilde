@@ -15,13 +15,17 @@ data class Meeting(val time: Long, val event: String, val shared: String, val no
 
 /** The "Met" log: who the owner shared with, for following up. Plain Kotlin, so it is unit-tested. */
 object MetLog {
-    /** A phone often reads a tag more than once per tap; reads this close together are one person. */
-    const val SAME_TAP_MS = 30_000L
+    /**
+     * A phone often reads a tag more than once per tap. Within one tap (one card-emulation session)
+     * the service logs the first read only; a new session this soon after, sharing the same thing,
+     * is the same phone coming back into range rather than the next person.
+     */
+    const val SAME_TAP_MS = 4_000L
     // What `shared` holds for entries that weren't a tap; the Met screen shows them in the app's language.
     const val RECEIVED = "received their contact"
     const val MANUAL = "added by hand"
 
-    /** Newest first. Adds an entry for a completed read unless it repeats the latest one. */
+    /** Newest first. Adds an entry for a tap's first completed read, unless it repeats the latest entry within [SAME_TAP_MS]. */
     fun afterTap(log: List<Meeting>, now: Long, event: String, shared: String, card: String = ""): List<Meeting> {
         val last = log.firstOrNull()
         if (last != null && now - last.time < SAME_TAP_MS && last.event == event && last.shared == shared && last.card == card) return log

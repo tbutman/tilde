@@ -21,11 +21,18 @@ class NdefHceService : HostApduService() {
         }
         // Nothing to answer with: Wi-Fi not set up, a link that's empty or was deleted, no profile.
         val sharing = prefs.sharing() ?: return Type4Tag.SW_FILE_NOT_FOUND
-        // A fresh tag per tap, so a mode or URL changed in the app applies from the next tap.
-        val current = tag ?: Type4Tag(prefs.message()) {
-            // Log who got what before bumping the count, so the screen's "Sent" banner finds the entry.
-            prefs.met = MetLog.afterTap(prefs.met, System.currentTimeMillis(), prefs.event, labelOf(prefs.find(sharing)), prefs.activeCard.label)
-            prefs.reads += 1
+        // A fresh tag per tap (session), so a mode or URL changed in the app applies from the next tap,
+        // and Met gets one entry per tap however often the other phone reads it meanwhile.
+        val current = tag ?: run {
+            var logged = false
+            Type4Tag(prefs.message()) {
+                // Log who got what before bumping the count, so the screen's "Sent" banner finds the entry.
+                if (!logged) {
+                    logged = true
+                    prefs.met = MetLog.afterTap(prefs.met, System.currentTimeMillis(), prefs.event, labelOf(prefs.find(sharing)), prefs.activeCard.label)
+                }
+                prefs.reads += 1
+            }
         }.also { tag = it }
         return current.process(commandApdu)
     }
