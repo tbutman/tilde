@@ -18,11 +18,17 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <!-- ~/handle, and the card's label with more than one card; opens the card switcher. -->
             <TextView
                 android:id="@+id/brand"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:ellipsize="end"
+                android:minHeight="40dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
                 android:fontFamily="monospace"
                 android:textColor="@color/text"
                 android:textSize="16sp" />

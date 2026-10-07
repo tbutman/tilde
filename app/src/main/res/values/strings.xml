@@ -168,6 +168,37 @@
     <string name="met_manual">added by hand</string>
     <string name="met_export_subject">People I met (Tilde)</string>
 
+    <!-- Cards -->
+    <string name="settings_this_card">This card</string>
+    <string name="settings_all_cards">All cards</string>
+    <string name="settings_all_cards_detail">These apply whichever card is active.</string>
+    <string name="cards_switch">Switch</string>
+    <string name="cards_title">Your cards</string>
+    <string name="cards_new">New card</string>
+    <string name="cards_manage">Manage cards</string>
+    <string name="cards_switch_description">Switch card. Current: %1$s</string>
+    <string name="cards_new_label">Label, only you see it (such as Work)</string>
+    <string name="cards_new_copy">Copy %1$s</string>
+    <string name="cards_new_copy_detail">Everything comes along: details, photo and links. Then change what differs.</string>
+    <string name="cards_new_blank">Start blank</string>
+    <string name="cards_new_name">Full name</string>
+    <string name="cards_create">Create</string>
+    <string name="cards_created_copy">%1$s is ready. Change what differs in Settings.</string>
+    <string name="cards_created_blank">%1$s is ready. Fill in the rest here.</string>
+    <string name="cards_switched">Now sharing %1$s</string>
+    <string name="cards_edit">Rename and colour</string>
+    <string name="cards_duplicate">Duplicate</string>
+    <string name="cards_move_up">Move up</string>
+    <string name="cards_move_down">Move down</string>
+    <string name="cards_delete">Delete</string>
+    <string name="cards_delete_title">Delete %1$s?</string>
+    <string name="cards_delete_body">Its details, links and photo are removed from this phone. Tags you\'ve already written keep what\'s on them.</string>
+    <string name="cards_colour">Colour</string>
+    <string name="cards_active">Active</string>
+    <string name="cards_manage_detail">Each card is a different you to share: work, personal, a project or an event. Only you see the labels. Swipe your card on the Share screen to switch.</string>
+    <string name="cards_more_actions">More actions for %1$s</string>
+    <string name="cards_copy_label">%1$s copy</string>
+
     <!-- Settings -->
     <string name="settings_profile">Profile</string>
     <string name="profile_detail">What you share. Stored only on this phone; leave out anything you don\'t want to share.</string>

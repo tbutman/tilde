@@ -94,6 +94,10 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private var resumed = false
 
     private var photo: Bitmap? = null
+
+    /** Settings' "This card" fields show this card; `filling` is true while they're being refilled. */
+    private var filledCardId = ""
+    private var filling = false
     private var photoLoaded = ""
 
     /** Android's photo picker: no permission needed, and the app only sees the photo chosen. */
@@ -505,6 +509,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         lastReads = prefs.reads
         applyNfcMode()
         applyBrightness()
+        // The Cards screen may have switched or deleted the active card.
+        if (!welcoming && filledCardId != prefs.activeCardId) fillCardFields()
         render()
         // Only here: a redraw just before the welcome screens' recreate() would show it on the old screen.
         if (!welcoming && prefs.ready.isNotEmpty()) showReady()
@@ -617,17 +623,28 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         // The code: tap to show it bigger; swipe sideways to step through the quick-switch row.
         val qrCard = findViewById<View>(R.id.qr_card)
         qrCard.setOnClickListener { enlargeQr() }
-        qrCard.setOnTouchListener(QrSwipe(qrCard))
+        qrCard.setOnTouchListener(Swipe(qrCard, { prefs.quickSwitch().size >= 2 }, ::stepQuickSwitch))
+
+        // The profile card: swipe to the next card (who), as the code swipes what's shared; tap to choose.
+        val profileCard = findViewById<View>(R.id.profile_card)
+        profileCard.setOnClickListener { showCardSwitcher() }
+        profileCard.setOnTouchListener(Swipe(profileCard, { prefs.cards.size >= 2 }, ::stepCard))
+        findViewById<View>(R.id.brand).setOnClickListener { showCardSwitcher() }
     }
 
     /**
-     * Swipes on the code. The Share screen scrolls vertically, and its ScrollView takes over a touch
-     * as soon as it moves a little up or down, so a slightly diagonal swipe used to be lost. Once a
-     * touch is clearly sideways, the code keeps it (requestDisallowInterceptTouchEvent). A swipe
-     * counts by distance (a fifth of the card's width), not speed, so slow drags work too; the card
-     * follows the finger a little and springs back. A touch that barely moves is a tap.
+     * Sideways swipes on the code (next option) and the profile card (next card). The Share screen
+     * scrolls vertically, and its ScrollView takes over a touch as soon as it moves a little up or
+     * down, so a slightly diagonal swipe used to be lost. Once a touch is clearly sideways, the view
+     * keeps it (requestDisallowInterceptTouchEvent). A swipe counts by distance (a fifth of the
+     * view's width), not speed, so slow drags work too; the view follows the finger a little and
+     * springs back. A touch that barely moves is a tap (performClick).
      */
-    private inner class QrSwipe(private val card: View) : View.OnTouchListener {
+    private inner class Swipe(
+        private val card: View,
+        private val canSwipe: () -> Boolean,
+        private val onSwipe: (Int) -> Unit,
+    ) : View.OnTouchListener {
         private val slop = android.view.ViewConfiguration.get(this@MainActivity).scaledTouchSlop
         private var startX = 0f
         private var startY = 0f
@@ -647,14 +664,14 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 MotionEvent.ACTION_MOVE -> {
                     if (kotlin.math.abs(dx) > slop || kotlin.math.abs(dy) > slop) moved = true
                     // Sideways more than up or down: keep the touch from the scrolling page.
-                    if (!swiping && kotlin.math.abs(dx) > slop && kotlin.math.abs(dx) > kotlin.math.abs(dy) && prefs.quickSwitch().size >= 2) {
+                    if (!swiping && kotlin.math.abs(dx) > slop && kotlin.math.abs(dx) > kotlin.math.abs(dy) && canSwipe()) {
                         swiping = true
                         view.parent.requestDisallowInterceptTouchEvent(true)
                     }
                     if (swiping) card.translationX = dx * 0.4f
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (swiping && kotlin.math.abs(dx) > card.width / 5f) stepQuickSwitch(if (dx < 0) 1 else -1)
+                    if (swiping && kotlin.math.abs(dx) > card.width / 5f) onSwipe(if (dx < 0) 1 else -1)
                     else if (!moved) view.performClick()
                     settle()
                 }
@@ -677,6 +694,94 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         val next = if (current < 0) 0 else Math.floorMod(current + direction, options.size)
         prefs.share = options[next].id
         findViewById<View>(R.id.qr_card).performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+    }
+
+    /** Swiping the profile card: the next (or previous) card, round and round. */
+    private fun stepCard(direction: Int) {
+        val next = Cards.step(prefs.cards, prefs.activeCardId, direction) ?: return
+        switchCard(next.id)
+        findViewById<View>(R.id.profile_card).performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+    }
+
+    /** Makes a card active: the Share screen, taps and Settings' "This card" fields all follow. */
+    private fun switchCard(id: String) {
+        if (id == prefs.activeCardId) return
+        prefs.activeCardId = id
+        fillCardFields()
+        render()
+        Snackbar.make(nav, getString(R.string.cards_switched, prefs.activeCard.label), Snackbar.LENGTH_SHORT).setAnchorView(nav).show()
+    }
+
+    /** The card switcher: every card with a check on the active one, then New card and Manage cards. */
+    private fun showCardSwitcher() {
+        val sheet = BottomSheetDialog(this)
+        val list = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, dp(8), 0, dp(24))
+        }
+        list.addView(TextView(this).apply {
+            setText(R.string.cards_title)
+            setTextColor(getColor(R.color.text))
+            textSize = 18f
+            setPadding(dp(20), dp(8), dp(20), dp(12))
+        })
+        val activeId = prefs.activeCardId
+        for (card in prefs.cards) {
+            list.addView(CardDialogs.row(this, card, active = card.id == activeId).apply {
+                setOnClickListener {
+                    sheet.dismiss()
+                    switchCard(card.id)
+                }
+            })
+        }
+        fun action(text: Int, icon: Int, run: () -> Unit) = list.addView(
+            MaterialButton(this, null, androidx.appcompat.R.attr.borderlessButtonStyle).apply {
+                setText(text)
+                setIconResource(icon)
+                iconTint = getColorStateList(R.color.accent)
+                setTextColor(getColor(R.color.accent))
+                setPadding(dp(20), 0, dp(20), 0)
+                gravity = android.view.Gravity.START or android.view.Gravity.CENTER_VERTICAL
+                setOnClickListener { sheet.dismiss(); run() }
+            },
+            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(52)),
+        )
+        action(R.string.cards_new, R.drawable.ic_add) { newCard() }
+        action(R.string.cards_manage, R.drawable.ic_nav_settings) { startActivity(Intent(this, CardsActivity::class.java)) }
+        sheet.setContentView(androidx.core.widget.NestedScrollView(this).apply { addView(list) })
+        sheet.show()
+    }
+
+    /** New card, from the switcher or Settings. A blank card goes straight to Settings to be filled in. */
+    private fun newCard() {
+        CardDialogs.newCard(this, prefs) { card, copied ->
+            fillCardFields()
+            if (!copied) nav.selectedItemId = R.id.nav_settings
+            val message = getString(if (copied) R.string.cards_created_copy else R.string.cards_created_blank, card.label)
+            Snackbar.make(nav, message, Snackbar.LENGTH_LONG).setAnchorView(nav).show()
+        }
+    }
+
+    /**
+     * Puts the active card's values into Settings' "This card" fields: after switching, creating or
+     * deleting a card. `filling` stops the fields' save-as-you-type from writing them straight back.
+     */
+    private fun fillCardFields() {
+        val profile = prefs.profile
+        val values = mapOf(
+            R.id.profile_name to profile.name, R.id.profile_title to profile.title,
+            R.id.profile_email to profile.email, R.id.profile_email2 to profile.email2,
+            R.id.profile_website to profile.website, R.id.profile_handle to profile.handle,
+            R.id.profile_linkedin to profile.linkedin, R.id.profile_github to profile.github,
+            R.id.profile_instagram to profile.instagram, R.id.profile_x to profile.x,
+            R.id.profile_whatsapp to profile.whatsapp, R.id.whatsapp_greeting to prefs.whatsappGreeting,
+            R.id.phone1_label to profile.phones.getOrNull(0)?.first.orEmpty(), R.id.phone1_number to profile.phones.getOrNull(0)?.second.orEmpty(),
+            R.id.phone2_label to profile.phones.getOrNull(1)?.first.orEmpty(), R.id.phone2_number to profile.phones.getOrNull(1)?.second.orEmpty(),
+        )
+        filling = true
+        for ((id, value) in values) findViewById<TextInputEditText>(id).setText(value)
+        filling = false
+        filledCardId = prefs.activeCardId
     }
 
     /** The code full screen on its light background, for scanning from further away. Tap to close. */
@@ -821,6 +926,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<View>(R.id.write_card).setOnClickListener { startActivity(Intent(this, WriteActivity::class.java).putExtra("demo", demo)) }
         findViewById<View>(R.id.add_tile).setOnClickListener { requestTile() }
         findViewById<TextView>(R.id.version).text = getString(R.string.version, BuildConfig.VERSION_NAME)
+        findViewById<View>(R.id.settings_card_switch).setOnClickListener { showCardSwitcher() }
+        filledCardId = prefs.activeCardId
         // Debug builds only: back to one empty card (photos deleted), and start the welcome screens again.
         findViewById<View>(R.id.debug_welcome).apply {
             visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
@@ -843,7 +950,9 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-                override fun afterTextChanged(s: Editable?) = save(s?.toString().orEmpty())
+                override fun afterTextChanged(s: Editable?) {
+                    if (!filling) save(s?.toString().orEmpty())
+                }
             })
         }
     }
@@ -872,10 +981,20 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     private fun renderShare() {
         val profile = prefs.profile
-        findViewById<TextView>(R.id.brand).text = handleLine(profile.handle)
+        val cards = prefs.cards
+        val active = prefs.activeCard
+        findViewById<TextView>(R.id.brand).apply {
+            // With more than one card, the card's label follows the handle: "~/janedoe · Work ▾".
+            text = handleLine(profile.handle).apply {
+                val start = length
+                append(if (cards.size > 1) "  ·  ${active.label}  ▾" else "  ▾")
+                setSpan(ForegroundColorSpan(getColor(R.color.dim)), start, length, 0)
+            }
+            contentDescription = getString(R.string.cards_switch_description, active.label)
+        }
         findViewById<View>(R.id.profile_card).apply {
             visibility = if (profile.isSet) View.VISIBLE else View.GONE
-            bindCard(this, profile)
+            bindCard(this, profile, colour = active.colour)
         }
         findViewById<View>(R.id.set_up_profile).visibility = if (profile.isSet) View.GONE else View.VISIBLE
         // If what was selected can't share any more (say, its link was deleted), fall back.
@@ -1007,7 +1126,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     /** Fills a business card (view_card): photo or initials, name, and title when there is one. */
-    private fun bindCard(card: View, profile: Profile, usePhoto: Boolean = true) {
+    private fun bindCard(card: View, profile: Profile, usePhoto: Boolean = true, colour: String? = null) {
+        card.findViewById<View>(R.id.card_band).setBackgroundColor(Cards.colour(colour ?: Cards.COLOURS.first().key).argb.toInt())
         card.findViewById<TextView>(R.id.name).text = profile.name
         card.findViewById<TextView>(R.id.card_title).apply {
             text = profile.title
@@ -1037,6 +1157,11 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun renderSettings() {
+        prefs.activeCard.let { card ->
+            findViewById<TextView>(R.id.settings_card_label).text = card.label
+            findViewById<View>(R.id.settings_card_dot).backgroundTintList =
+                android.content.res.ColorStateList.valueOf(Cards.colour(card.colour).argb.toInt())
+        }
         bindAvatar(findViewById(R.id.settings_avatar), prefs.profile)
         findViewById<MaterialButton>(R.id.photo_pick).setText(if (photo != null) R.string.photo_change else R.string.photo_add)
         findViewById<View>(R.id.photo_remove).visibility = if (photo != null) View.VISIBLE else View.GONE
@@ -1096,7 +1221,9 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 this, entry.time,
                 DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_ABBREV_MONTH,
             )
-            val detail = listOf(whenText, entry.event, entry.shared).filter { it.isNotEmpty() }.joinToString(" · ")
+            // Which card was shared, once there's more than one.
+            val card = entry.card.takeIf { prefs.cards.size > 1 }.orEmpty()
+            val detail = listOf(whenText, card, entry.event, entry.shared).filter { it.isNotEmpty() }.joinToString(" · ")
             val row = listRow(entry.note.ifEmpty { getString(R.string.met_no_note) }, detail, emptyList(), muted = entry.note.isEmpty())
             row.setOnClickListener { editNote(entry) }
             list.addView(row)

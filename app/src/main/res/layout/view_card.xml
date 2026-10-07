@@ -18,7 +18,9 @@
         android:orientation="vertical"
         android:paddingBottom="18dp">
 
+        <!-- The cover band, in the card's colour (set in code). -->
         <View
+            android:id="@+id/card_band"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@color/accent" />

@@ -32,6 +32,10 @@
             android:name=".WriteActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".CardsActivity"
+            android:exported="false" />
+
         <!-- Send hands the contact card to another app as a .vcf file (see res/xml/file_paths.xml). -->
         <provider
             android:name="androidx.core.content.FileProvider"
