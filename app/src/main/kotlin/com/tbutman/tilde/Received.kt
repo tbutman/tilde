@@ -2,7 +2,9 @@ package com.tbutman.tilde
 
 /**
  * What Receive mode read from someone else's tag or phone, decoded from raw NDEF bytes. Plain
- * Kotlin so the decoding runs in JVM unit tests.
+ * Kotlin so the decoding runs in JVM unit tests. Holds no interface text: the Receive screen adds
+ * "Wi-Fi:", "Open network" and the like in the app's language (title is the network's name for
+ * Wi-Fi, and empty for a contact card without a name or an unsupported record).
  */
 class Received(val kind: String, val title: String, val detail: String, val payload: String) {
     companion object {
@@ -45,14 +47,14 @@ class Received(val kind: String, val title: String, val detail: String, val payl
                 tnf == 2 && typeText.lowercase() in setOf("text/vcard", "text/x-vcard") -> {
                     val card = payload.toString(Charsets.UTF_8)
                     val fields = VCard.parse(card)
-                    Received(CONTACT, fields.name.ifEmpty { "Contact card" }, fields.summary(), card)
+                    Received(CONTACT, fields.name, fields.summary(), card)
                 }
                 tnf == 2 && typeText.lowercase() == Wifi.MIME -> {
                     val (ssid, key) = Wifi.parse(payload) ?: return@mapNotNull null
-                    Received(WIFI, "Wi-Fi: $ssid", if (key.isEmpty()) "Open network" else "Password: $key", key)
+                    Received(WIFI, ssid, "", key)
                 }
                 tnf == 0 -> null
-                else -> Received(OTHER, "Unsupported record", "$typeText (${payload.size} bytes)", "")
+                else -> Received(OTHER, "", "$typeText (${payload.size} B)", "")
             }
         }
 

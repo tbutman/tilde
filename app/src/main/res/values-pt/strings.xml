@@ -154,6 +154,10 @@
     <string name="receive_detail">Funcionam etiquetas, cartões de visita NFC e telemóveis Android com esta app. Os iPhones não conseguem enviar desta forma.</string>
     <string name="received_label">Recebido</string>
     <string name="received_empty">Ainda nada.</string>
+    <string name="received_wifi">Wi-Fi: %1$s</string>
+    <string name="received_wifi_open">Rede aberta</string>
+    <string name="received_wifi_password">Palavra-passe: %1$s</string>
+    <string name="received_unsupported">Registo não suportado</string>
     <string name="received_nothing">Essa etiqueta não tem conteúdo legível.</string>
     <string name="clear_received">Limpar histórico</string>
     <string name="action_open">Abrir</string>
@@ -174,6 +178,7 @@
     <string name="met_delete">Apagar</string>
     <string name="met_cancel">Cancelar</string>
     <string name="met_no_note">Ainda sem nota. Toca para adicionar uma.</string>
+    <string name="met_received">recebi o contacto</string>
     <string name="met_manual">adicionado à mão</string>
     <string name="met_export_subject">Pessoas que conheci (Tilde)</string>
 

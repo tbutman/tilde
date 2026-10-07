@@ -47,7 +47,8 @@ class FeaturesTest {
         assertTrue("+1 555 0100" in contact[0].detail)
 
         val wifi = Received.fromNdef(Ndef.message(listOf(Wifi.record("Home Guest", "correct horse", open = false))))
-        assertEquals("Wi-Fi: Home Guest", wifi.single().title)
+        assertEquals("Home Guest", wifi.single().title)
+        assertEquals("correct horse", wifi.single().payload)
     }
 
     @Test

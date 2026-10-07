@@ -822,7 +822,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     private fun setUpMet() {
         findViewById<View>(R.id.met_add).setOnClickListener {
-            editNote(Meeting(System.currentTimeMillis(), prefs.event, getString(R.string.met_manual), "", prefs.activeCard.label), isNew = true)
+            editNote(Meeting(System.currentTimeMillis(), prefs.event, MetLog.MANUAL, "", prefs.activeCard.label), isNew = true)
         }
         findViewById<View>(R.id.met_export).setOnClickListener { export() }
     }
@@ -1018,7 +1018,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         val startOfDay = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
         }.timeInMillis
-        val today = prefs.met.count { it.time >= startOfDay && it.shared != MetLog.RECEIVED && it.shared != getString(R.string.met_manual) }
+        val today = prefs.met.count { it.time >= startOfDay && it.shared != MetLog.RECEIVED && it.shared != MetLog.MANUAL }
         val meta = listOfNotNull(
             prefs.event.takeIf { it.isNotBlank() && preset.id != Presets.WIFI && preset.id != Presets.WHATSAPP }?.let { getString(R.string.meta_event, it) },
             today.takeIf { it > 0 }?.let { resources.getQuantityString(R.plurals.meta_sent_today, it, it) },
@@ -1141,8 +1141,25 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 }
                 if (item.payload.isNotEmpty()) add(R.string.action_copy to { copy(item.payload) })
             }
-            list.addView(listRow(item.title, item.detail, actions))
+            val (title, detail) = receivedText(item)
+            list.addView(listRow(title, detail, actions))
         }
+    }
+
+    /** A received item's title and detail in the app's language. Items saved before 1.2 already have English text. */
+    private fun receivedText(item: Received): Pair<String, String> = when (item.kind) {
+        Received.WIFI -> getString(R.string.received_wifi, item.title.removePrefix("Wi-Fi: ")) to
+            if (item.payload.isEmpty()) getString(R.string.received_wifi_open) else getString(R.string.received_wifi_password, item.payload)
+        Received.CONTACT -> item.title.takeIf { it.isNotEmpty() && it != "Contact card" }.orEmpty().ifEmpty { getString(R.string.preset_contact) } to item.detail
+        Received.OTHER -> getString(R.string.received_unsupported) to item.detail
+        else -> item.title to item.detail
+    }
+
+    /** Met's "shared" column: an option's name as saved, or "received their contact" / "added by hand" in the app's language. */
+    private fun sharedName(shared: String) = when (shared) {
+        MetLog.RECEIVED -> getString(R.string.met_received)
+        MetLog.MANUAL -> getString(R.string.met_manual)
+        else -> shared
     }
 
     private fun renderMet() {
@@ -1158,7 +1175,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             )
             // Which card was shared, once there's more than one.
             val card = entry.card.takeIf { prefs.cards.size > 1 }.orEmpty()
-            val detail = listOf(whenText, card, entry.event, entry.shared).filter { it.isNotEmpty() }.joinToString(" · ")
+            val detail = listOf(whenText, card, entry.event, sharedName(entry.shared)).filter { it.isNotEmpty() }.joinToString(" · ")
             val row = listRow(entry.note.ifEmpty { getString(R.string.met_no_note) }, detail, emptyList(), muted = entry.note.isEmpty())
             row.setOnClickListener { editNote(entry) }
             list.addView(row)
@@ -1248,7 +1265,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         val send = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_SUBJECT, getString(R.string.met_export_subject))
-            putExtra(Intent.EXTRA_TEXT, MetLog.csv(prefs.met))
+            putExtra(Intent.EXTRA_TEXT, MetLog.csv(prefs.met, shared = ::sharedName))
         }
         startActivity(Intent.createChooser(send, getString(R.string.met_export)))
     }

@@ -156,6 +156,10 @@
     <string name="received_label">Received</string>
     <string name="received_empty">Nothing yet.</string>
     <string name="received_nothing">That tag has no readable content.</string>
+    <string name="received_wifi">Wi-Fi: %1$s</string>
+    <string name="received_wifi_open">Open network</string>
+    <string name="received_wifi_password">Password: %1$s</string>
+    <string name="received_unsupported">Unsupported record</string>
     <string name="clear_received">Clear history</string>
     <string name="action_open">Open</string>
     <string name="action_save_contact">Save contact</string>
@@ -176,6 +180,7 @@
     <string name="met_cancel">Cancel</string>
     <string name="met_no_note">No note yet. Tap to add one.</string>
     <string name="met_manual">added by hand</string>
+    <string name="met_received">received their contact</string>
     <string name="met_export_subject">People I met (Tilde)</string>
 
     <!-- Cards -->

@@ -18,7 +18,9 @@ object MetLog {
     /** A phone often reads a tag more than once per tap; reads this close together are one person. */
     const val SAME_TAP_MS = 30_000L
     const val MAX_ENTRIES = 500
+    // What `shared` holds for entries that weren't a tap; the Met screen shows them in the app's language.
     const val RECEIVED = "received their contact"
+    const val MANUAL = "added by hand"
 
     /** Newest first. Adds an entry for a completed read unless it repeats the latest one. */
     fun afterTap(log: List<Meeting>, now: Long, event: String, shared: String, card: String = ""): List<Meeting> {
@@ -56,10 +58,10 @@ object MetLog {
     }.getOrDefault(emptyList())
 
     /** CSV, oldest first, for pasting into a spreadsheet or CRM. */
-    fun csv(log: List<Meeting>, zone: ZoneId = ZoneId.systemDefault()): String {
+    fun csv(log: List<Meeting>, zone: ZoneId = ZoneId.systemDefault(), shared: (String) -> String = { it }): String {
         val format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(zone)
         val rows = log.reversed().map { m ->
-            listOf(format.format(Instant.ofEpochMilli(m.time)), m.card, m.event, m.shared, m.note).joinToString(",") { field(it) }
+            listOf(format.format(Instant.ofEpochMilli(m.time)), m.card, m.event, shared(m.shared), m.note).joinToString(",") { field(it) }
         }
         return (listOf("date,card,event,shared,note") + rows).joinToString("\n") + "\n"
     }
