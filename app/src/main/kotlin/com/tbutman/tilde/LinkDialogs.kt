@@ -22,6 +22,7 @@ object LinkDialogs {
     fun editLink(context: Context, prefs: Prefs, existing: SavedLink?, onSaved: (SavedLink?) -> Unit) {
         val (nameLayout, name) = field(context, R.string.link_name_hint, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
         val (urlLayout, url) = field(context, R.string.link_url_hint, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
+        url.filters = arrayOf(android.text.InputFilter.LengthFilter(MAX_LINK))
         name.setText(existing?.name)
         url.setText(existing?.url)
         url.doAfterTextChanged { urlLayout.error = null }
@@ -100,6 +101,7 @@ object LinkDialogs {
             if (whatsapp) R.string.setup_whatsapp_hint else R.string.setup_link_hint,
             if (whatsapp) InputType.TYPE_CLASS_PHONE else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI,
         )
+        input.filters = arrayOf(android.text.InputFilter.LengthFilter(MAX_LINK))
         input.doAfterTextChanged { layout.error = null }
         val dialog = MaterialAlertDialogBuilder(context)
             .setTitle(context.getString(R.string.setup_title, context.labelOf(preset)))
@@ -136,6 +138,9 @@ object LinkDialogs {
         input.requestFocus()
         return true
     }
+
+    /** The longest link (a saved link or a profile's), so a code always has room for the rest. */
+    const val MAX_LINK = 500
 
     private fun field(context: Context, hint: Int, type: Int): Pair<TextInputLayout, TextInputEditText> {
         val layout = TextInputLayout(context, null, com.google.android.material.R.attr.textInputOutlinedStyle).apply {

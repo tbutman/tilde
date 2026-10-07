@@ -788,6 +788,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     /** The code full screen on its light background, for scanning from further away. Tap to close. */
     private fun enlargeQr() {
         val code = prefs.qrText().takeIf { it.isNotEmpty() } ?: return
+        val bitmap = qrBitmap(code) ?: return
         val opens = findViewById<TextView>(R.id.qr_opens).text
         val dialog = android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         val page = LinearLayout(this).apply {
@@ -797,7 +798,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             setPadding(dp(24), dp(24), dp(24), dp(24))
             setOnClickListener { dialog.dismiss() }
             addView(ImageView(context).apply {
-                setImageBitmap(qrBitmap(code))
+                setImageBitmap(bitmap)
                 adjustViewBounds = true
                 contentDescription = opens
             }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -999,9 +1000,13 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<TextView>(R.id.tagline).setText(if (tapping) R.string.tagline_tap else R.string.tagline_scan)
         findViewById<View>(R.id.nfc_settings).visibility = if (nfc != null && !nfcOn) View.VISIBLE else View.GONE
 
-        findViewById<View>(R.id.qr_card).visibility = if (wifiMissing) View.GONE else View.VISIBLE
+        // Too much for a QR code (very long details or links): say so rather than show nothing.
+        val code = if (wifiMissing) null else prefs.qrText().takeIf { it.isNotEmpty() }?.let(::qrBitmap)
+        val tooLong = !wifiMissing && prefs.qrText().isNotEmpty() && code == null
+        findViewById<View>(R.id.qr_card).visibility = if (wifiMissing || tooLong) View.GONE else View.VISIBLE
+        findViewById<View>(R.id.qr_too_long).visibility = if (tooLong) View.VISIBLE else View.GONE
         findViewById<View>(R.id.wifi_missing).visibility = if (wifiMissing) View.VISIBLE else View.GONE
-        if (!wifiMissing) findViewById<ImageView>(R.id.qr).setImageBitmap(prefs.qrText().takeIf { it.isNotEmpty() }?.let(::qrBitmap))
+        findViewById<ImageView>(R.id.qr).setImageBitmap(code)
         findViewById<TextView>(R.id.iphone_hint).apply {
             visibility = if (tapping && !preset.iphoneTap && !wifiMissing) View.VISIBLE else View.GONE
             val opens = PresetRows.iphoneOpens(this@MainActivity, prefs.contactProfile)
@@ -1282,6 +1287,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             setText(entry.note)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
             minLines = 2
+            filters = arrayOf(InputFilter.LengthFilter(MAX_NOTE))
         }
         layout.addView(field)
         val dialog = MaterialAlertDialogBuilder(this)
@@ -1341,7 +1347,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
-    private fun qrBitmap(text: String): Bitmap = QrCode.bitmap(this, text)
+    private fun qrBitmap(text: String): Bitmap? = QrCode.bitmap(this, text)
 
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 
@@ -1350,6 +1356,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         private val SENT_TOKEN = Any()
         /** From a widget for one card: open Tilde on that card. */
         const val EXTRA_CARD = "card"
+        /** The longest Met note. */
+        private const val MAX_NOTE = 500
         private const val STATE_STEP = "welcome.step"
         private const val STATE_COUNTRIES = "welcome.countries"
         private const val STATE_SECOND_PHONE = "welcome.secondPhone"

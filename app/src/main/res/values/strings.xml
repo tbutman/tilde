@@ -109,6 +109,7 @@
     <string name="detail_wifi_missing">Not set up yet</string>
     <string name="qr_description">QR code for what a tap shares</string>
     <string name="qr_enlarge">Tap to show it bigger</string>
+    <string name="qr_too_long">Too long for a QR code. Shorten your link or details.</string>
     <string name="qr_close">Tap anywhere to close</string>
     <string name="opens_link">Opens %1$s</string>
     <string name="opens_contact">Saves your contact card</string>

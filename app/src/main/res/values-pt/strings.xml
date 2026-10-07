@@ -107,6 +107,7 @@
     <string name="detail_wifi_missing">Ainda não configurado</string>
     <string name="qr_description">Código QR do que um toque partilha</string>
     <string name="qr_enlarge">Toca para o ver maior</string>
+    <string name="qr_too_long">Demasiado longo para um código QR. Encurta o teu link ou os teus dados.</string>
     <string name="qr_close">Toca em qualquer sítio para fechar</string>
     <string name="opens_link">Abre %1$s</string>
     <string name="opens_contact">Guarda o teu cartão de contacto</string>

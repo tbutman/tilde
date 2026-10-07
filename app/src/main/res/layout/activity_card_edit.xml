@@ -103,6 +103,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_name"
+                android:maxLength="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
@@ -117,6 +118,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_title"
+                android:maxLength="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
@@ -131,6 +133,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_company"
+                android:maxLength="100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
@@ -216,6 +219,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_website"
+                android:maxLength="500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
@@ -230,6 +234,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_linkedin"
+                android:maxLength="500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
@@ -244,6 +249,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_github"
+                android:maxLength="500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
@@ -258,6 +264,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_instagram"
+                android:maxLength="500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"
@@ -272,6 +279,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profile_x"
+                android:maxLength="500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionNext"

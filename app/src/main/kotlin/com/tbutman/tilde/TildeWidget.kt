@@ -57,7 +57,9 @@ class TildeWidget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.widget_qr)
             views.setTextViewText(R.id.widget_label, context.getString(R.string.widget_label, card.profile.handle.ifBlank { context.getString(R.string.brand_name) }, card.label))
             prefs.qrTextFor(card).takeIf { it.isNotEmpty() }?.let { text ->
-                views.setImageViewBitmap(R.id.widget_qr, QrCode.bitmap(context, text, scale = 8))
+                val code = QrCode.bitmap(context, text, scale = 8)
+                views.setImageViewBitmap(R.id.widget_qr, code)
+                if (code == null) views.setTextViewText(R.id.widget_label, context.getString(R.string.qr_too_long))
             }
             // Opens Tilde on this card (a widget for "the active card" just opens Tilde).
             val open = Intent(context, MainActivity::class.java)

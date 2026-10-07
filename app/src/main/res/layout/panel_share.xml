@@ -111,6 +111,15 @@
                 android:scaleType="fitCenter" />
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Instead of the code, when what it would carry doesn't fit in one. -->
+        <TextView
+            android:id="@+id/qr_too_long"
+            style="@style/Hint"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="@string/qr_too_long"
+            android:visibility="gone" />
+
         <!-- For the other person: what scanning or tapping opens. -->
         <TextView
             android:id="@+id/qr_opens"
