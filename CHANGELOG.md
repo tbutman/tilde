@@ -2,7 +2,7 @@
 
 ## 1.2.0 (unreleased)
 
-More than one card, a reorganised Settings with new options, backup and restore, a light theme, a
+More than one card, a reorganized Settings with new options, backup and restore, a light theme, a
 home-screen widget, and Tilde in Portuguese. Installing it over 1.1 keeps everything: your profile,
 photo, links and choices become your first card, "My card".
 
@@ -10,12 +10,12 @@ photo, links and choices become your first card, "My card".
 
 - **Cards:** keep several, each a different you to share (work, personal, a project, an event).
   Each has its own name, title, company, photo, handle, phone numbers, links, WhatsApp greeting,
-  what a tap shares, quick-switch row and cover colour. Labels such as "Work" are only for you.
+  what a tap shares, quick-switch row and cover color. Labels such as "Work" are only for you.
 - **Switching:** tap `~/` at the top of the Share screen (it shows the card's label once you have
   more than one) or the card itself, or swipe the card sideways to step through your cards.
 - **New card:** copy the current card (photo and links included; then change what differs in Edit
   card) or start blank with just a name.
-- **Manage cards:** rename, recolour, duplicate, reorder and delete. The last card can't be
+- **Manage cards:** rename, recolor, duplicate, reorder and delete. The last card can't be
   deleted, and stickers you've already written keep what's on them.
 - **Choose what each card gives away:** untick details a card's contact card should leave out, such
   as your phone number on a card for events. Taps, the QR code, Send and the link iPhones open all
@@ -24,7 +24,7 @@ photo, links and choices become your first card, "My card".
 - **Met** shows which card was shared, and the export has a `card` column.
 - The Quick Settings tile shows the card as well as what it shares ("Work · LinkedIn").
 
-### Settings, reorganised
+### Settings, reorganized
 
 - Settings is a short list in three groups: **This card** (tap your card to edit it, Your cards),
   **All cards** (Sharing, Guest Wi-Fi, Met, Write a sticker) and **App** (Backup and restore,
@@ -43,7 +43,7 @@ photo, links and choices become your first card, "My card".
 - The keyboard no longer covers the field you're typing in, in Edit card or any Settings page.
 - **Set up** on Guest Wi-Fi or the contact card opens the right page directly.
 - **About** has the version, a privacy note, links to the website, the privacy page, the source
-  code and **Report a problem**, and the open-source licences.
+  code and **Report a problem**, and the open-source licenses.
 
 ### New settings
 
@@ -128,7 +128,7 @@ photo, links and choices become your first card, "My card".
   Medium, Substack, Dribbble, Behance, Calendly, Telegram, Discord, Product Hunt, Stack Overflow,
   GitLab and Figma (and LinkedIn, GitHub, Instagram, X and WhatsApp links), instead of the first
   letter of the link's name.
-- The cover colours are easier to tap and are read aloud by name, and the pencil on your card is
+- The cover colors are easier to tap and are read aloud by name, and the pencil on your card is
   bigger and easier to see.
 - A card always keeps a name: clearing it in Edit card keeps the last one, with a note.
 - Name, title and company take up to 100 characters, and links and Met notes up to 500.

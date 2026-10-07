@@ -4,7 +4,7 @@
 your website, contact details, WhatsApp or LinkedIn, just as if you'd handed them an NFC business
 card. Or they scan the code on your screen.
 
-**Free and open source** (MIT licence). Website: [tbutman.com/tilde](https://tbutman.com/tilde). No account, sign-up, subscription, payment or ads, and no
+**Free and open source** (MIT license). Website: [tbutman.com/tilde](https://tbutman.com/tilde). No account, sign-up, subscription, payment or ads, and no
 internet: Tilde can't go online, and your details stay on your phone until you share them.
 
 <p>
@@ -31,7 +31,7 @@ internet: Tilde can't go online, and your details stay on your phone until you s
 ## What it does
 
 - **More than one card.** Keep a card for work, one for personal life, one for a project or an
-  event, each with its own name, title, company, photo, links and colour. Swipe your card (or tap
+  event, each with its own name, title, company, photo, links and color. Swipe your card (or tap
   `~/` at the top) to switch; only you see the labels.
 - **Tap to share.** The other phone doesn't need Tilde or any other app. Phones read it the way they
   read an NFC sticker or a contactless business card.
@@ -133,7 +133,7 @@ Things worth knowing:
 
 Tilde works on its own; you don't need a card. If you have a 3D printer and want something to hand
 out too, the **Tilde card** is a free, open-source business card designed to go with it: a QR code
-on the front, and optionally an NFC sticker sealed inside. Customize it with your name and colours,
+on the front, and optionally an NFC sticker sealed inside. Customize it with your name and colors,
 print it, then use **Settings → Write a sticker** to put your link or contact card on the sticker.
 See [tbutman/tilde-card](https://github.com/tbutman/tilde-card).
 
@@ -170,7 +170,7 @@ Tilde is written in Kotlin with no network code and few dependencies. See
 Bug reports and ideas are welcome in [Issues](https://github.com/tbutman/tilde/issues). For code,
 open an issue first; see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) to build and test.
 
-## Licence
+## License
 
 [MIT](LICENSE) © Thomas Butman.
 

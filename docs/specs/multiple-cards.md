@@ -11,7 +11,7 @@ People present themselves differently depending on who they're meeting: a work c
 
 A card is a complete identity to share:
 
-- **What others see:** name, job title, photo, Tilde handle (`~/handle`) and a cover colour.
+- **What others see:** name, job title, photo, Tilde handle (`~/handle`) and a cover color.
 - **What it shares:** emails, phone numbers, website, social links, WhatsApp number and greeting.
 - **How it shares:** which option a tap shares by default, and which options appear in its quick-switch row.
 - **A private label** that only you see, such as "Work", "Personal" or "Web Summit".
@@ -24,13 +24,13 @@ Exactly one card is **active**. The Share screen, taps, the QR code, Send/Copy, 
 | --- | --- | --- |
 | Name, title, emails, phones, website, socials, WhatsApp number, handle | **Card** | They're the identity. |
 | Photo | **Card** | A headshot for work, something else for personal use. |
-| Cover colour | **Card** | Tells cards apart at a glance; good for a project or company's colour. |
+| Cover color | **Card** | Tells cards apart at a glance; good for a project or company's color. |
 | WhatsApp greeting | **Card** | It uses the card's first name ("Hi Thomas"). |
 | What a tap shares; quick-switch stars | **Card** | Work shows LinkedIn and LabTrails; Personal shows Instagram. |
 | Saved links | **Card** | Like the LinkedIn and website fields beside them. Each card is self-contained: editing one never changes another (see "Saved links: per card" below). |
 | Guest Wi-Fi | **Shared** | It's about the place, not the person. Each card can still star it. |
 | Event name (called the event tag when this was written) | **Shared** | It's about where you are now, whichever card you're using. It's still only added to links to that card's own website. |
-| Share by tap (then Share over NFC) on/off, the tile, the current tab | **Shared** | Phone behaviour, not identity. |
+| Share by tap (then Share over NFC) on/off, the tile, the current tab | **Shared** | Phone behavior, not identity. |
 | Met | **Shared, with a Card column** | One list of people met; each entry records which card was shared. CSV export gets a `card` column. |
 | Receive history, the read count | **Shared** | Not about which card you are. |
 
@@ -54,7 +54,7 @@ The 1.1 saved links move into card 1 during the upgrade.
 
 ### Switching cards
 
-- **The `~/handle` line on the Share screen becomes a button.** It opens a sheet listing the cards (label, name and colour) with a check on the active one, plus **New card** and **Manage cards**.
+- **The `~/handle` line on the Share screen becomes a button.** It opens a sheet listing the cards (label, name and color) with a check on the active one, plus **New card** and **Manage cards**.
 - **Swipe the profile card sideways** to go to the next or previous card, like flipping through a wallet. This mirrors swiping the QR code to change what's shared: the top card is *who*, the code is *what*. It uses the same touch handling as the QR swipe (keeps sideways touches from the scrolling page, counts by distance).
 - Switching is instant and recorded as the active card. A tap that's already in progress finishes with the card it started with.
 - **Quick Settings tile:** the subtitle shows "Work · LinkedIn". A long press opens the app, as now.
@@ -73,7 +73,7 @@ The 1.1 saved links move into card 1 during the upgrade.
 
 A **Cards** screen, reached from the switcher's **Manage cards** and from Settings:
 
-- Reorder by dragging, rename, change the colour, duplicate, or delete.
+- Reorder by dragging, rename, change the color, duplicate, or delete.
 - **Delete** asks for confirmation and removes that card's photo. The last card can't be deleted.
 - Deleting the active card makes the first remaining card active.
 
@@ -81,7 +81,7 @@ A **Cards** screen, reached from the switcher's **Manage cards** and from Settin
 
 Settings splits in two:
 
-- **This card** (top, with the card's label and colour and a **Switch** button): profile, photo, handle, phone numbers, WhatsApp greeting, and its saved links (with their Share screen checkboxes).
+- **This card** (top, with the card's label and color and a **Switch** button): profile, photo, handle, phone numbers, WhatsApp greeting, and its saved links (with their Share screen checkboxes).
 - **All cards** (below): Guest Wi-Fi, event tag, Share over NFC, Stickers and cards (Write a sticker), shortcuts and About.
 
 That makes clear which edits affect only this card.
@@ -94,7 +94,7 @@ About. There's no "Stickers and cards" row; see `panel_settings.xml` and `MainAc
 
 ### Welcome
 
-Unchanged: it creates the first card, labelled "My card", with the colour picked automatically. A short line on the "Your card is ready" sheet mentions that you can add more cards (for work, personal or an event) from the `~/handle` button.
+Unchanged: it creates the first card, labeled "My card", with the color picked automatically. A short line on the "Your card is ready" sheet mentions that you can add more cards (for work, personal or an event) from the `~/handle` button.
 
 ### Write a sticker (renamed from Write a card)
 
@@ -102,7 +102,7 @@ Unchanged: it creates the first card, labelled "My card", with the colour picked
 
 ## Edge cases
 
-| Case | Behaviour |
+| Case | Behavior |
 | --- | --- |
 | The selected option isn't available on the card switched to (say, no LinkedIn) | Fall back to the card's first ready option, as the Share screen already does. Each card remembers its own choice. |
 | A saved link is deleted | Only from that card; its stars and selection fall back there. |
@@ -115,7 +115,7 @@ Unchanged: it creates the first card, labelled "My card", with the colour picked
 | Upgrading from 1.0 or 1.1 | The single profile, photo, share option, stars, greeting and saved links become card 1, "My card". Nothing is lost; covered by a migration test. |
 | Debug "Show the welcome screens" | Clears all cards. |
 | Lots of cards | No limit. The switcher scrolls. Expect fewer than ten. |
-| Accessibility | Swiping the card always has a button alternative (the switcher). The handle button is labelled "Switch card, current: Work". |
+| Accessibility | Swiping the card always has a button alternative (the switcher). The handle button is labeled "Switch card, current: Work". |
 
 ## Data model
 
@@ -144,7 +144,7 @@ Decided by Thomas on 7 October 2026 (links per card after a second look):
 
 1. **Naming:** identities are **cards**. The writing feature is renamed **Write a sticker** ("an NFC sticker, or a printed card with one inside"); the printable product stays the **Tilde card**.
 2. **Switching:** the `~/handle` button opens the switcher, **and** swiping the profile card steps through cards.
-3. **Cover colour:** yes, per card, from six colours (Tilde amber plus five that suit the dark theme).
+3. **Cover color:** yes, per card, from six colors (Tilde amber plus five that suit the dark theme).
 4. **Release:** ship `release/1.1.0` first (beta, then 1.1.0), then build cards on their own branch for **1.2**.
 
 5. **Saved links per card**, with Copy card copying them and Add a link suggesting links from other cards (see "Saved links: per card"). Chosen over a shared library starred per card, which has one place to edit but behaves differently from the per-card social links, and where an edit can affect other cards.
@@ -153,7 +153,7 @@ Decided by Thomas on 7 October 2026 (links per card after a second look):
 
 1. `Card` model, storage and migration, with unit tests: migration from 1.0 and 1.1 data (profile, photo, saved links), copy (including links and photo), delete, the last card.
 2. `Prefs` redirects to the active card. The tap service, tile and Write a card use the active card.
-3. The switcher sheet, New card (copy or blank), the Cards screen (rename, colour, reorder, delete), and link suggestions from other cards in Add a link.
+3. The switcher sheet, New card (copy or blank), the Cards screen (rename, color, reorder, delete), and link suggestions from other cards in Add a link.
 4. Settings split into This card and All cards.
 5. The profile-card swipe, the Met card column and CSV, the welcome mention.
 6. Rename Write a card to Write a sticker (screen, Settings, README, site, the welcome's card step). Release notes, README and the site's Tilde page.

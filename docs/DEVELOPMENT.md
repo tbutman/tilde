@@ -18,7 +18,7 @@ To the other phone it looks like any NFC sticker or business card, so it needs n
   only prefers Tilde while it is in the foreground.
 - **Receive** uses reader mode to read NDEF from tags, NFC cards and other phones running Tilde.
 - **Cards.** Each identity is a `Card` (`Cards.kt`): profile, saved links, share choice, stars,
-  greeting, label and colour, stored as JSON. `Prefs.profile`, `links`, `share`, `pinned` and
+  greeting, label and color, stored as JSON. `Prefs.profile`, `links`, `share`, `pinned` and
   `whatsappGreeting` read and write the active card, so most code doesn't know about cards. Version
   1.1's single profile (and photo) becomes card 1 the first time cards are read. See
   `docs/specs/multiple-cards.md`.
@@ -65,8 +65,8 @@ To the other phone it looks like any NFC sticker or business card, so it needs n
   Sharing, `sendPhoto`).
 - **Logos** come from Simple Icons (CC0; LinkedIn from 13.21.0, the last version to include it; the
   sites saved links are matched to, in `Sites`, from 16.34.0), with their paths rewritten so
-  Android's vector parser accepts them (see `VectorPathTest`). Brand colours are kept unless they're
-  too dark for the dark theme (black logos are drawn in the text colour).
+  Android's vector parser accepts them (see `VectorPathTest`). Brand colors are kept unless they're
+  too dark for the dark theme (black logos are drawn in the text color).
 
 Permissions: `NFC` and `VIBRATE`. No `INTERNET` permission, no analytics, and cloud backup is off.
 The `android.hardware.nfc.hce` feature is optional (`required="false"`): without NFC the Share
@@ -131,11 +131,11 @@ demo exit
 | Class | Covers |
 | --- | --- |
 | `Type4TagTest` | The full reader exchange: select the NDEF application, read the capability container, the NDEF length and the message (long ones in chunks); the URI record's exact bytes; the refusals (no file selected, writes, unknown commands). |
-| `NdefTest` | The contact message (a long vCard record, then the link), labelled numbers, the shorter QR code card, a reader getting it in chunks. |
+| `NdefTest` | The contact message (a long vCard record, then the link), labeled numbers, the shorter QR code card, a reader getting it in chunks. |
 | `ProfileTest` | Profiles and their vCards: the seed file, escaping and labels, the iPhone link, handles, company, what a card leaves off, the photo in a sent card, link checking and @handles in Edit card. |
 | `FeaturesTest` | Event names on links, Wi-Fi records and `WIFI:` codes, Receive decoding what Share sends and other tags, vCard parsing, WhatsApp links. |
 | `LinksTest` | Saved links: options, readiness, JSON, the 1.0 custom link, link checking and @handles, known sites. |
-| `CardsTest` | Cards: JSON, the migration from one profile, copying, deleting, moving, swiping, new colours and labels. |
+| `CardsTest` | Cards: JSON, the migration from one profile, copying, deleting, moving, swiping, new colors and labels. |
 | `CountriesTest` | The country table, flags, search, labels and saved numbers. |
 | `MetLogTest` | One entry per tap (repeated reads, two taps 10 s apart, another card), no size limit, notes, the CSV. |
 | `BackupTest` | The backup round trip, the Wi-Fi password, refused, damaged and hand-edited files, a missing active card, the event name expiring, dropping old Met entries. |
