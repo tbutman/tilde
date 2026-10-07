@@ -76,10 +76,11 @@ photo, links and choices become your first card, "My card".
 ### Share screen
 
 - What a tap shares and the quick-switch chips stay above the bottom bar, and whatever is being
-  shared always has a chip. The QR code is bigger, and Send and Copy link are icons beside the
-  "Opens …" line.
+  shared always has a chip. The QR code is a little smaller so everything fits on one screen, and
+  Send and Copy link are icons beside the "Opens …" line.
 - Tap the status badge (Ready, NFC off, Taps off, No NFC) to see what it means, with the fix one
-  tap away: turn on NFC, or turn Share by tap on or off.
+  tap away: turn on NFC, or turn Share by tap on or off. On a phone without NFC, it says to share
+  with the code instead.
 - **Guest Wi-Fi is shared once:** after a tap, or when you leave the Share screen, your card goes
   back to what it shared before. Its Settings page says plainly that the Wi-Fi code contains the
   password.
@@ -89,7 +90,8 @@ photo, links and choices become your first card, "My card".
 ### Write a sticker
 
 - **Write a card** is now **Write a sticker** (Settings → Write a sticker), now that "card" means
-  one of your cards. It writes the active card, and says which one when you have several.
+  one of your cards. It puts your link on an NFC sticker or a Tilde card, from the active card,
+  and says which card when you have several.
 - **Lock it after writing** (off unless ticked and confirmed), so nobody can overwrite the sticker.
   Tilde says so if a sticker can't be locked.
 - It says what anyone who taps the sticker gets ("…gets your phone number and email", "…can join

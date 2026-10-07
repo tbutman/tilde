@@ -39,8 +39,8 @@ internet: Tilde can't go online, and your details stay on your phone until you s
   who'd rather scan.
 - **Switch what you share in one tap,** to suit who you're talking to: tap one of the chips under
   the QR code (or swipe the code), or tap the line below them for every option:
-  - **Contact card:** your name, title, phone numbers, email, website and social links all at once,
-    ready to save to their contacts. (It's a vCard, the standard format every phone's contacts app
+  - **Contact card:** your name, title, company, phone numbers, email, website and social links all
+    at once, ready to save to their contacts. (It's the standard format every phone's contacts app
     understands.)
   - **A link:** your website, LinkedIn, GitHub, Instagram, X, or links you save yourself, such as
     your projects. Each saved link is its own option, with its own name.
@@ -121,6 +121,8 @@ Things worth knowing:
   nothing is shared from your pocket by accident. To share with Tilde closed (screen on, phone
   unlocked), switch on Settings → Sharing → Answer taps when Tilde is closed. The Quick Settings
   tile and the home-screen widget open it in one swipe.
+- **The Share screen goes to full brightness and stays on, and Tilde buzzes when a tap is read.**
+  Settings → Sharing turns off full brightness, keeping the screen on, or the buzz.
 - **iPhones only act on links from a tap.** If you share your contact card, a tapping iPhone opens
   your website instead; the QR code saves the contact on any phone. Guest Wi-Fi is the same: an
   iPhone joins by scanning the code. The Share screen tells you when this applies.
