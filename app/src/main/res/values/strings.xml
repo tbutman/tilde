@@ -12,7 +12,7 @@
 
     <!-- Share: what the other person sees -->
     <string name="brand_prefix">~/</string>
-    <string name="set_up_profile">Set up your profile</string>
+    <string name="set_up_profile">Set up your card</string>
     <string name="brand_name">tilde</string>
     <string name="welcome_step">Step %1$d of %2$d</string>
     <string name="welcome_start">Get started</string>
@@ -74,7 +74,7 @@
     <string name="ready_switch_title">Change what you share</string>
     <string name="ready_switch_detail">Tap the row under your code: your website, contact card, WhatsApp and more.</string>
     <string name="ready_tabs_title">Receive and Met</string>
-    <string name="ready_tabs_detail">Receive reads other people\'s cards and tags. Met remembers who you\'ve shared with.</string>
+    <string name="ready_tabs_detail">Receive reads other people\'s NFC business cards and stickers. Met remembers who you\'ve shared with.</string>
     <string name="ready_done">Got it</string>
     <string name="ready_write">Write a sticker</string>
     <string name="ready_more_cards">Want another card, say for work or an event? Tap ~/ at the top of the Share screen to add one.</string>
@@ -92,7 +92,7 @@
     <string name="state_nfc_off">NFC off</string>
     <string name="state_no_nfc">No NFC</string>
     <string name="state_description">Status: %1$s. Tap for details.</string>
-    <string name="state_ready_detail">Hold the back of your phone to theirs and they get what\'s on screen. Keep Tilde open: it only answers taps while it\'s in front (you can change that in Settings → Sharing). The code works too.</string>
+    <string name="state_ready_detail">Hold the back of your phone to theirs and they get what\'s on screen. Keep Tilde open: it only answers taps while it\'s on screen (you can change that in Settings → Sharing). The code works too.</string>
     <string name="state_ready_detail_closed">Hold the back of your phone to theirs and they get your active card\'s choice. It works with Tilde closed too, while your phone is unlocked (Settings → Sharing). The code works too.</string>
     <string name="state_nfc_off_detail">NFC is switched off on this phone, so taps can\'t work. Turn it on in Android\'s settings. The code works either way.</string>
     <string name="state_paused_detail">You\'ve paused sharing by tap (Share over NFC, in Settings), so a phone nearby gets nothing. The code still works.</string>
@@ -100,7 +100,7 @@
     <string name="state_pause">Pause taps</string>
     <string name="state_resume">Resume taps</string>
     <string name="iphone_scan_only">iPhone: scan the code</string>
-    <string name="iphone_contact_note">iPhone: tap opens %1$s, scan for the card</string>
+    <string name="iphone_contact_note">iPhone: a tap opens %1$s; scan to save the contact</string>
     <!-- What an iPhone opens instead of the contact card: "your website", or a network's name ("LinkedIn"). -->
     <string name="iphone_your_website">your website</string>
     <string name="contact_part_name">Name</string>
@@ -114,7 +114,7 @@
     <string name="contact_preview">Preview</string>
     <string name="contact_preview_title">Your contact card</string>
     <string name="contact_preview_code">Scanning the code gives the same card with only the first link.</string>
-    <string name="detail_whatsapp">Opens a chat with me</string>
+    <string name="detail_whatsapp">Opens a WhatsApp chat with you</string>
     <string name="detail_wifi_missing">Not set up yet</string>
     <string name="qr_description">QR code for what a tap shares</string>
     <string name="qr_enlarge">Tap to show it bigger</string>
@@ -136,7 +136,7 @@
         <item quantity="other">%d sent today</item>
     </plurals>
     <string name="sent">Sent</string>
-    <string name="sent_detail">It\'s on their phone.</string>
+    <string name="sent_detail">Their phone has read it.</string>
     <string name="done">Done</string>
 
     <!-- Picker -->
@@ -163,12 +163,12 @@
 
     <!-- Receive -->
     <string name="receive_title">Hold an NFC tag or another phone to the back of yours.</string>
-    <string name="receive_detail">Tags, NFC business cards and Android phones running this app all work. iPhones can\'t send this way.</string>
+    <string name="receive_detail">Stickers, NFC business cards and Android phones with Tilde open all work. iPhones can\'t send this way.</string>
     <string name="receive_no_nfc">This phone can\'t receive taps. Scan their code with your camera instead.</string>
     <string name="receive_nfc_off">NFC is off. Turn it on to receive taps.</string>
     <string name="receive_turn_on">Turn on</string>
     <string name="received_label">Received</string>
-    <string name="received_empty">Nothing yet.</string>
+    <string name="received_empty">Nothing yet. Hold a sticker, card or phone to the back of yours.</string>
     <string name="received_nothing">That tag has no readable content.</string>
     <string name="received_wifi">Wi-Fi: %1$s</string>
     <string name="received_wifi_open">Open network</string>
@@ -186,7 +186,7 @@
     <string name="met_add_note">Add a note</string>
     <string name="met_add_someone">Add someone</string>
     <string name="met_export">Export</string>
-    <string name="met_empty">Nobody yet.</string>
+    <string name="met_empty">Nobody yet. Tap phones with someone, or add them by hand.</string>
     <string name="met_note_title">Who was it?</string>
     <string name="met_note_hint">Jane, React dev at Acme, wants to talk about payments</string>
     <string name="met_save">Save</string>
@@ -226,7 +226,7 @@
     <string name="cards_new_blank">Start blank</string>
     <string name="cards_new_name">Full name</string>
     <string name="cards_create">Create</string>
-    <string name="cards_created_copy">%1$s is ready. Change what differs in Settings.</string>
+    <string name="cards_created_copy">%1$s is ready. Change what differs in Edit card.</string>
     <string name="cards_created_blank">%1$s is ready. Fill in the rest here.</string>
     <string name="cards_switched">Now sharing %1$s</string>
     <string name="cards_edit">Rename and colour</string>
@@ -282,6 +282,7 @@
     <string name="profile_website">Website</string>
     <string name="profile_handle">Tilde handle</string>
     <string name="profile_handle_helper">Shown as ~/yourname at the top of your card.</string>
+    <string name="profile_handle_helper_live">Shown as ~/%1$s at the top of your card.</string>
     <string name="handle_prefix" translatable="false">~/</string>
     <string name="profile_linkedin">LinkedIn link</string>
     <string name="profile_github">GitHub link</string>
@@ -412,8 +413,8 @@
     </plurals>
     <string name="debug_welcome" translatable="false">Show the welcome screens (debug)</string>
     <plurals name="reads">
-        <item quantity="one">Read %d time from this phone</item>
-        <item quantity="other">Read %d times from this phone</item>
+        <item quantity="one">Shared by tap %d time from this phone</item>
+        <item quantity="other">Shared by tap %d times from this phone</item>
     </plurals>
     <string name="version">Version %1$s</string>
     <!-- Write a sticker (called Write a card before 1.2, when "card" came to mean one of your cards) -->

@@ -30,8 +30,9 @@ class NdefHceService : HostApduService() {
                 if (!logged) {
                     logged = true
                     prefs.met = MetLog.afterTap(prefs.met, System.currentTimeMillis(), prefs.event, labelOf(prefs.find(sharing)), prefs.activeCard.label)
+                    // Once per tap too: it's About's "Shared by tap" count, and the screen's "Sent".
+                    prefs.reads += 1
                 }
-                prefs.reads += 1
                 // Guest Wi-Fi goes to one person: the next tap shares the card again.
                 if (sharing == Presets.WIFI) prefs.endWifi()
             }

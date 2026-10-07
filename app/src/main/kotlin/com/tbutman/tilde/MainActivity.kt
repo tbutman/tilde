@@ -231,6 +231,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         })
         findViewById<TextInputEditText>(R.id.welcome_job).addTextChangedListener(afterChange { bindWelcomePreview() })
         handle.addTextChangedListener(afterChange { text ->
+            (handle.parent.parent as? TextInputLayout)?.showHandleHelper(Profile.cleanHandle(text))
             // Clearing it hands it back to the name.
             if (!syncingHandle) handleEdited = text.isNotEmpty()
             bindWelcomePreview()

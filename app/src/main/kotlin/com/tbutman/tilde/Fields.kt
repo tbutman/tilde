@@ -67,6 +67,11 @@ fun ScrollView.keepFocusAboveKeyboard() {
     viewTreeObserver.addOnGlobalFocusChangeListener { _, _ -> post { reveal() } }
 }
 
+/** The handle field's helper says what's typed: "Shown as ~/janedoe at the top of your card." */
+fun TextInputLayout.showHandleHelper(handle: String) {
+    helperText = if (handle.isBlank()) context.getString(R.string.profile_handle_helper) else context.getString(R.string.profile_handle_helper_live, handle)
+}
+
 /** Typing in a Tilde handle field: lower case and the allowed characters only, up to the maximum length. */
 fun handleFilters(): Array<InputFilter> = arrayOf(
     InputFilter { source, start, end, _, _, _ ->

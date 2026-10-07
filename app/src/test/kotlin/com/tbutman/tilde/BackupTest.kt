@@ -58,6 +58,11 @@ class BackupTest {
         // A photo that isn't base64.
         val badPhoto = org.json.JSONObject(Backups.toJson(backup)).put("photos", org.json.JSONObject("""{"w1":"not base64!"}"""))
         assertEquals(Backups.Reason.DAMAGED, assertThrows(Backups.Invalid::class.java) { Backups.fromJson(badPhoto.toString()) }.reason)
+        // Cut short (a half-copied file): it says it's a backup, so it's damaged, not "not a backup".
+        // (Android writes "kind" first; the JVM's org.json may not, so cut after it either way.)
+        val truncated = Backups.toJson(backup).let { it.take(maxOf(it.length / 2, it.indexOf(Backups.KIND) + 20)) }
+        assertEquals(Backups.Reason.DAMAGED, assertThrows(Backups.Invalid::class.java) { Backups.fromJson(truncated) }.reason)
+        assertEquals(Backups.Reason.NOT_A_BACKUP, assertThrows(Backups.Invalid::class.java) { Backups.fromJson("{\"kind\": \"other\"") }.reason)
         // A card id that would be a path.
         val badId = Backups.toJson(backup.copy(cards = listOf(work.copy(id = "../x")), activeCardId = "../x", photos = emptyMap()))
         assertEquals(Backups.Reason.DAMAGED, assertThrows(Backups.Invalid::class.java) { Backups.fromJson(badId) }.reason)

@@ -85,7 +85,10 @@ object Backups {
 
     /** Reads a backup file; throws [Invalid] for anything that isn't one Tilde can restore. */
     fun fromJson(json: String): Backup {
-        val o = runCatching { JSONObject(json) }.getOrElse { throw Invalid(Reason.NOT_A_BACKUP) }
+        // A file that says it's a Tilde backup but doesn't parse was cut short or damaged.
+        val o = runCatching { JSONObject(json) }.getOrElse {
+            throw Invalid(if (Regex("\"kind\"\\s*:\\s*\"$KIND\"").containsMatchIn(json)) Reason.DAMAGED else Reason.NOT_A_BACKUP)
+        }
         if (o.optString("kind") != KIND) throw Invalid(Reason.NOT_A_BACKUP)
         if (o.optInt("version") > VERSION) throw Invalid(Reason.TOO_NEW)
         val cards = Cards.fromJson(o.optJSONArray("cards")?.toString())

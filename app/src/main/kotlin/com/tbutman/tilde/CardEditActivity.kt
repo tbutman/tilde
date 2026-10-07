@@ -71,8 +71,15 @@ class CardEditActivity : AppCompatActivity() {
         }
         profileField(R.id.profile_title, profile.title) { copy(title = it) }
         profileField(R.id.profile_company, profile.company) { copy(company = it) }
-        findViewById<TextInputEditText>(R.id.profile_handle).filters = handleFilters()
-        profileField(R.id.profile_handle, profile.handle) { copy(handle = it) }
+        findViewById<TextInputEditText>(R.id.profile_handle).apply {
+            filters = handleFilters()
+            val layout = parent.parent as? TextInputLayout
+            layout?.showHandleHelper(profile.handle)
+            saveAsYouType(profile.handle) { text ->
+                layout?.showHandleHelper(text.trim())
+                prefs.profile = prefs.profile.copy(handle = text.trim())
+            }
+        }
         profileField(R.id.profile_email, profile.email) { copy(email = it) }
         profileField(R.id.profile_email2, profile.email2) { copy(email2 = it) }
         linkField(R.id.profile_website, profile.website, null) { copy(website = it) }

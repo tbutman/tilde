@@ -349,7 +349,7 @@ class Prefs(context: Context) {
         get() = store.getBoolean(KEY_WIFI_OPEN, false)
         set(value) = store.edit().putBoolean(KEY_WIFI_OPEN, value).apply()
 
-    /** How many times a reader has read the whole message from this phone. */
+    /** How many taps have read the whole message from this phone (once per tap, however often each one reads it). */
     var reads: Int
         get() = store.getInt(KEY_READS, 0)
         set(value) = store.edit().putInt(KEY_READS, value).apply()

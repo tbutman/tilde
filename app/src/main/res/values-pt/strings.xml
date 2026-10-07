@@ -13,7 +13,7 @@
 
     <!-- Share: what the other person sees -->
     <string name="brand_prefix">~/</string>
-    <string name="set_up_profile">Configura o teu perfil</string>
+    <string name="set_up_profile">Configura o teu cartão</string>
     <string name="brand_name">tilde</string>
     <string name="welcome_step">Passo %1$d de %2$d</string>
     <string name="welcome_start">Começar</string>
@@ -72,7 +72,7 @@
     <string name="ready_switch_title">Muda o que partilhas</string>
     <string name="ready_switch_detail">Toca na linha por baixo do código: o teu site, cartão de contacto, WhatsApp e mais.</string>
     <string name="ready_tabs_title">Receber e Conhecidos</string>
-    <string name="ready_tabs_detail">Receber lê os cartões e etiquetas de outras pessoas. Conhecidos guarda com quem partilhaste.</string>
+    <string name="ready_tabs_detail">Receber lê os cartões de visita NFC e autocolantes de outras pessoas. Conhecidos guarda com quem partilhaste.</string>
     <string name="ready_done">Percebi</string>
     <string name="ready_write">Gravar um autocolante</string>
     <string name="ready_more_cards">Queres outro cartão, por exemplo para o trabalho ou um evento? Toca em ~/ no topo do ecrã Partilhar para adicionar um.</string>
@@ -90,7 +90,7 @@
     <string name="state_nfc_off">NFC desligado</string>
     <string name="state_no_nfc">Sem NFC</string>
     <string name="state_description">Estado: %1$s. Toca para ver detalhes.</string>
-    <string name="state_ready_detail">Encosta as costas do teu telemóvel às do da outra pessoa e ela recebe o que está no ecrã. Mantém a Tilde aberta: só responde a toques enquanto está à frente (podes mudar isso em Definições → Partilha). O código também funciona.</string>
+    <string name="state_ready_detail">Encosta as costas do teu telemóvel às do da outra pessoa e ela recebe o que está no ecrã. Mantém a Tilde aberta: só responde a toques enquanto está no ecrã (podes mudar isso em Definições → Partilha). O código também funciona.</string>
     <string name="state_ready_detail_closed">Encosta as costas do teu telemóvel às do da outra pessoa e ela recebe o que escolheste no cartão ativo. Também funciona com a Tilde fechada, desde que o telemóvel esteja desbloqueado (Definições → Partilha). O código também funciona.</string>
     <string name="state_nfc_off_detail">O NFC está desligado neste telemóvel, por isso os toques não funcionam. Liga-o nas definições do Android. O código funciona na mesma.</string>
     <string name="state_paused_detail">Puseste em pausa a partilha por toque (Partilhar por NFC, nas Definições), por isso um telemóvel por perto não recebe nada. O código continua a funcionar.</string>
@@ -98,7 +98,7 @@
     <string name="state_pause">Pausar toques</string>
     <string name="state_resume">Retomar toques</string>
     <string name="iphone_scan_only">iPhone: ler o código</string>
-    <string name="iphone_contact_note">iPhone: um toque abre %1$s; o código dá o cartão</string>
+    <string name="iphone_contact_note">iPhone: um toque abre %1$s; lê o código para guardar o contacto</string>
     <!-- What an iPhone opens instead of the contact card: "your website", or a network's name ("LinkedIn"). -->
     <string name="iphone_your_website">o teu site</string>
     <string name="contact_part_name">Nome</string>
@@ -111,7 +111,7 @@
     <string name="contact_preview">Pré-visualizar</string>
     <string name="contact_preview_title">O teu cartão de contacto</string>
     <string name="contact_preview_code">Ler o código dá o mesmo cartão, só com o primeiro link.</string>
-    <string name="detail_whatsapp">Abre uma conversa comigo</string>
+    <string name="detail_whatsapp">Abre uma conversa de WhatsApp contigo</string>
     <string name="detail_wifi_missing">Ainda não configurado</string>
     <string name="qr_description">Código QR do que um toque partilha</string>
     <string name="qr_enlarge">Toca para o ver maior</string>
@@ -134,7 +134,7 @@
         <item quantity="other">%d enviados hoje</item>
     </plurals>
     <string name="sent">Enviado</string>
-    <string name="sent_detail">Já está no telemóvel da outra pessoa.</string>
+    <string name="sent_detail">O telemóvel da outra pessoa já o leu.</string>
     <string name="done">Concluído</string>
 
     <!-- Picker -->
@@ -161,12 +161,12 @@
 
     <!-- Receive -->
     <string name="receive_title">Encosta uma etiqueta NFC ou outro telemóvel às costas do teu.</string>
-    <string name="receive_detail">Funcionam etiquetas, cartões de visita NFC e telemóveis Android com esta app. Os iPhones não conseguem enviar desta forma.</string>
+    <string name="receive_detail">Funcionam autocolantes, cartões de visita NFC e telemóveis Android com a Tilde aberta. Os iPhones não conseguem enviar desta forma.</string>
     <string name="receive_no_nfc">Este telemóvel não consegue receber toques. Lê o código da outra pessoa com a câmara.</string>
     <string name="receive_nfc_off">O NFC está desligado. Liga-o para receberes toques.</string>
     <string name="receive_turn_on">Ligar</string>
     <string name="received_label">Recebido</string>
-    <string name="received_empty">Ainda nada.</string>
+    <string name="received_empty">Ainda nada. Encosta um autocolante, cartão ou telemóvel às costas do teu.</string>
     <string name="received_wifi">Wi-Fi: %1$s</string>
     <string name="received_wifi_open">Rede aberta</string>
     <string name="received_wifi_password">Palavra-passe: %1$s</string>
@@ -184,14 +184,14 @@
     <string name="met_add_note">Adicionar uma nota</string>
     <string name="met_add_someone">Adicionar alguém</string>
     <string name="met_export">Exportar</string>
-    <string name="met_empty">Ainda ninguém.</string>
+    <string name="met_empty">Ainda ninguém. Encosta o telemóvel ao de alguém, ou adiciona a pessoa à mão.</string>
     <string name="met_note_title">Quem era?</string>
     <string name="met_note_hint">Jane, dev React na Acme, quer falar sobre pagamentos</string>
     <string name="met_save">Guardar</string>
     <string name="met_delete">Apagar</string>
     <string name="met_cancel">Cancelar</string>
     <string name="met_no_note">Ainda sem nota. Toca para adicionar uma.</string>
-    <string name="met_received">recebi o contacto</string>
+    <string name="met_received">contacto recebido</string>
     <string name="met_manual">adicionado à mão</string>
     <string name="met_export_subject">Pessoas que conheci (Tilde)</string>
 
@@ -222,7 +222,7 @@
     <string name="cards_new_blank">Começar do zero</string>
     <string name="cards_new_name">Nome completo</string>
     <string name="cards_create">Criar</string>
-    <string name="cards_created_copy">%1$s está pronto. Muda o que for diferente nas Definições.</string>
+    <string name="cards_created_copy">%1$s está pronto. Muda o que for diferente em Editar cartão.</string>
     <string name="cards_created_blank">%1$s está pronto. Preenche o resto aqui.</string>
     <string name="cards_switched">Agora a partilhar %1$s</string>
     <string name="cards_edit">Mudar nome e cor</string>
@@ -278,6 +278,7 @@
     <string name="profile_website">Site</string>
     <string name="profile_handle">Identificador Tilde</string>
     <string name="profile_handle_helper">Aparece como ~/oteunome no topo do teu cartão.</string>
+    <string name="profile_handle_helper_live">Aparece como ~/%1$s no topo do teu cartão.</string>
     <string name="profile_linkedin">Link do LinkedIn</string>
     <string name="profile_github">Link do GitHub</string>
     <string name="profile_instagram">Link do Instagram</string>
@@ -411,9 +412,9 @@
         <item quantity="other">%d links</item>
     </plurals>
     <plurals name="reads">
-        <item quantity="one">Lido %d vez a partir deste telemóvel</item>
-        <item quantity="many">Lido %d vezes a partir deste telemóvel</item>
-        <item quantity="other">Lido %d vezes a partir deste telemóvel</item>
+        <item quantity="one">Partilhado por toque %d vez a partir deste telemóvel</item>
+        <item quantity="many">Partilhado por toque %d vezes a partir deste telemóvel</item>
+        <item quantity="other">Partilhado por toque %d vezes a partir deste telemóvel</item>
     </plurals>
     <string name="version">Versão %1$s</string>
     <!-- Write a sticker -->
