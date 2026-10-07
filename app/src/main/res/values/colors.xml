@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dark palette with an amber accent (from the author's site). -->
+<!-- The light palette (Settings → Theme: Light, or Follow system in light mode). Same names as the
+     dark palette in values-night; the amber is darker here so text in it stays readable on white. -->
 <resources>
-    <color name="bg">#0B0D10</color>
-    <color name="panel">#11151A</color>
-    <color name="panel_raised">#151A20</color>
-    <color name="line">#1F262E</color>
-    <color name="line_strong">#2B343E</color>
-    <color name="text">#E7EAEE</color>
-    <color name="muted">#A2ABB6</color>
-    <color name="dim">#8A94A0</color>
-    <color name="accent">#FFB547</color>
-    <color name="accent_soft">#33FFB547</color>
-    <color name="qr_light">#F1EFE8</color>
+    <color name="bg">#F4F3EF</color>
+    <color name="panel">#FFFFFF</color>
+    <color name="panel_raised">#FFFFFF</color>
+    <color name="line">#E2E0D9</color>
+    <color name="line_strong">#CCC9BF</color>
+    <color name="text">#15181D</color>
+    <color name="muted">#545C67</color>
+    <color name="dim">#68717C</color>
+    <color name="accent">#A85F00</color>
+    <color name="accent_soft">#26A85F00</color>
+    <color name="qr_light">#FFFFFF</color>
     <color name="qr_hint">#5B6470</color>
-    <color name="ok">#7BD88F</color>
-    <color name="danger">#FF8A7A</color>
-    <color name="sent_scrim">#F20B0D10</color>
+    <color name="ok">#23803F</color>
+    <color name="danger">#B93A1F</color>
+    <color name="sent_scrim">#F2F4F3EF</color>
 </resources>

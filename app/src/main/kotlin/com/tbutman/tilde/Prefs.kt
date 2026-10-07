@@ -189,6 +189,11 @@ class Prefs(context: Context) {
         get() = store.getBoolean(KEY_VIBRATE, true)
         set(value) = store.edit().putBoolean(KEY_VIBRATE, value).apply()
 
+    /** [THEME_DARK] (the default), [THEME_LIGHT], or [THEME_SYSTEM] to follow the phone. */
+    var theme: String
+        get() = store.getString(KEY_THEME, THEME_DARK) ?: THEME_DARK
+        set(value) = store.edit().putString(KEY_THEME, value).apply()
+
     /** Send (not a tap) puts the card's photo in the contact card file. Off unless switched on. */
     var sendPhoto: Boolean
         get() = store.getBoolean(KEY_SEND_PHOTO, false)
@@ -220,7 +225,7 @@ class Prefs(context: Context) {
         wifiOpen = wifiOpen,
         settings = mapOf(
             KEY_EVENT_AUTO_CLEAR to eventAutoClear, KEY_FULL_BRIGHTNESS to fullBrightness, KEY_KEEP_SCREEN_ON to keepScreenOn,
-            KEY_VIBRATE to vibrate, KEY_MET_ASK_NOTE to metAskNote, KEY_MET_KEEP_MONTHS to metKeepMonths, KEY_SEND_PHOTO to sendPhoto,
+            KEY_VIBRATE to vibrate, KEY_MET_ASK_NOTE to metAskNote, KEY_MET_KEEP_MONTHS to metKeepMonths, KEY_SEND_PHOTO to sendPhoto, KEY_THEME to theme,
         ),
     )
 
@@ -247,6 +252,7 @@ class Prefs(context: Context) {
             when (value) {
                 is Boolean -> edit.putBoolean(key, value)
                 is Int -> edit.putInt(key, value)
+                is String -> edit.putString(key, value)
             }
         }
         edit.apply()
@@ -379,6 +385,10 @@ class Prefs(context: Context) {
         const val KEY_KEEP_SCREEN_ON = "keep_screen_on"
         const val KEY_VIBRATE = "vibrate"
         const val KEY_SEND_PHOTO = "send_photo"
+        const val KEY_THEME = "theme"
+        const val THEME_DARK = "dark"
+        const val THEME_LIGHT = "light"
+        const val THEME_SYSTEM = "system"
         const val KEY_MET_ASK_NOTE = "met_ask_note"
         const val KEY_MET_KEEP_MONTHS = "met_keep_months"
         const val KEY_WHATSAPP_GREETING = "whatsapp_greeting"

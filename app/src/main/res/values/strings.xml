@@ -181,6 +181,10 @@
     <string name="settings_this_card">This card</string>
     <string name="settings_all_cards">All cards</string>
     <string name="settings_app">App</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_system">Follow the phone\'s setting</string>
     <string name="cards_switch">Switch</string>
     <string name="cards_title">Your cards</string>
     <string name="cards_new">New card</string>

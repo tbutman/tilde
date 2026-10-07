@@ -742,7 +742,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         val page = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = android.view.Gravity.CENTER
-            setBackgroundColor(LIGHT)
+            setBackgroundColor(getColor(R.color.qr_light))
             setPadding(dp(24), dp(24), dp(24), dp(24))
             setOnClickListener { dialog.dismiss() }
             addView(ImageView(context).apply {
@@ -828,10 +828,33 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         }
         row(R.id.row_tile, R.drawable.ic_nav_settings, R.string.add_tile) { requestTile() }.visibility =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) View.VISIBLE else View.GONE
+        row(R.id.row_theme, R.drawable.ic_theme, R.string.settings_theme) { chooseTheme() }
         row(R.id.row_about, R.drawable.ic_info, R.string.settings_about) { openPage(SettingsPageActivity.PAGE_ABOUT) }
     }
 
     private fun openPage(page: String) = startActivity(SettingsPageActivity.intent(this, page))
+
+    /** Dark (Tilde's default), light, or following the phone's setting. Applies straight away. */
+    private fun chooseTheme() {
+        val themes = listOf(Prefs.THEME_DARK, Prefs.THEME_LIGHT, Prefs.THEME_SYSTEM)
+        val names = arrayOf(getString(R.string.theme_dark), getString(R.string.theme_light), getString(R.string.theme_system))
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.settings_theme)
+            .setSingleChoiceItems(names, themes.indexOf(prefs.theme)) { dialog, which ->
+                prefs.theme = themes[which]
+                dialog.dismiss()
+                TildeApp.applyTheme(themes[which])
+            }
+            .show()
+    }
+
+    private fun themeName(theme: String) = getString(
+        when (theme) {
+            Prefs.THEME_LIGHT -> R.string.theme_light
+            Prefs.THEME_SYSTEM -> R.string.theme_system
+            else -> R.string.theme_dark
+        },
+    )
 
     /** Edit card: everything on the active card. */
     private fun editCard() = startActivity(Intent(this, CardEditActivity::class.java))
@@ -1058,6 +1081,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         summary(R.id.row_backup, getString(R.string.row_backup_summary))
         summary(R.id.row_write, getString(R.string.row_write_summary))
         summary(R.id.row_tile, getString(R.string.row_tile_summary))
+        summary(R.id.row_theme, themeName(prefs.theme))
         summary(R.id.row_about, getString(R.string.version, BuildConfig.VERSION_NAME))
     }
 
@@ -1226,7 +1250,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         val scale = 16
         val width = matrix.width * scale
         val height = matrix.height * scale
-        val pixels = IntArray(width * height) { i -> if (matrix[(i % width) / scale, (i / width) / scale]) DARK else LIGHT }
+        val light = getColor(R.color.qr_light)
+        val pixels = IntArray(width * height) { i -> if (matrix[(i % width) / scale, (i / width) / scale]) DARK else light }
         return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
     }
 
@@ -1234,7 +1259,6 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     companion object {
         private val DARK = Color.parseColor("#0b0d10")
-        private val LIGHT = Color.parseColor("#f1efe8")
         private val SENT_TOKEN = Any()
         private const val STATE_STEP = "welcome.step"
         private const val STATE_COUNTRIES = "welcome.countries"

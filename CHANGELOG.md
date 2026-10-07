@@ -63,6 +63,9 @@ Not released yet. Tested on the emulator.
 - **Your photo in a sent contact card,** if you switch it on (Settings → Sharing). A tap never
   includes it, so it stays quick to read.
 
+- **Light theme:** Settings → Theme: Dark (as before, the default), Light, or follow the phone's
+  setting.
+
 ### Share screen
 
 - Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap

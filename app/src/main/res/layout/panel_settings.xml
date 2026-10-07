@@ -114,6 +114,8 @@
 
         <include android:id="@+id/row_backup" layout="@layout/row_setting" />
 
+        <include android:id="@+id/row_theme" layout="@layout/row_setting" />
+
         <include android:id="@+id/row_tile" layout="@layout/row_setting" />
 
         <include android:id="@+id/row_about" layout="@layout/row_setting" />

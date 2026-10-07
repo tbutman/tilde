@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The light theme; values-night/themes.xml is the dark one, Tilde's default. -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Tilde" parent="Theme.Material3.Light.NoActionBar">
+<resources>
+    <style name="Theme.Tilde" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/accent</item>
         <item name="colorOnPrimary">@color/bg</item>
         <item name="colorPrimaryContainer">@color/accent_soft</item>
@@ -21,9 +20,6 @@
         <item name="android:windowBackground">@color/bg</item>
         <item name="android:statusBarColor">@color/bg</item>
         <item name="android:navigationBarColor">@color/panel</item>
-        <!-- Dark status bar and navigation icons on the light background. -->
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Tilde.BottomSheet</item>
     </style>
 

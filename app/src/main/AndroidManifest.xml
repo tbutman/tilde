@@ -7,6 +7,7 @@
 
     <!-- No cloud backup: the profile, Wi-Fi password and Met notes stay on the phone. -->
     <application
+        android:name=".TildeApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:supportsRtl="true"
