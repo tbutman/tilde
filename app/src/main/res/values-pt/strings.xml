@@ -320,6 +320,16 @@
         <item quantity="many">%d meses</item>
         <item quantity="other">%d meses</item>
     </plurals>
+    <plurals name="met_delete_now_title">
+        <item quantity="one">Apagar %d pessoa agora?</item>
+        <item quantity="many">Apagar %d pessoas agora?</item>
+        <item quantity="other">Apagar %d pessoas agora?</item>
+    </plurals>
+    <plurals name="met_delete_now_body">
+        <item quantity="one">É de há mais de %1$s. Exporta primeiro a lista se a quiseres guardar.</item>
+        <item quantity="many">São de há mais de %1$s. Exporta primeiro a lista se as quiseres guardar.</item>
+        <item quantity="other">São de há mais de %1$s. Exporta primeiro a lista se as quiseres guardar.</item>
+    </plurals>
     <string name="met_keep_detail">As entradas mais antigas são apagadas deste telemóvel automaticamente. Exporta primeiro a lista se a quiseres guardar.</string>
     <string name="settings_backup">Cópia de segurança e restauro</string>
     <string name="backup_body">A Tilde não tem cópia de segurança na nuvem, por isso os teus cartões só existem neste telemóvel. Guarda-os num ficheiro para os passares para um telemóvel novo, ou por precaução.</string>

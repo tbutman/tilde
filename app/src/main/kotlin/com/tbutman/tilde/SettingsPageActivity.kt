@@ -106,14 +106,37 @@ class SettingsPageActivity : AppCompatActivity() {
             setOnCheckedChangeListener { _, checked -> prefs.metAskNote = checked }
         }
         val group = findViewById<RadioGroup>(R.id.met_keep)
-        for (months in MET_KEEP_CHOICES) {
-            group.addView(RadioButton(this).apply {
+        val buttons = MET_KEEP_CHOICES.associateWith { months ->
+            RadioButton(this).apply {
                 id = View.generateViewId()
                 text = if (months == 0) getString(R.string.met_keep_never) else resources.getQuantityString(R.plurals.met_keep_months, months, months)
                 setTextColor(getColor(R.color.text))
+                minHeight = (48 * resources.displayMetrics.density).toInt()
                 isChecked = prefs.metKeepMonths == months
-                setOnCheckedChangeListener { _, checked -> if (checked) prefs.metKeepMonths = months }
-            })
+            }.also(group::addView)
+        }
+        for ((months, button) in buttons) {
+            button.setOnClickListener {
+                val before = prefs.metKeepMonths
+                if (months == before) return@setOnClickListener
+                // A shorter period deletes people straight away: say how many, and ask first.
+                val doomed = prefs.met.size - MetLog.keepMonths(prefs.met, System.currentTimeMillis(), months).size
+                if (doomed == 0) {
+                    prefs.metKeepMonths = months
+                    return@setOnClickListener
+                }
+                val period = resources.getQuantityString(R.plurals.met_keep_months, months, months)
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(resources.getQuantityString(R.plurals.met_delete_now_title, doomed, doomed))
+                    .setMessage(resources.getQuantityString(R.plurals.met_delete_now_body, doomed, period))
+                    .setPositiveButton(R.string.met_delete) { _, _ ->
+                        prefs.metKeepMonths = months
+                        prefs.met = MetLog.keepMonths(prefs.met, System.currentTimeMillis(), months)
+                    }
+                    .setNegativeButton(R.string.met_cancel, null)
+                    .setOnDismissListener { buttons.getValue(prefs.metKeepMonths).isChecked = true }
+                    .show()
+            }
         }
     }
 

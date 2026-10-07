@@ -323,6 +323,14 @@
         <item quantity="one">%d month</item>
         <item quantity="other">%d months</item>
     </plurals>
+    <plurals name="met_delete_now_title">
+        <item quantity="one">Delete %d person now?</item>
+        <item quantity="other">Delete %d people now?</item>
+    </plurals>
+    <plurals name="met_delete_now_body">
+        <item quantity="one">They\'re older than %1$s. Export the list first if you want to keep them.</item>
+        <item quantity="other">They\'re older than %1$s. Export the list first if you want to keep them.</item>
+    </plurals>
     <string name="met_keep_detail">Older entries are deleted from this phone automatically. Export the list first if you want to keep it.</string>
     <string name="settings_backup">Backup and restore</string>
     <string name="backup_body">Tilde has no cloud backup, so your cards live only on this phone. Save them to a file to move to a new phone, or to be safe.</string>
