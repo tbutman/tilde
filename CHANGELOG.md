@@ -74,6 +74,10 @@ Not released yet. Tested on the emulator.
 - **Lock a sticker after writing it** (Write a sticker, off unless ticked and confirmed), so nobody
   can overwrite it. Tilde says so if a sticker can't be locked.
 
+- **Home-screen widget:** a card's QR code on your home screen. Choose the card when you add it, or
+  "the active card" to follow whichever is active; tap it to open Tilde on that card. It updates
+  whenever you change something in Tilde.
+
 ### Share screen
 
 - Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap

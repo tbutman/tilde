@@ -15,7 +15,11 @@ class TildeApp : Application() {
         applyTheme(Prefs(this).theme)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityResumed(activity: Activity) { resumed++ }
-            override fun onActivityPaused(activity: Activity) { resumed-- }
+            override fun onActivityPaused(activity: Activity) {
+                resumed--
+                // Whatever changed in the app (cards, what's shared), the widgets show it.
+                TildeWidget.updateAll(activity.applicationContext)
+            }
             override fun onActivityCreated(activity: Activity, state: Bundle?) = Unit
             override fun onActivityStarted(activity: Activity) = Unit
             override fun onActivityStopped(activity: Activity) = Unit

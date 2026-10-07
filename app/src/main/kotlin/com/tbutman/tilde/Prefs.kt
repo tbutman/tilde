@@ -197,6 +197,12 @@ class Prefs(context: Context) {
         get() = store.getBoolean(KEY_ANSWER_WHEN_CLOSED, false)
         set(value) = store.edit().putBoolean(KEY_ANSWER_WHEN_CLOSED, value).apply()
 
+    /** The card a home-screen widget shows, or null for "the active card". */
+    fun widgetCard(widgetId: Int): String? = store.getString("$KEY_WIDGET$widgetId", null)
+
+    fun setWidgetCard(widgetId: Int, cardId: String?) =
+        store.edit().apply { if (cardId == null) remove("$KEY_WIDGET$widgetId") else putString("$KEY_WIDGET$widgetId", cardId) }.apply()
+
     /** [THEME_DARK] (the default), [THEME_LIGHT], or [THEME_SYSTEM] to follow the phone. */
     var theme: String
         get() = store.getString(KEY_THEME, THEME_DARK) ?: THEME_DARK
@@ -297,17 +303,33 @@ class Prefs(context: Context) {
         set(value) = store.edit().putInt(KEY_READS, value).apply()
 
     /** The link a preset carries, with the event tag applied; "" when there's nothing to link to. */
-    fun urlFor(id: String, profile: Profile = this.profile, event: String = this.event): String {
+    fun urlFor(id: String, card: Card = activeCard, event: String = this.event): String {
+        val profile = card.profile
         val base = when (id) {
-            Presets.CUSTOM -> links.firstOrNull()?.url.orEmpty()
-            Presets.WHATSAPP -> Profile.whatsappUrl(profile.whatsapp, whatsappGreeting) ?: ""
+            Presets.CUSTOM -> card.links.firstOrNull()?.url.orEmpty()
+            Presets.WHATSAPP -> Profile.whatsappUrl(profile.whatsapp, card.greeting ?: profile.greeting) ?: ""
             // The contact card carries a link too, for readers that only act on links (iPhones).
-            Presets.CONTACT -> profile.forContactCard(activeCard.hidden).contactLink?.second.orEmpty()
+            Presets.CONTACT -> profile.forContactCard(card.hidden).contactLink?.second.orEmpty()
             Presets.WIFI -> profile.website
-            else -> SavedLink.idOf(id)?.let { linkId -> links.firstOrNull { it.id == linkId }?.url }
+            else -> SavedLink.idOf(id)?.let { linkId -> card.links.firstOrNull { it.id == linkId }?.url }
                 ?: Presets.profileUrl(id, profile) ?: ""
         }.trim()
         return if (base.isEmpty()) "" else Presets.withEvent(base, event, profile.siteHost)
+    }
+
+    /**
+     * What a card's code shows, for any card (the home-screen widget can show one that isn't
+     * active): its chosen option, or its first ready one when that can't share.
+     */
+    fun qrTextFor(card: Card): String {
+        val ready = { id: String -> Presets.isReady(id, card.profile, card.links, wifiReady) }
+        val share = (card.share ?: Presets.WEBSITE).takeIf(ready)
+            ?: Presets.available(card.profile, card.links, wifiReady).firstOrNull()?.id ?: return ""
+        return when (share) {
+            Presets.CONTACT -> card.profile.forContactCard(card.hidden).vcard(compact = true)
+            Presets.WIFI -> Wifi.qrText(wifiSsid, wifiPassword, wifiOpen)
+            else -> urlFor(share, card)
+        }
     }
 
     /** The link a tap carries for the current preset. */
@@ -395,6 +417,7 @@ class Prefs(context: Context) {
         const val KEY_VIBRATE = "vibrate"
         const val KEY_SEND_PHOTO = "send_photo"
         const val KEY_THEME = "theme"
+        const val KEY_WIDGET = "widget."
         const val KEY_ANSWER_WHEN_CLOSED = "answer_when_closed"
         const val THEME_DARK = "dark"
         const val THEME_LIGHT = "light"

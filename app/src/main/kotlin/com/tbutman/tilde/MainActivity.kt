@@ -163,6 +163,21 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         setUpMet()
         setUpSettings()
         setUpWelcome(savedInstanceState)
+        if (savedInstanceState == null) openCardFrom(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        openCardFrom(intent)
+    }
+
+    /** A widget for one card opens Tilde on that card's Share screen. */
+    private fun openCardFrom(intent: Intent?) {
+        val id = intent?.getStringExtra(EXTRA_CARD) ?: return
+        if (welcoming || prefs.cards.none { it.id == id }) return
+        prefs.tab = Prefs.TAB_SHARE
+        if (::nav.isInitialized) nav.selectedItemId = R.id.nav_share
+        switchCard(id)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -1244,22 +1259,15 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
-    private fun qrBitmap(text: String): Bitmap {
-        val hints = mapOf(EncodeHintType.MARGIN to 4, EncodeHintType.ERROR_CORRECTION to ErrorCorrectionLevel.M)
-        val matrix = QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, 0, 0, hints)
-        val scale = 16
-        val width = matrix.width * scale
-        val height = matrix.height * scale
-        val light = getColor(R.color.qr_light)
-        val pixels = IntArray(width * height) { i -> if (matrix[(i % width) / scale, (i / width) / scale]) DARK else light }
-        return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
-    }
+    private fun qrBitmap(text: String): Bitmap = QrCode.bitmap(this, text)
 
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 
     companion object {
         private val DARK = Color.parseColor("#0b0d10")
         private val SENT_TOKEN = Any()
+        /** From a widget for one card: open Tilde on that card. */
+        const val EXTRA_CARD = "card"
         private const val STATE_STEP = "welcome.step"
         private const val STATE_COUNTRIES = "welcome.countries"
         private const val STATE_SECOND_PHONE = "welcome.secondPhone"

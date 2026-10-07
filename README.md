@@ -42,6 +42,7 @@ internet: Tilde can't go online, and your details stay on your phone until you s
   card with one inside, so it works even when your phone isn't there. You can change it later,
   unless you choose to lock it so nobody can overwrite it.
 - **Receive.** Read other people's NFC cards, tags and phones running Tilde.
+- **Home-screen widget.** Your card's QR code on the home screen, for sharing by code in a second.
 
 ## Install
 

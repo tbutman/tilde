@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The home-screen widget: a card's label and its QR code. Tap to open Tilde on that card. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_widget"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/widget_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingBottom="6dp"
+        android:textColor="@color/accent"
+        android:textSize="13sp" />
+
+    <ImageView
+        android:id="@+id/widget_qr"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/qr_description"
+        android:scaleType="fitCenter" />
+</LinearLayout>
