@@ -4,8 +4,11 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-/** One person met: when, at which event, what they got, and the owner's note. Stored only on the phone. */
-data class Meeting(val time: Long, val event: String, val shared: String, val note: String)
+/**
+ * One person met: when, at which event, what they got, the owner's note, and which of the owner's
+ * cards was shared (its label; empty before cards existed). Stored only on the phone.
+ */
+data class Meeting(val time: Long, val event: String, val shared: String, val note: String, val card: String = "")
 
 /** The "Met" log: who the owner shared with, for following up. Plain Kotlin, so it is unit-tested. */
 object MetLog {
@@ -15,10 +18,10 @@ object MetLog {
     const val RECEIVED = "received their contact"
 
     /** Newest first. Adds an entry for a completed read unless it repeats the latest one. */
-    fun afterTap(log: List<Meeting>, now: Long, event: String, shared: String): List<Meeting> {
+    fun afterTap(log: List<Meeting>, now: Long, event: String, shared: String, card: String = ""): List<Meeting> {
         val last = log.firstOrNull()
-        if (last != null && now - last.time < SAME_TAP_MS && last.event == event && last.shared == shared) return log
-        return add(log, Meeting(now, event, shared, ""))
+        if (last != null && now - last.time < SAME_TAP_MS && last.event == event && last.shared == shared && last.card == card) return log
+        return add(log, Meeting(now, event, shared, "", card))
     }
 
     fun add(log: List<Meeting>, meeting: Meeting) = (listOf(meeting) + log).take(MAX_ENTRIES)
@@ -31,9 +34,9 @@ object MetLog {
     fun csv(log: List<Meeting>, zone: ZoneId = ZoneId.systemDefault()): String {
         val format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(zone)
         val rows = log.reversed().map { m ->
-            listOf(format.format(Instant.ofEpochMilli(m.time)), m.event, m.shared, m.note).joinToString(",") { field(it) }
+            listOf(format.format(Instant.ofEpochMilli(m.time)), m.card, m.event, m.shared, m.note).joinToString(",") { field(it) }
         }
-        return (listOf("date,event,shared,note") + rows).joinToString("\n") + "\n"
+        return (listOf("date,card,event,shared,note") + rows).joinToString("\n") + "\n"
     }
 
     private fun field(value: String) =

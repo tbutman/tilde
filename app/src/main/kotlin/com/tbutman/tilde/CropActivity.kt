@@ -37,7 +37,7 @@ class CropActivity : AppCompatActivity() {
         findViewById<View>(R.id.crop_done).setOnClickListener {
             val cropped = cropView.crop() ?: return@setOnClickListener
             worker.execute {
-                Photo.save(this, cropped)
+                Photo.save(this, Prefs(this).activeCardId, cropped)
                 runOnUiThread {
                     setResult(RESULT_OK)
                     finish()

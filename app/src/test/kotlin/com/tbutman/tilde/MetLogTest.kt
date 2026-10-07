@@ -38,15 +38,25 @@ class MetLogTest {
     @Test
     fun csvIsOldestFirstAndQuotesWhereNeeded() {
         val log = listOf(
-            Meeting(t0 + 3_600_000, "lisbon-js", "Contact card", "Jane, \"React\" dev\nfollow up"),
+            Meeting(t0 + 3_600_000, "lisbon-js", "Contact card", "Jane, \"React\" dev\nfollow up", "Work"),
             Meeting(t0, "", "tbutman.com/hello", "Bob"),
         )
         val csv = MetLog.csv(log, ZoneId.of("Europe/Lisbon"))
+        // Entries from before cards have an empty card column.
         assertEquals(
-            "date,event,shared,note\n" +
-                "2026-10-03 05:00,,tbutman.com/hello,Bob\n" +
-                "2026-10-03 06:00,lisbon-js,Contact card,\"Jane, \"\"React\"\" dev\nfollow up\"\n",
+            "date,card,event,shared,note\n" +
+                "2026-10-03 05:00,,,tbutman.com/hello,Bob\n" +
+                "2026-10-03 06:00,Work,lisbon-js,Contact card,\"Jane, \"\"React\"\" dev\nfollow up\"\n",
             csv,
         )
+    }
+
+    @Test
+    fun aTapWithAnotherCardIsAnotherPerson() {
+        var log = MetLog.afterTap(emptyList(), t0, "", "Website", "Work")
+        log = MetLog.afterTap(log, t0 + 1_000, "", "Website", "Work")
+        assertEquals(1, log.size)
+        log = MetLog.afterTap(log, t0 + 2_000, "", "Website", "Personal")
+        assertEquals(listOf("Personal", "Work"), log.map { it.card })
     }
 }

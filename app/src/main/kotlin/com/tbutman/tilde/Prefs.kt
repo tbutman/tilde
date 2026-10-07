@@ -9,14 +9,76 @@ import org.json.JSONObject
 class Prefs(context: Context) {
     val store: SharedPreferences = context.getSharedPreferences("tilde", Context.MODE_PRIVATE)
 
-    /**
-     * Whose card this is. The first launch seeds it from the build (profile.local.properties, empty
-     * in a build without one); after that it lives only here and is edited in Settings.
-     */
+    private val filesDir = context.filesDir
+
+    // ---- Cards ----
+    // Everything about an identity lives in a Card (see Cards.kt). `profile`, `links`, `share`,
+    // `pinned` and `whatsappGreeting` below read and write the active card, so screens and the tap
+    // service work on whichever card is active without knowing about cards.
+
+    private var cachedJson: String? = null
+    private var cachedCards: List<Card> = emptyList()
+
+    /** All cards, in the owner's order. Never empty: version 1.1's single profile becomes card 1. */
+    var cards: List<Card>
+        get() {
+            if (!store.contains(KEY_CARDS)) migrateToCards()
+            val json = store.getString(KEY_CARDS, null)
+            if (json != cachedJson) {
+                cachedJson = json
+                cachedCards = Cards.fromJson(json)
+            }
+            return cachedCards.ifEmpty { listOf(Card(SavedLink.newId(emptyList()), Cards.FIRST_LABEL)).also { cards = it } }
+        }
+        set(value) = store.edit().putString(KEY_CARDS, Cards.toJson(value)).apply()
+
+    /** The card the Share screen, taps, the code and Write a sticker use. */
+    var activeCardId: String
+        get() = store.getString(KEY_ACTIVE_CARD, null)?.takeIf { id -> cards.any { it.id == id } } ?: cards.first().id
+        set(value) = store.edit().putString(KEY_ACTIVE_CARD, value).apply()
+
+    val activeCard: Card
+        get() = cards.let { all -> all.firstOrNull { it.id == activeCardId } ?: all.first() }
+
+    /** Changes the active card. */
+    private fun updateActive(change: (Card) -> Card) {
+        val id = activeCard.id
+        cards = cards.map { if (it.id == id) change(it) else it }
+    }
+
+    /** Version 1.1 (and 1.0) kept one profile in separate keys: it becomes card 1, once, photo included. */
+    private fun migrateToCards() {
+        migrateLinks()
+        val id = SavedLink.newId(emptyList())
+        val pinnedJson = store.getString(KEY_PINNED, null)
+        val card = Cards.fromSingleProfile(
+            id = id,
+            profile = store.getString(KEY_PROFILE, null)?.let { Profile.parse(it) } ?: Profile.parse(BuildConfig.PROFILE_SEED),
+            share = store.getString(KEY_SHARE, null) ?: Presets.CONTACT.takeIf { store.getString("mode", null) == "contact" },
+            links = SavedLink.fromJson(store.getString(KEY_LINKS, null)),
+            pinned = pinnedJson?.let { json -> runCatching { JSONArray(json).let { a -> (0 until a.length()).map { a.getString(it) } } }.getOrNull() },
+            greeting = store.getString(KEY_WHATSAPP_GREETING, null),
+        )
+        java.io.File(filesDir, Photo.LEGACY_FILE).takeIf { it.exists() }?.renameTo(Photo.file(filesDir, id))
+        store.edit()
+            .putString(KEY_CARDS, Cards.toJson(listOf(card)))
+            .putString(KEY_ACTIVE_CARD, id)
+            .remove(KEY_PROFILE).remove(KEY_SHARE).remove(KEY_LINKS).remove(KEY_PINNED).remove(KEY_WHATSAPP_GREETING).remove("mode")
+            .apply()
+    }
+
+    /** Debug builds' "Show the welcome screens": back to one empty card, photos deleted. */
+    fun resetCards() {
+        cards.forEach { Photo.file(filesDir, it.id).delete() }
+        val card = Card(SavedLink.newId(emptyList()), Cards.FIRST_LABEL)
+        cards = listOf(card)
+        activeCardId = card.id
+    }
+
+    /** The active card's profile: what it shows and shares. Edited in Settings. */
     var profile: Profile
-        get() = store.getString(KEY_PROFILE, null)?.let { Profile.parse(it) }
-            ?: Profile.parse(BuildConfig.PROFILE_SEED).also { profile = it }
-        set(value) = store.edit().putString(KEY_PROFILE, value.toText()).apply()
+        get() = activeCard.profile
+        set(value) = updateActive { it.copy(profile = value) }
 
     /** Bumped whenever the profile photo changes, so screens know to reload it. */
     var photoVersion: Int
@@ -45,37 +107,29 @@ class Prefs(context: Context) {
         get() = store.getString(KEY_TAB, TAB_SHARE) ?: TAB_SHARE
         set(value) = store.edit().putString(KEY_TAB, value).apply()
 
-    /** Which option a tap shares (see Presets): a fixed option's id, or a saved link's "link:<id>". */
+    /** Which option a tap shares on the active card (see Presets): a fixed option's id, or "link:<id>". */
     var share: String
-        get() {
-            migrateLinks()
-            return store.getString(KEY_SHARE, null)
-                ?: if (store.getString("mode", null) == "contact") Presets.CONTACT else Presets.WEBSITE // 1.1 setting
-        }
-        set(value) = store.edit().putString(KEY_SHARE, value).apply()
+        get() = activeCard.share ?: Presets.WEBSITE
+        set(value) = updateActive { it.copy(share = value) }
 
-    /** Links saved to share, each its own option, in the order they were added. */
+    /** The active card's saved links, each its own option, in the order they were added. */
     var links: List<SavedLink>
-        get() {
-            migrateLinks()
-            return SavedLink.fromJson(store.getString(KEY_LINKS, null))
-        }
-        set(value) = store.edit().putString(KEY_LINKS, SavedLink.toJson(value)).apply()
+        get() = activeCard.links
+        set(value) = updateActive { it.copy(links = value) }
 
-    /** Version 1.0's single custom link becomes the first saved link, once. */
+    /** Version 1.0's single custom link becomes the first saved link, once (before cards existed). */
     private fun migrateLinks() {
         if (store.contains(KEY_LINKS)) return
         val (links, share) = SavedLink.migrate(store.getString(KEY_URL, "") ?: "", store.getString(KEY_SHARE, null), SavedLink.newId(emptyList()))
         store.edit().putString(KEY_LINKS, SavedLink.toJson(links)).remove(KEY_URL)
-            .apply { if (share == null) remove(KEY_SHARE) else putString(KEY_SHARE, share) }.apply()
+            .apply { if (share == null) remove(KEY_SHARE) else putString(KEY_SHARE, share) }.commit()
     }
 
-    /** The options on the Share screen's quick-switch row (starred in the picker), in order. */
+    /** The active card's quick-switch row (starred in the picker, ticked in Settings), in order. */
     var pinned: List<String>
-        get() = store.getString(KEY_PINNED, null)?.let { json ->
-            runCatching { JSONArray(json).let { a -> (0 until a.length()).map { a.getString(it) } } }.getOrNull()
-        } ?: listOf(Presets.WEBSITE, Presets.CONTACT) + links.map { it.presetId } + listOf(Presets.LINKEDIN, Presets.WHATSAPP)
-        set(value) = store.edit().putString(KEY_PINNED, JSONArray(value.distinct()).toString()).apply()
+        get() = activeCard.pinned
+            ?: listOf(Presets.WEBSITE, Presets.CONTACT) + links.map { it.presetId } + listOf(Presets.LINKEDIN, Presets.WHATSAPP)
+        set(value) = updateActive { it.copy(pinned = value.distinct()) }
 
     /** Every option in the picker's order, including saved links. */
     fun options(): List<Presets.Preset> = Presets.options(links)
@@ -96,10 +150,10 @@ class Prefs(context: Context) {
         get() = store.getString(KEY_EVENT, "") ?: ""
         set(value) = store.edit().putString(KEY_EVENT, value).apply()
 
-    /** Text typed into the WhatsApp chat for them to send or not; blank for an empty chat. */
+    /** Text the active card types into a WhatsApp chat for them to send or not; blank for an empty chat. */
     var whatsappGreeting: String
-        get() = store.getString(KEY_WHATSAPP_GREETING, null) ?: profile.greeting
-        set(value) = store.edit().putString(KEY_WHATSAPP_GREETING, value).apply()
+        get() = activeCard.greeting ?: profile.greeting
+        set(value) = updateActive { it.copy(greeting = value) }
 
     var wifiSsid: String
         get() = store.getString(KEY_WIFI_SSID, "") ?: ""
@@ -172,12 +226,14 @@ class Prefs(context: Context) {
             val array = JSONArray(store.getString(KEY_MET, "[]"))
             (0 until array.length()).map { i ->
                 val o = array.getJSONObject(i)
-                Meeting(o.getLong("time"), o.optString("event"), o.optString("shared"), o.optString("note"))
+                Meeting(o.getLong("time"), o.optString("event"), o.optString("shared"), o.optString("note"), o.optString("card"))
             }
         }.getOrDefault(emptyList())
         set(value) {
             val array = JSONArray()
-            value.forEach { m -> array.put(JSONObject().put("time", m.time).put("event", m.event).put("shared", m.shared).put("note", m.note)) }
+            value.forEach { m ->
+                array.put(JSONObject().put("time", m.time).put("event", m.event).put("shared", m.shared).put("note", m.note).put("card", m.card))
+            }
             store.edit().putString(KEY_MET, array.toString()).apply()
         }
 
@@ -205,7 +261,9 @@ class Prefs(context: Context) {
         const val TAB_SETTINGS = "settings"
         const val HISTORY_SIZE = 20
 
-        const val KEY_PROFILE = "profile"
+        const val KEY_CARDS = "cards"
+        const val KEY_ACTIVE_CARD = "active_card"
+        const val KEY_PROFILE = "profile" // before cards (1.1 and earlier); migrated into KEY_CARDS
         const val KEY_PHOTO_VERSION = "photo_version"
         const val KEY_WELCOMED = "welcomed"
         const val KEY_READY = "ready"

@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private var resumed = false
 
     private var photo: Bitmap? = null
-    private var photoLoaded = -1
+    private var photoLoaded = ""
 
     /** Android's photo picker: no permission needed, and the app only sees the photo chosen. */
     private val pickPhoto = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -574,7 +574,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 prefs.received = items + prefs.received
                 // Someone handed over their card: that's a person met too.
                 items.firstOrNull { it.kind == Received.CONTACT }?.let { card ->
-                    prefs.met = MetLog.add(prefs.met, Meeting(System.currentTimeMillis(), prefs.event, MetLog.RECEIVED, card.title))
+                    prefs.met = MetLog.add(prefs.met, Meeting(System.currentTimeMillis(), prefs.event, MetLog.RECEIVED, card.title, prefs.activeCard.label))
                 }
                 buzz()
             }
@@ -759,7 +759,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     private fun setUpMet() {
         findViewById<View>(R.id.met_add).setOnClickListener {
-            editNote(Meeting(System.currentTimeMillis(), prefs.event, getString(R.string.met_manual), ""), isNew = true)
+            editNote(Meeting(System.currentTimeMillis(), prefs.event, getString(R.string.met_manual), "", prefs.activeCard.label), isNew = true)
         }
         findViewById<View>(R.id.met_export).setOnClickListener { export() }
     }
@@ -785,7 +785,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
         findViewById<View>(R.id.photo_remove).setOnClickListener {
-            Photo.delete(this)
+            Photo.delete(this, prefs.activeCardId)
             prefs.photoVersion += 1
         }
         val phoneFields = listOf(R.id.phone1_label, R.id.phone1_number, R.id.phone2_label, R.id.phone2_number)
@@ -821,13 +821,12 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<View>(R.id.write_card).setOnClickListener { startActivity(Intent(this, WriteActivity::class.java).putExtra("demo", demo)) }
         findViewById<View>(R.id.add_tile).setOnClickListener { requestTile() }
         findViewById<TextView>(R.id.version).text = getString(R.string.version, BuildConfig.VERSION_NAME)
-        // Debug builds only: clear the (dev) profile and photo, and start the welcome screens again.
+        // Debug builds only: back to one empty card (photos deleted), and start the welcome screens again.
         findViewById<View>(R.id.debug_welcome).apply {
             visibility = if (BuildConfig.DEBUG) View.VISIBLE else View.GONE
             setOnClickListener {
-                Photo.delete(this@MainActivity)
+                prefs.resetCards()
                 prefs.photoVersion += 1
-                prefs.profile = Profile()
                 prefs.welcomed = false
                 recreate()
             }
@@ -1019,9 +1018,11 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
     /** The photo if there is one (and `usePhoto`), otherwise the initials, in a circle. */
     private fun bindAvatar(avatar: View, profile: Profile, usePhoto: Boolean = true) {
-        if (photoLoaded != prefs.photoVersion) {
-            photo = Photo.load(this)
-            photoLoaded = prefs.photoVersion
+        // Reload when the photo changed or another card became active.
+        val photoKey = "${prefs.activeCardId}:${prefs.photoVersion}"
+        if (photoLoaded != photoKey) {
+            photo = Photo.load(this, prefs.activeCardId)
+            photoLoaded = photoKey
         }
         val shown = photo.takeIf { usePhoto }
         val image = avatar.findViewById<ImageView>(R.id.avatar_photo)

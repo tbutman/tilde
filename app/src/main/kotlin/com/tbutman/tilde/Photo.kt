@@ -12,25 +12,36 @@ import java.io.File
 import kotlin.math.max
 
 /**
- * The profile photo: a cropped square kept in the app's private storage. It is only ever shown on
+ * A card's photo: a cropped square kept in the app's private storage. It is only ever shown on
  * this phone's screen, never sent in a tap (a photo would make the contact card slow to read).
  */
 object Photo {
     /** Large enough to crop from comfortably, small enough not to strain memory. */
     private const val MAX_SIDE = 2048
 
-    private fun file(context: Context) = File(context.filesDir, "profile_photo.jpg")
+    /** Before cards there was one photo; it becomes card 1's (see Prefs). */
+    const val LEGACY_FILE = "profile_photo.jpg"
 
-    fun load(context: Context): Bitmap? = file(context).takeIf { it.exists() }?.let { BitmapFactory.decodeFile(it.path) }
+    /** Each card has its own photo file. */
+    fun file(dir: File, cardId: String) = File(dir, "photo-$cardId.jpg")
 
-    fun save(context: Context, bitmap: Bitmap) {
-        val tmp = File(context.filesDir, "profile_photo.tmp")
+    fun load(context: Context, cardId: String): Bitmap? =
+        file(context.filesDir, cardId).takeIf { it.exists() }?.let { BitmapFactory.decodeFile(it.path) }
+
+    fun save(context: Context, cardId: String, bitmap: Bitmap) {
+        val tmp = File(context.filesDir, "photo.tmp")
         tmp.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 90, it) }
-        tmp.renameTo(file(context))
+        tmp.renameTo(file(context.filesDir, cardId))
     }
 
-    fun delete(context: Context) {
-        file(context).delete()
+    fun delete(context: Context, cardId: String) {
+        file(context.filesDir, cardId).delete()
+    }
+
+    /** For copying a card: the copy gets its own file, so deleting one photo leaves the other. */
+    fun copy(context: Context, fromCardId: String, toCardId: String) {
+        val from = file(context.filesDir, fromCardId)
+        if (from.exists()) from.copyTo(file(context.filesDir, toCardId), overwrite = true)
     }
 
     /** Reads a picked photo the right way up and no larger than MAX_SIDE. */
