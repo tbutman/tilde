@@ -52,9 +52,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # The release notes are this version's section of CHANGELOG.md ("## 1.0.0 (date)").
-          awk -v h="## $VERSION" 'index($0, h " ") == 1 || $0 == h {on=1; next} /^## / {on=0} on' CHANGELOG.md > notes.md
           # Versions with a hyphen (1.0.0-beta.1) are pre-releases: not shown as the latest release.
+          # The site's download button opens a release page, so the notes start by helping anyone
+          # new: install steps for a stable release, a pointer to the stable one for a pre-release.
           prerelease=()
-          [[ "$VERSION" == *-* ]] && prerelease=(--prerelease)
+          if [[ "$VERSION" == *-* ]]; then
+            prerelease=(--prerelease)
+            echo "This is a test version. For the stable version, see [the latest release](https://github.com/tbutman/tilde/releases/latest)." > notes.md
+          else
+            echo "**New to Tilde?** On your Android phone, tap **Tilde-$VERSION.apk** under **Assets** below, then follow the [install steps](https://github.com/tbutman/tilde#install): about a minute, no developer mode. More at [tbutman.com/tilde](https://tbutman.com/tilde)." > notes.md
+          fi
+          # Then this version's section of CHANGELOG.md ("## 1.0.0 (date)").
+          awk -v h="## $VERSION" 'index($0, h " ") == 1 || $0 == h {on=1; next} /^## / {on=0} on' CHANGELOG.md >> notes.md
+          # Exactly one .apk per release: the site's download link and Obtainium both rely on it.
           gh release create "$GITHUB_REF_NAME" "Tilde-$VERSION.apk" --title "Tilde $VERSION" --notes-file notes.md "${prerelease[@]}"
