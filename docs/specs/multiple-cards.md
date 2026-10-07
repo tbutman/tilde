@@ -122,7 +122,7 @@ Unchanged: it creates the first card, labelled "My card", with the colour picked
 
 - Switching automatically by time, place or event.
 - Exporting or importing a card, or sharing one with someone as a file.
-- Cards on a Wear OS watch, and a home-screen widget per card.
+- Cards on a Wear OS watch. (A home-screen widget per card was built in 1.2: each widget shows the card chosen when it was added.)
 - Syncing between phones (Tilde stays offline).
 
 ## Decisions
