@@ -11,8 +11,8 @@ import android.widget.RemoteViews
 /**
  * The home-screen widget: one card's QR code, or the active card's. It redraws whenever a Tilde
  * screen closes (see TildeApp), so it follows changes made in the app. Tapping it opens Tilde on
- * that card. While an event tag is set to clear itself, it also redraws just after midnight, so the
- * code stops carrying yesterday's tag.
+ * that card. While an event name is set to clear itself, it also redraws just after midnight, so the
+ * code stops carrying yesterday's event.
  */
 class TildeWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
@@ -34,7 +34,7 @@ class TildeWidget : AppWidgetProvider() {
             redrawAtMidnight(context, ids)
         }
 
-        /** An inexact alarm (no permission needed) just after midnight, only while a self-clearing event tag is set. */
+        /** An inexact alarm (no permission needed) just after midnight, only while a self-clearing event name is set. */
         private fun redrawAtMidnight(context: Context, ids: IntArray) {
             val alarms = context.getSystemService(android.app.AlarmManager::class.java) ?: return
             val redraw = PendingIntent.getBroadcast(

@@ -10,7 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 /**
  * The sharing options as rows, and the sheet to choose one. Used by the Share screen and by Write a
- * card (`writing`), which shows links without the event tag, because a written card outlives the
+ * card (`writing`), which shows links without the event name, because a written card outlives the
  * event, and iPhone notes without the on-screen code, which a sticker doesn't have.
  */
 class PresetRows(private val context: Context, private val prefs: Prefs, private val writing: Boolean = false) {

@@ -12,8 +12,9 @@ import java.io.File
 import kotlin.math.max
 
 /**
- * A card's photo: a cropped square kept in the app's private storage. It is only ever shown on
- * this phone's screen, never sent in a tap (a photo would make the contact card slow to read).
+ * A card's photo: a cropped square kept in the app's private storage. It is never in a tap or the
+ * QR code (a photo would make the contact card slow to read); a contact card sent with Send
+ * includes it only when the owner switches that on (Prefs.sendPhoto).
  */
 object Photo {
     /** Large enough to crop from comfortably, small enough not to strain memory. */

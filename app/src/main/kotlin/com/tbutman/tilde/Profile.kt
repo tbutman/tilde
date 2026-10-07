@@ -88,7 +88,7 @@ data class Profile(
     val siteRoot: String?
         get() = if (platformOf(website) != null) null else Regex("^https?://[^/?#]+").find(website.trim())?.value?.plus("/")
 
-    /** The host event tags apply to, without www. Never a social network's. */
+    /** The host event names apply to, without www. Never a social network's. */
     val siteHost: String? get() = siteRoot?.substringAfter("://")?.removeSuffix("/")?.removePrefix("www.")?.lowercase()
 
     val socials: List<Pair<String, String>>

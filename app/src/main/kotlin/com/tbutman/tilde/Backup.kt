@@ -18,7 +18,7 @@ data class Backup(
     val met: List<Meeting>,
     val enabled: Boolean,
     val event: String,
-    /** The day the event tag was set (yyyy-mm-dd), so it still clears itself at the end of that day. */
+    /** The day the event name was set (yyyy-mm-dd), so it still clears itself at the end of that day. */
     val eventDay: String?,
     val wifiSsid: String,
     val wifiPassword: String?,
@@ -123,7 +123,7 @@ object Backups {
     fun fileName(date: java.time.LocalDate) = "tilde-backup-$date.json"
 }
 
-/** The event tag clears itself at the end of the day it was set, unless that's switched off. */
+/** The event name clears itself at the end of the day it was set, unless that's switched off. */
 object EventTag {
     /** Dates are yyyy-mm-dd, so they compare as text; an earlier "today" (flying west) doesn't clear it. */
     fun expired(setOn: String?, today: String, autoClear: Boolean) = autoClear && setOn != null && today > setOn

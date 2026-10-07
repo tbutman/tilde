@@ -184,8 +184,8 @@ class Prefs(context: Context) {
     /** The quick-switch row: the pinned options that are ready, in the picker's order. */
     fun quickSwitch(): List<Presets.Preset> = pinned.toSet().let { pins -> available().filter { it.id in pins } }
 
-    /** Optional tag added to links on the profile's website as ?event=, e.g. the meetup's name. */
-    /** Cleared at the end of the day it was set (see [eventAutoClear]), so yesterday's tag doesn't linger. */
+    /** The optional event name added to links on the profile's website as ?event=, e.g. the meetup's name. */
+    /** Cleared at the end of the day it was set (see [eventAutoClear]), so yesterday's event doesn't linger. */
     var event: String
         get() {
             val tag = store.getString(KEY_EVENT, "") ?: ""
@@ -202,7 +202,7 @@ class Prefs(context: Context) {
 
     private fun today() = java.time.LocalDate.now().toString()
 
-    /** Whether the event tag clears itself at the end of the day. On unless switched off. */
+    /** Whether the event name clears itself at the end of the day. On unless switched off. */
     var eventAutoClear: Boolean
         get() = store.getBoolean(KEY_EVENT_AUTO_CLEAR, true)
         set(value) = store.edit().putBoolean(KEY_EVENT_AUTO_CLEAR, value).putString(KEY_EVENT_DAY, today()).apply()
@@ -292,7 +292,7 @@ class Prefs(context: Context) {
             temp to Photo.file(filesDir, id)
         }
         val oldPhotos = cards.map { Photo.file(filesDir, it.id) }
-        // An event tag only comes back with the day it was set, so it can still clear itself.
+        // An event name only comes back with the day it was set, so it can still clear itself.
         val event = backup.event.takeIf { backup.eventDay != null }.orEmpty()
         val edit = store.edit()
             .putString(KEY_CARDS, Cards.toJson(backup.cards))
@@ -354,7 +354,7 @@ class Prefs(context: Context) {
         get() = store.getInt(KEY_READS, 0)
         set(value) = store.edit().putInt(KEY_READS, value).apply()
 
-    /** The link a preset carries, with the event tag applied; "" when there's nothing to link to. */
+    /** The link a preset carries, with the event name applied; "" when there's nothing to link to. */
     fun urlFor(id: String, card: Card = activeCard, event: String = this.event): String {
         val profile = card.profile
         val base = when (id) {

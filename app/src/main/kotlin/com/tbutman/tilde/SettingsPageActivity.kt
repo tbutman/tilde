@@ -19,7 +19,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 /**
- * The settings that apply to every card, one short page each: Sharing (taps, the event tag, the
+ * The settings that apply to every card, one short page each: Sharing (taps, the event name, the
  * Share screen's brightness, screen and vibration), Guest Wi-Fi, Met, Backup and restore, and
  * About (with Delete all data). Fields save as they're typed.
  */

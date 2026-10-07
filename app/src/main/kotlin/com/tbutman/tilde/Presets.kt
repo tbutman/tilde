@@ -4,7 +4,7 @@ import java.net.URLEncoder
 
 /**
  * What a tap can share: the fixed options (links from the Profile, the contact card, Wi-Fi) plus
- * each saved link. Event tags go on links to the profile's own website only.
+ * each saved link. Event names go on links to the profile's own website only.
  */
 object Presets {
     const val WEBSITE = "hello" // kept as "hello" so settings saved by earlier versions still match
