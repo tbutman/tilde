@@ -144,6 +144,8 @@
     <string name="picker_add_link">Adicionar um link</string>
     <string name="picker_more">Mais opções (%1$d)</string>
     <string name="picker_less">Menos opções</string>
+    <string name="picker_stars_hint">As opções marcadas com estrela aparecem por baixo do teu código.</string>
+    <string name="chip_starred_description">%1$s, favorito</string>
     <string name="picker_star">Mostrar na linha de troca rápida</string>
     <string name="picker_unstar">Remover da linha de troca rápida</string>
     <string name="detail_missing">Ainda não configurado</string>

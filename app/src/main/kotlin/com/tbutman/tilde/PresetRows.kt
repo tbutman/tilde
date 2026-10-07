@@ -69,7 +69,14 @@ class PresetRows(private val context: Context, private val prefs: Prefs, private
             setText(title)
             setTextColor(context.getColor(R.color.text))
             textSize = 18f
-            setPadding(dp(20), dp(8), dp(20), dp(12))
+            setPadding(dp(20), dp(8), dp(20), if (onSetUp != null) dp(4) else dp(12))
+        })
+        // On the Share screen: the stars here are the chips under the code.
+        if (onSetUp != null) list.addView(TextView(context).apply {
+            setText(R.string.picker_stars_hint)
+            setTextColor(context.getColor(R.color.muted))
+            textSize = 14f
+            setPadding(dp(20), 0, dp(20), dp(12))
         })
         val pinned = prefs.pinned.toSet()
         val options = prefs.options().filter { onSetUp != null || prefs.isReady(it.id) }

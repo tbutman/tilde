@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- One option in the Share screen's quick-switch row. -->
+<!-- One option in the Share screen's quick-switch row. A starred option shows the options list's
+     star at its start (set in code); the active option, if it isn't starred, has none. -->
 <com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.Material3.Chip.Filter"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:checkable="true"
-    app:checkedIconVisible="false" />
+    app:checkedIconVisible="false"
+    app:chipIconSize="16dp"
+    app:chipIconTint="@color/accent"
+    app:chipIconVisible="false"
+    app:iconStartPadding="6dp" />

@@ -145,6 +145,9 @@
     <string name="picker_add_link">Add a link</string>
     <string name="picker_more">More options (%1$d)</string>
     <string name="picker_less">Fewer options</string>
+    <string name="picker_stars_hint">Starred options appear as chips under your code.</string>
+    <!-- A starred chip under the code, for screen readers: "LinkedIn, favourite". -->
+    <string name="chip_starred_description">%1$s, favourite</string>
     <string name="picker_star">Show in the quick-switch row</string>
     <string name="picker_unstar">Remove from the quick-switch row</string>
     <string name="detail_missing">Not set up yet</string>

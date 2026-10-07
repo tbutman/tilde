@@ -1054,6 +1054,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
 
         // The quick-switch row: shown once there are two or more starred options ready to share.
         // What's being shared always has a chip, starred or not (Guest Wi-Fi usually isn't).
+        // Starred chips carry the list's star, so the row reads as "your starred options".
+        val starredIds = prefs.quickSwitch().map { it.id }.toSet()
         val quick = prefs.quickSwitch().let { starred ->
             if (starred.any { it.id == preset.id }) starred
             else (starred.map { it.id } + preset.id).toSet().let { ids -> prefs.available().filter { it.id in ids } }
@@ -1064,6 +1066,11 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         for (option in quick) {
             val chip = layoutInflater.inflate(R.layout.chip_option, chips, false) as Chip
             chip.text = labelOf(option)
+            if (option.id in starredIds) {
+                chip.setChipIconResource(R.drawable.ic_star_filled)
+                chip.isChipIconVisible = true
+                chip.contentDescription = getString(R.string.chip_starred_description, chip.text)
+            }
             chip.isChecked = option.id == preset.id
             chip.setOnClickListener { prefs.share = option.id }
             chips.addView(chip)
