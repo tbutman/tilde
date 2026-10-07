@@ -133,6 +133,56 @@ photo, links and choices become your first card, "My card".
 - A card always keeps a name: clearing it in Edit card keeps the last one, with a note.
 - Name, title and company take up to 100 characters, and links and Met notes up to 500.
 
+## 1.2.0-beta.3 (7 October 2026)
+
+A third 1.2 beta with the changes from a product review of 1.2.0-beta.2; everything in the earlier
+betas below still applies. Like them, it's a pre-release: Obtainium offers it only with **Include
+prereleases** turned on. It's for testing on a real phone before 1.2.0: taps with an iPhone and an
+Android phone, Met entries, answering taps with Tilde closed, one-off Guest Wi-Fi, Write a sticker
+and locking, the widget, and the Met export.
+
+Changes:
+
+- **Share screen:** what a tap shares and the quick-switch chips stay above the bottom bar, and
+  whatever is being shared always has a chip. The QR code is a little smaller so everything fits on
+  one screen, and Send and Copy link are icons beside the "Opens …" line. A long handle or label is
+  shortened so ▾ always shows.
+- **Share by tap** is the new name for Share over NFC (Settings → Sharing). While it's off, the
+  status badge says **Taps off**. On a phone without NFC, the status dialog says to share with the
+  code instead.
+- **Answer taps when Tilde is closed** now also works when Tilde was last left on Receive.
+- **The event tag is now the event name.**
+- **Guest Wi-Fi is shared once:** after a tap, or when you leave the Share screen, your card goes
+  back to what it shared before. Its Settings page says plainly that the Wi-Fi code contains the
+  password.
+- **Links are checked as you type,** in Edit card and the welcome: anything that isn't a link says
+  "That doesn't look like a link". A bare address gets `https://`, and "@janedoe" in a LinkedIn,
+  GitHub, Instagram or X field becomes your profile link.
+- **WhatsApp** has a country picker and **Same as my mobile**, and its default greeting is in the
+  app's language.
+- **The keyboard no longer covers the field you're typing in,** in Edit card or any Settings page.
+- **Preview** in Edit card shows your contact card as it will be saved.
+- **Met keeps everyone** (the 500-entry limit is gone) and lists one entry per tap, so two people
+  who tap one after the other are both listed. **Sent** shows once per tap too, and About's count
+  is now "Shared by tap … times".
+- **Met's export sends a CSV file** (`tilde-met-YYYY-MM-DD.csv`). Choosing a shorter "Delete
+  entries older than" says how many people that deletes, and asks first.
+- **Write a sticker** says what anyone who taps the sticker gets ("…gets your phone number and
+  email", "…can join your Wi-Fi"), and says it again before locking. It says "NFC sticker" and
+  "Tilde card" throughout, as does the rest of Tilde.
+- **The widget is called Tilde QR code.** Choosing a card whose code is your contact card or guest
+  Wi-Fi reminds you that anyone who sees your home screen can scan it.
+- **Receive** says what to do on a phone without NFC (scan their code instead) or with NFC off
+  (with **Turn on**), and empty Met and Receive lists say how to fill them.
+- **Welcome:** the first screen says Tilde is free, with no account and no internet, and offers
+  **Restore a backup** for moving from another phone. The handle shows as it will appear on your
+  card.
+- **About** links to the website, the privacy page and **Report a problem**, and lists the
+  open-source licences. A backup that was cut short says it's damaged, and nothing changes.
+- **Cards:** the cover colours are easier to tap and are read aloud by name, and the pencil on your
+  card is bigger and easier to see. Name, title and company take up to 100 characters, and links
+  and Met notes up to 500. A code too long for a QR code says so instead of crashing.
+
 ## 1.2.0-beta.2 (7 October 2026)
 
 A second 1.2 beta with fixes from a review of 1.2.0-beta.1; everything in 1.2.0-beta.1 below still
