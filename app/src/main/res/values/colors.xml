@@ -14,6 +14,8 @@
     <color name="dim">#68717C</color>
     <color name="accent">#A85F00</color>
     <color name="accent_soft">#26A85F00</color>
+    <!-- The pencil on the card's cover band: light in both themes, over a dark disc. -->
+    <color name="on_band">#F1EFE8</color>
     <color name="qr_light">#FFFFFF</color>
     <color name="qr_hint">#5B6470</color>
     <color name="ok">#23803F</color>
