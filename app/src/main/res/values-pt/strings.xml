@@ -86,17 +86,17 @@
     <string name="iphone_hint_contact_link">Tens um iPhone? Lê o código para guardar o contacto. Ao encostar, abre %1$s.</string>
     <string name="iphone_hint_wifi">Tens um iPhone? Lê o código para te ligares.</string>
     <string name="state_ready">Pronto</string>
-    <string name="state_paused">Em pausa</string>
+    <string name="state_paused">Toques desligados</string>
     <string name="state_nfc_off">NFC desligado</string>
     <string name="state_no_nfc">Sem NFC</string>
     <string name="state_description">Estado: %1$s. Toca para ver detalhes.</string>
     <string name="state_ready_detail">Encosta as costas do teu telemóvel às do da outra pessoa e ela recebe o que está no ecrã. Mantém a Tilde aberta: só responde a toques enquanto está no ecrã (podes mudar isso em Definições → Partilha). O código também funciona.</string>
     <string name="state_ready_detail_closed">Encosta as costas do teu telemóvel às do da outra pessoa e ela recebe o que escolheste no cartão ativo. Também funciona com a Tilde fechada, desde que o telemóvel esteja desbloqueado (Definições → Partilha). O código também funciona.</string>
     <string name="state_nfc_off_detail">O NFC está desligado neste telemóvel, por isso os toques não funcionam. Liga-o nas definições do Android. O código funciona na mesma.</string>
-    <string name="state_paused_detail">Puseste em pausa a partilha por toque (Partilhar por NFC, nas Definições), por isso um telemóvel por perto não recebe nada. O código continua a funcionar.</string>
+    <string name="state_paused_detail">Partilhar por toque está desligado (Definições → Partilha), por isso um telemóvel por perto não recebe nada. O teu código continua a funcionar.</string>
     <string name="state_no_nfc_detail">Este telemóvel não consegue funcionar como etiqueta NFC, por isso partilha com o código: qualquer câmara de telemóvel o consegue ler.</string>
-    <string name="state_pause">Pausar toques</string>
-    <string name="state_resume">Retomar toques</string>
+    <string name="state_pause">Desligar Partilhar por toque</string>
+    <string name="state_resume">Ligar Partilhar por toque</string>
     <string name="iphone_scan_only">iPhone: ler o código</string>
     <string name="iphone_contact_note">iPhone: um toque abre %1$s; lê o código para guardar o contacto</string>
     <!-- What an iPhone opens instead of the contact card: "your website", or a network's name ("LinkedIn"). -->
@@ -293,8 +293,8 @@
     <string name="crop_done">Usar fotografia</string>
     <string name="profile_whatsapp">Número de WhatsApp</string>
     <string name="settings_sharing">Partilha</string>
-    <string name="toggle">Partilhar por NFC</string>
-    <string name="toggle_detail">Desligado: os toques não fazem nada, o código QR continua a funcionar.</string>
+    <string name="toggle">Partilhar por toque</string>
+    <string name="toggle_detail">Desligado: os toques não fazem nada; o teu código continua a funcionar.</string>
     <string name="settings_event">Nome do evento</string>
     <string name="event_hint">lisbon-js</string>
     <string name="event_detail">Acrescentado aos links para o teu próprio site (como ?event=websummit), para as estatísticas do site mostrarem de que evento veio cada visita.</string>
@@ -399,8 +399,8 @@
         <item quantity="many">%d cartões</item>
         <item quantity="other">%d cartões</item>
     </plurals>
-    <string name="row_sharing_on">Toques ligados</string>
-    <string name="row_sharing_off">Toques em pausa</string>
+    <string name="row_sharing_on">Partilhar por toque ligado</string>
+    <string name="row_sharing_off">Partilhar por toque desligado</string>
     <string name="row_event_none">sem evento</string>
     <string name="row_event">evento: %1$s</string>
     <string name="row_wifi_none">Não configurado</string>

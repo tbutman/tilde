@@ -88,17 +88,17 @@
     <string name="iphone_hint_contact_link">On an iPhone? Scan the code to save the contact. Tapping opens %1$s instead.</string>
     <string name="iphone_hint_wifi">On an iPhone? Scan the code to join.</string>
     <string name="state_ready">Ready</string>
-    <string name="state_paused">Paused</string>
+    <string name="state_paused">Taps off</string>
     <string name="state_nfc_off">NFC off</string>
     <string name="state_no_nfc">No NFC</string>
     <string name="state_description">Status: %1$s. Tap for details.</string>
     <string name="state_ready_detail">Hold the back of your phone to theirs and they get what\'s on screen. Keep Tilde open: it only answers taps while it\'s on screen (you can change that in Settings → Sharing). The code works too.</string>
     <string name="state_ready_detail_closed">Hold the back of your phone to theirs and they get your active card\'s choice. It works with Tilde closed too, while your phone is unlocked (Settings → Sharing). The code works too.</string>
     <string name="state_nfc_off_detail">NFC is switched off on this phone, so taps can\'t work. Turn it on in Android\'s settings. The code works either way.</string>
-    <string name="state_paused_detail">You\'ve paused sharing by tap (Share over NFC, in Settings), so a phone nearby gets nothing. The code still works.</string>
+    <string name="state_paused_detail">Share by tap is off (Settings → Sharing), so a phone nearby gets nothing. Your code still works.</string>
     <string name="state_no_nfc_detail">This phone can\'t act as an NFC tag, so share with the code instead: any phone camera can scan it.</string>
-    <string name="state_pause">Pause taps</string>
-    <string name="state_resume">Resume taps</string>
+    <string name="state_pause">Turn off Share by tap</string>
+    <string name="state_resume">Turn on Share by tap</string>
     <string name="iphone_scan_only">iPhone: scan the code</string>
     <string name="iphone_contact_note">iPhone: a tap opens %1$s; scan to save the contact</string>
     <!-- What an iPhone opens instead of the contact card: "your website", or a network's name ("LinkedIn"). -->
@@ -298,8 +298,8 @@
     <string name="crop_done">Use photo</string>
     <string name="profile_whatsapp">WhatsApp number</string>
     <string name="settings_sharing">Sharing</string>
-    <string name="toggle">Share over NFC</string>
-    <string name="toggle_detail">Off: taps do nothing, the QR code still works.</string>
+    <string name="toggle">Share by tap</string>
+    <string name="toggle_detail">Off: taps do nothing; your code still works.</string>
     <string name="settings_event">Event name</string>
     <string name="event_hint">lisbon-js</string>
     <string name="event_detail">Added to links to your own website (as ?event=websummit), so your site\'s statistics show which event a visitor came from.</string>
@@ -400,8 +400,8 @@
         <item quantity="one">%d card</item>
         <item quantity="other">%d cards</item>
     </plurals>
-    <string name="row_sharing_on">Taps on</string>
-    <string name="row_sharing_off">Taps paused</string>
+    <string name="row_sharing_on">Share by tap on</string>
+    <string name="row_sharing_off">Share by tap off</string>
     <string name="row_event_none">no event</string>
     <string name="row_event">event: %1$s</string>
     <string name="row_wifi_none">Not set up</string>
