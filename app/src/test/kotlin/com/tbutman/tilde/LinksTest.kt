@@ -70,4 +70,16 @@ class LinksTest {
         var n = 0
         assertEquals("000002", SavedLink.newId(listOf("000001")) { ++n })
     }
+
+    @Test
+    fun linksOnKnownSitesAreRecognised() {
+        assertEquals("bluesky", Sites.of("https://bsky.app/profile/jane.bsky.social"))
+        assertEquals("substack", Sites.of("https://jane.substack.com/p/hello"))
+        assertEquals("youtube", Sites.of("youtu.be/abc"))
+        assertEquals("calendly", Sites.of("https://calendly.com/jane/30min"))
+        assertEquals("x", Sites.of("https://twitter.com/jane"))
+        assertNull(Sites.of("https://labtrails.app"))
+        assertNull(Sites.of("https://notyoutube.com"))
+        assertNull(Sites.of(""))
+    }
 }

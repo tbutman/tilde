@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Substack logo from Simple Icons 16.34.0 (CC0), unaltered, shown next to a link to the owner's
+     own page there. Trademark of its owner. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFF6719" android:pathData="M 22.539 8.242 H 1.46 V 5.406 h 21.08 v 2.836 z M 1.46 10.812 V 24 L 12 18.11 22.54 24 V 10.812 H 1.46 z M 22.54 0 H 1.46 v 2.836 h 21.08 V 0 z" />
+</vector>

@@ -18,7 +18,8 @@ class PresetRows(private val context: Context, private val prefs: Prefs, private
         get() = if (writing) "" else prefs.event
 
     fun bind(row: View, preset: Presets.Preset, selected: Boolean) {
-        val logo = logoFor(preset.id)
+        // A saved link on a known site shows that site's logo; others show their first letter.
+        val logo = logoFor(preset.id) ?: SavedLink.idOf(preset.id)?.let { siteLogo(prefs.urlFor(preset.id, event = "")) }
         row.findViewById<ImageView>(R.id.logo).apply {
             visibility = if (logo != null) View.VISIBLE else View.GONE
             logo?.let { setImageResource(it) }
@@ -175,6 +176,33 @@ class PresetRows(private val context: Context, private val prefs: Prefs, private
         /** What an iPhone opens when it taps a contact card ("your website", "LinkedIn"), or null for nothing. */
         fun iphoneOpens(context: Context, profile: Profile): String? =
             profile.contactLink?.let { (label, _) -> label ?: context.getString(R.string.iphone_your_website) }
+
+        /** The logo for a link on a known site (see [Sites]), or null. */
+        fun siteLogo(url: String): Int? = when (Sites.of(url)) {
+            "bluesky" -> R.drawable.ic_brand_bluesky
+            "threads" -> R.drawable.ic_brand_threads
+            "facebook" -> R.drawable.ic_brand_facebook
+            "youtube" -> R.drawable.ic_brand_youtube
+            "tiktok" -> R.drawable.ic_brand_tiktok
+            "mastodon" -> R.drawable.ic_brand_mastodon
+            "medium" -> R.drawable.ic_brand_medium
+            "substack" -> R.drawable.ic_brand_substack
+            "dribbble" -> R.drawable.ic_brand_dribbble
+            "behance" -> R.drawable.ic_brand_behance
+            "calendly" -> R.drawable.ic_brand_calendly
+            "telegram" -> R.drawable.ic_brand_telegram
+            "discord" -> R.drawable.ic_brand_discord
+            "producthunt" -> R.drawable.ic_brand_producthunt
+            "stackoverflow" -> R.drawable.ic_brand_stackoverflow
+            "gitlab" -> R.drawable.ic_brand_gitlab
+            "figma" -> R.drawable.ic_brand_figma
+            "linkedin" -> R.drawable.ic_brand_linkedin
+            "github" -> R.drawable.ic_brand_github
+            "instagram" -> R.drawable.ic_brand_instagram
+            "x" -> R.drawable.ic_brand_x
+            "whatsapp" -> R.drawable.ic_brand_whatsapp
+            else -> null
+        }
 
         fun logoFor(id: String): Int? = when (id) {
             Presets.WHATSAPP -> R.drawable.ic_brand_whatsapp

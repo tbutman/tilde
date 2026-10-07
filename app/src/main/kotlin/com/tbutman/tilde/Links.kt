@@ -4,6 +4,31 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
+ * Which site a link is on, for showing its logo next to a saved link: "bsky.app/profile/jane" is
+ * Bluesky. Matches the host or any subdomain of it ("jane.substack.com"). Plain Kotlin, unit-tested.
+ */
+object Sites {
+    private val HOSTS = mapOf(
+        "bluesky" to listOf("bsky.app", "bsky.social"), "threads" to listOf("threads.net", "threads.com"),
+        "facebook" to listOf("facebook.com", "fb.com", "fb.me"), "youtube" to listOf("youtube.com", "youtu.be"),
+        "tiktok" to listOf("tiktok.com"), "mastodon" to listOf("mastodon.social", "mastodon.online", "mstdn.social"),
+        "medium" to listOf("medium.com"), "substack" to listOf("substack.com"), "dribbble" to listOf("dribbble.com"),
+        "behance" to listOf("behance.net"), "calendly" to listOf("calendly.com"), "telegram" to listOf("t.me", "telegram.me"),
+        "discord" to listOf("discord.gg", "discord.com"), "producthunt" to listOf("producthunt.com"),
+        "stackoverflow" to listOf("stackoverflow.com"), "gitlab" to listOf("gitlab.com"), "figma" to listOf("figma.com"),
+        "linkedin" to listOf("linkedin.com", "lnkd.in"), "github" to listOf("github.com"),
+        "instagram" to listOf("instagram.com", "instagr.am"), "x" to listOf("x.com", "twitter.com"), "whatsapp" to listOf("wa.me", "whatsapp.com"),
+    )
+
+    /** The site's key ("bluesky"), or null for a site without a logo here. */
+    fun of(url: String): String? {
+        val host = Regex("^(?:[a-z][a-z0-9+.-]*://)?([^/?#:]+)", RegexOption.IGNORE_CASE).find(url.trim())?.groupValues?.get(1)?.lowercase()
+            ?: return null
+        return HOSTS.entries.firstOrNull { (_, hosts) -> hosts.any { host == it || host.endsWith(".$it") } }?.key
+    }
+}
+
+/**
  * A link saved to share, with a name, such as "Tilde" → https://tbutman.com/tilde. Each one is its
  * own sharing option, `link:<id>`. Plain Kotlin apart from org.json, so it's unit-tested.
  */

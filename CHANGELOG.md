@@ -53,6 +53,13 @@ Not released yet. Tested on the emulator.
 - **Met** (Settings → Met): ask for a note after each tap, and delete entries older than 3, 6 or 12
   months.
 
+### Polish
+
+- **Logos for saved links on known sites:** Bluesky, Threads, Facebook, YouTube, TikTok, Mastodon,
+  Medium, Substack, Dribbble, Behance, Calendly, Telegram, Discord, Product Hunt, Stack Overflow,
+  GitLab and Figma (and LinkedIn, GitHub, Instagram, X and WhatsApp links), instead of the first
+  letter of the link's name.
+
 ### Share screen
 
 - Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap

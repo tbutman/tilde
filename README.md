@@ -135,5 +135,6 @@ Tilde is written in Kotlin with no network code and few dependencies. See
 
 [MIT](LICENSE) © Thomas Butman.
 
-The WhatsApp, LinkedIn, GitHub, Instagram and X logos come from [Simple Icons](https://simpleicons.org)
-(CC0) and are used only to link to your own accounts. They remain their owners' trademarks.
+The site logos (WhatsApp, LinkedIn, GitHub, Instagram, X, and the sites saved links can point to,
+such as Bluesky, YouTube or Calendly) come from [Simple Icons](https://simpleicons.org) (CC0) and are
+used only next to links to your own pages. They remain their owners' trademarks.

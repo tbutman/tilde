@@ -33,8 +33,10 @@ To the other phone it looks like any NFC sticker or business card, so it needs n
   personal is in the source.
 - **Photo.** Picked with the system Photo Picker (no storage permission), cropped in `CropView`
   and kept in the app's private files. It is shown on screen only, never sent.
-- **Logos** come from Simple Icons (CC0; LinkedIn from 13.21.0, the last version to include it),
-  with their paths rewritten so Android's vector parser accepts them (see `VectorPathTest`).
+- **Logos** come from Simple Icons (CC0; LinkedIn from 13.21.0, the last version to include it; the
+  sites saved links are matched to, in `Sites`, from 16.34.0), with their paths rewritten so
+  Android's vector parser accepts them (see `VectorPathTest`). Brand colours are kept unless they're
+  too dark for the dark theme (black logos are drawn in the text colour).
 
 Permissions: `NFC` and `VIBRATE`. No `INTERNET` permission, no analytics, and cloud backup is off.
 Dependencies: Material Components (with AppCompat), ExifInterface and ZXing core for the QR code.

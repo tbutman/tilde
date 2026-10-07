@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Product Hunt logo from Simple Icons 16.34.0 (CC0), unaltered, shown next to a link to the owner's
+     own page there. Trademark of its owner. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFDA552F" android:pathData="M 13.604 8.4 h -3.405 V 12 h 3.405 c .995 0 1.801 -.806 1.801 -1.801 0 -.993 -.805 -1.799 -1.801 -1.799 z M 12 0 C 5.372 0 0 5.372 0 12 s 5.372 12 12 12 12 -5.372 12 -12 S 18.628 0 12 0 z m 1.604 14.4 h -3.405 V 18 H 7.801 V 6 h 5.804 c 2.319 0 4.2 1.88 4.2 4.199 0 2.321 -1.881 4.201 -4.201 4.201 z" />
+</vector>
