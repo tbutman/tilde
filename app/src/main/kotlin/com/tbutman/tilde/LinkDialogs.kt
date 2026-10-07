@@ -102,7 +102,7 @@ object LinkDialogs {
         )
         input.doAfterTextChanged { layout.error = null }
         val dialog = MaterialAlertDialogBuilder(context)
-            .setTitle(context.getString(R.string.setup_title, preset.label))
+            .setTitle(context.getString(R.string.setup_title, context.labelOf(preset)))
             .setView(column(context, layout))
             .setPositiveButton(R.string.met_save, null)
             .setNegativeButton(R.string.met_cancel, null)

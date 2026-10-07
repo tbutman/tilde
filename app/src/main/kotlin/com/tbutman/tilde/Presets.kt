@@ -23,17 +23,17 @@ object Presets {
      * in the background, so a contact card or Wi-Fi network reaches them by scanning the QR code.
      * Android phones handle every preset by tap or scan.
      */
-    class Preset(val id: String, val label: String, val monogram: String, val iphoneTap: Boolean = true)
+    class Preset(val id: String, val label: String, val monogram: String, val iphoneTap: Boolean = true, val labelRes: Int = 0)
 
     val all = listOf(
-        Preset(WEBSITE, "Website", "~/"),
-        Preset(CONTACT, "Contact card", "+", iphoneTap = false),
+        Preset(WEBSITE, "Website", "~/", labelRes = R.string.preset_website),
+        Preset(CONTACT, "Contact card", "+", iphoneTap = false, labelRes = R.string.preset_contact),
         Preset(WHATSAPP, "WhatsApp", "wa"),
         Preset(LINKEDIN, "LinkedIn", "in"),
         Preset(GITHUB, "GitHub", "gh"),
         Preset(INSTAGRAM, "Instagram", "ig"),
         Preset(X, "X", "X"),
-        Preset(WIFI, "Guest Wi-Fi", "wi", iphoneTap = false),
+        Preset(WIFI, "Guest Wi-Fi", "wi", iphoneTap = false, labelRes = R.string.preset_wifi),
     )
 
     /** Every option, in the picker's order: the fixed ones, then the saved links, then Guest Wi-Fi last. */
@@ -82,3 +82,7 @@ object Presets {
         return "$url${separator}event=${URLEncoder.encode(tag, "UTF-8")}"
     }
 }
+
+/** An option's name in the app's language: the fixed options' names are translated, link names are the owner's own. */
+fun android.content.Context.labelOf(preset: Presets.Preset): String =
+    if (preset.labelRes != 0) getString(preset.labelRes) else preset.label

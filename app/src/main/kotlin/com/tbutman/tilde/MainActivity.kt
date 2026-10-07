@@ -1001,7 +1001,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         chips.removeAllViews()
         for (option in quick) {
             val chip = layoutInflater.inflate(R.layout.chip_option, chips, false) as Chip
-            chip.text = option.label
+            chip.text = labelOf(option)
             chip.isChecked = option.id == preset.id
             chip.setOnClickListener { prefs.share = option.id }
             chips.addView(chip)

@@ -29,7 +29,7 @@ class PresetRows(private val context: Context, private val prefs: Prefs, private
             text = preset.monogram
         }
         row.findViewById<TextView>(R.id.title).apply {
-            text = preset.label
+            text = context.labelOf(preset)
             setTextColor(context.getColor(if (selected) R.color.accent else R.color.text))
         }
         row.findViewById<TextView>(R.id.subtitle).text = detail(preset)

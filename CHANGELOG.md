@@ -38,6 +38,9 @@ Not released yet. Tested on the emulator.
 
 ### New settings
 
+- **Tilde in Portuguese** (European Portuguese). Settings → Language chooses the phone's language,
+  English or Português; Android 13 and later also list Tilde in the phone's own language settings.
+  The translation still needs a native speaker's review.
 - **Company:** a field next to your job title, shown on your card ("Product designer · Acme") and on
   the contact card.
 - **What each card's contact card includes:** untick details a card should leave out, such as your

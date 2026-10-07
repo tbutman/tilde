@@ -222,6 +222,9 @@
     <string name="cards_more_actions">More actions for %1$s</string>
     <string name="cards_copy_label">%1$s copy</string>
     <string name="cards_first_label">My card</string>
+    <string name="preset_website">Website</string>
+    <string name="preset_contact">Contact card</string>
+    <string name="preset_wifi">Guest Wi-Fi</string>
     <string name="cards_next_label">Card %1$d</string>
 
     <!-- Edit card -->
@@ -405,7 +408,7 @@
     <string name="write_not_lockable">Written, but this sticker can\'t be locked, so it can still be changed.</string>
     <string name="write_close">Done</string>
     <string name="write_skip">Skip for now</string>
-    <string name="write_later">No sticker yet? Write one any time from Settings → Stickers and cards.</string>
+    <string name="write_later">No sticker yet? Write one any time from Settings → Write a sticker.</string>
     <string name="write_iphone_contact">iPhone: opens %1$s instead</string>
     <string name="write_iphone_contact_none">iPhone: a tap does nothing. Add a website in Settings for iPhones to open.</string>
     <string name="write_iphone_wifi">iPhone: can\'t join Wi-Fi from a tag</string>
