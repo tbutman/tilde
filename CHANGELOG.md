@@ -23,6 +23,11 @@ Not released yet. Tested on the emulator.
 - Updating from 1.1 keeps everything: your profile, photo, links and choices become your first
   card, "My card".
 
+### Share screen
+
+- Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap
+  away: turn on NFC, resume or pause taps.
+
 ### Write a sticker
 
 - **Write a card** is now **Write a sticker** (Settings → Stickers and cards), now that "card"

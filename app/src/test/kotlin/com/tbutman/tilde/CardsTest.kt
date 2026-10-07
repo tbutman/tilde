@@ -80,7 +80,7 @@ class CardsTest {
         assertEquals("Card 4", Cards.nextLabel(listOf(work, personal, Card("x", "Card 3"))))
         assertEquals("amber", Cards.colour("nope").key)
         val blank = Cards.blank("b1", "Side project", "  Jane Doe ", "violet")
-        assertEquals(Profile(name = "Jane Doe"), blank.profile)
+        assertEquals(Profile(name = "Jane Doe", handle = "janedoe"), blank.profile)
         assertEquals(emptyList<SavedLink>(), blank.links)
     }
 }

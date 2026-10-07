@@ -88,8 +88,9 @@ object Cards {
     /** A copy of `card` with a new id and label; its links and choices come along, independent from then on. */
     fun copy(card: Card, newId: String, label: String) = card.copy(id = newId, label = label)
 
-    /** A blank card with just a name, for "Start blank". */
-    fun blank(id: String, label: String, name: String, colour: String) = Card(id, label, colour, Profile(name = name.trim()))
+    /** A blank card with just a name (and a handle from it, as the welcome does), for "Start blank". */
+    fun blank(id: String, label: String, name: String, colour: String) =
+        Profile(name = name.trim()).let { Card(id, label, colour, it.copy(handle = it.suggestedHandle)) }
 
     /** A colour the other cards don't use yet, if there is one, so a new card stands out. */
     fun nextColour(cards: List<Card>): String =

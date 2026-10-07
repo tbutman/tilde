@@ -696,6 +696,24 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         findViewById<View>(R.id.qr_card).performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
     }
 
+    /**
+     * Tapping the status badge: what the state means, with the fix one tap away: Android's NFC
+     * settings when NFC is off, resuming when taps are paused, pausing when ready.
+     */
+    private fun explainState(state: Int) {
+        val dialog = MaterialAlertDialogBuilder(this).setTitle(state)
+        when (state) {
+            R.string.state_ready -> dialog.setMessage(R.string.state_ready_detail)
+                .setNeutralButton(R.string.state_pause) { _, _ -> prefs.enabled = false }
+            R.string.state_nfc_off -> dialog.setMessage(R.string.state_nfc_off_detail)
+                .setNeutralButton(R.string.open_nfc_settings) { _, _ -> runCatching { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) } }
+            R.string.state_paused -> dialog.setMessage(R.string.state_paused_detail)
+                .setNeutralButton(R.string.state_resume) { _, _ -> prefs.enabled = true }
+            else -> dialog.setMessage(R.string.state_no_nfc_detail)
+        }
+        dialog.setPositiveButton(R.string.done, null).show()
+    }
+
     /** Swiping the profile card: the next (or previous) card, round and round. */
     private fun stepCard(direction: Int) {
         val next = Cards.step(prefs.cards, prefs.activeCardId, direction) ?: return
@@ -1015,6 +1033,8 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             }
             text = getString(label)
             setTextColor(getColor(colour))
+            contentDescription = getString(R.string.state_description, getString(label))
+            setOnClickListener { explainState(label) }
         }
         findViewById<TextView>(R.id.tagline).setText(if (tapping) R.string.tagline_tap else R.string.tagline_scan)
         findViewById<View>(R.id.nfc_settings).visibility = if (nfc != null && !nfcOn) View.VISIBLE else View.GONE

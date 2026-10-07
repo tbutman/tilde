@@ -91,6 +91,13 @@
     <string name="state_paused">Paused</string>
     <string name="state_nfc_off">NFC off</string>
     <string name="state_no_nfc">No NFC</string>
+    <string name="state_description">Status: %1$s. Tap for details.</string>
+    <string name="state_ready_detail">Hold the back of your phone to theirs and they get what\'s on screen. Keep Tilde open: phones only answer taps with it in front. The code works too.</string>
+    <string name="state_nfc_off_detail">NFC is switched off on this phone, so taps can\'t work. Turn it on in Android\'s settings. The code works either way.</string>
+    <string name="state_paused_detail">You\'ve paused sharing by tap (Share over NFC, in Settings), so a phone nearby gets nothing. The code still works.</string>
+    <string name="state_no_nfc_detail">This phone can\'t act as an NFC tag, so share with the code instead: any phone camera can scan it.</string>
+    <string name="state_pause">Pause taps</string>
+    <string name="state_resume">Resume taps</string>
     <string name="iphone_scan_only">iPhone: scan the code</string>
     <string name="iphone_contact_note">iPhone: tap opens %1$s, scan for the card</string>
     <!-- What an iPhone opens instead of the contact card: "your website", or a network's name ("LinkedIn"). -->
