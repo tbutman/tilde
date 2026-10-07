@@ -253,8 +253,9 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             findViewById<TextInputEditText>(R.id.welcome_phone2).text = null
             showSecondPhone(false)
         }
+        val websiteLayout = findViewById<TextInputLayout>(R.id.welcome_website_layout)
         findViewById<TextInputEditText>(R.id.welcome_website).apply {
-            addTextChangedListener(afterChange { findViewById<TextInputLayout>(R.id.welcome_website_layout).error = null })
+            addTextChangedListener(afterChange { websiteLayout.error = null })
             onDone { welcomeNext() }
         }
 
