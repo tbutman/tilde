@@ -222,6 +222,13 @@
     <string name="cards_delete_title">Apagar %1$s?</string>
     <string name="cards_delete_body">Os dados, links e fotografia do cartão são removidos deste telemóvel. As etiquetas que já gravaste mantêm o que têm.</string>
     <string name="cards_colour">Cor</string>
+    <string name="cards_colour_selected">Selecionada</string>
+    <string name="colour_amber">Âmbar</string>
+    <string name="colour_teal">Verde-azulado</string>
+    <string name="colour_blue">Azul</string>
+    <string name="colour_violet">Violeta</string>
+    <string name="colour_coral">Coral</string>
+    <string name="colour_green">Verde</string>
     <string name="cards_active">Ativo</string>
     <string name="cards_manage_detail">Cada cartão é uma versão diferente de ti para partilhar: trabalho, pessoal, um projeto ou um evento. Só tu vês os rótulos. Desliza o teu cartão no ecrã Partilhar para mudar.</string>
     <string name="cards_more_actions">Mais ações para %1$s</string>

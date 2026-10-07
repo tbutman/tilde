@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The status badge's chip, drawn 32 dp tall inside a 48 dp touch target. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/bg_chip"
+    android:insetTop="8dp"
+    android:insetBottom="8dp" />

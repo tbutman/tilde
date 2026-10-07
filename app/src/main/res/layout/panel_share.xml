@@ -36,7 +36,7 @@
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackground"
                     android:ellipsize="end"
-                    android:minHeight="40dp"
+                    android:minHeight="48dp"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:fontFamily="monospace"
@@ -47,12 +47,12 @@
                     android:id="@+id/state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_chip"
+                    android:background="@drawable/bg_chip_inset"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:minHeight="32dp"
+                    android:minHeight="48dp"
                     android:gravity="center"
                     android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp"
+                    android:paddingVertical="12dp"
                     android:textSize="13sp" />
             </LinearLayout>
 

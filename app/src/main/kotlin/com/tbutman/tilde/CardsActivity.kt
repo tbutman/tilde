@@ -38,7 +38,7 @@ class CardsActivity : AppCompatActivity() {
                 setBackgroundResource(ripple.resourceId)
                 contentDescription = getString(R.string.cards_more_actions, card.label)
                 setOnClickListener { view -> menu(view, card, first = i == 0, last = i == cards.lastIndex, only = cards.size == 1) }
-            }, LinearLayout.LayoutParams(dp(44), dp(44)).apply { marginStart = dp(8) })
+            }, LinearLayout.LayoutParams(dp(48), dp(48)).apply { marginStart = dp(4) })
             list.addView(row)
         }
     }

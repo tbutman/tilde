@@ -35,8 +35,13 @@ object CardDialogs {
         label.setSelectAllOnFocus(true)
         val (nameLayout, name) = field(context, R.string.cards_new_name, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PERSON_NAME or InputType.TYPE_TEXT_FLAG_CAP_WORDS)
         nameLayout.visibility = View.GONE
-        val copy = RadioButton(context).apply { id = View.generateViewId(); text = context.getString(R.string.cards_new_copy, active.label); isChecked = true }
-        val blank = RadioButton(context).apply { id = View.generateViewId(); setText(R.string.cards_new_blank) }
+        val copy = RadioButton(context).apply {
+            id = View.generateViewId()
+            text = context.getString(R.string.cards_new_copy, active.label)
+            isChecked = true
+            minHeight = dp(context, 48)
+        }
+        val blank = RadioButton(context).apply { id = View.generateViewId(); setText(R.string.cards_new_blank); minHeight = dp(context, 48) }
         val copyHint = hint(context, R.string.cards_new_copy_detail)
         val choice = RadioGroup(context).apply {
             addView(copy)
@@ -87,17 +92,22 @@ object CardDialogs {
         fun showSwatches() {
             swatches.removeAllViews()
             for (c in Cards.COLOURS) {
+                // A 36 dp dot in a 48 dp target; the chosen one has a dark tick, which shows on every
+                // swatch colour, and says "selected" to screen readers.
                 swatches.addView(TextView(context).apply {
-                    setBackgroundResource(R.drawable.bg_dot)
+                    setBackgroundResource(R.drawable.bg_swatch)
                     backgroundTintList = ColorStateList.valueOf(c.argb.toInt())
                     gravity = Gravity.CENTER
                     text = if (c.key == colour) "✓" else ""
-                    setTextColor(context.getColor(R.color.bg))
+                    setTextColor(0xFF0B0D10.toInt())
                     textSize = 18f
-                    contentDescription = c.key
+                    contentDescription = context.getString(colourName(c.key))
                     isSelected = c.key == colour
+                    androidx.core.view.ViewCompat.setStateDescription(
+                        this, if (c.key == colour) context.getString(R.string.cards_colour_selected) else null,
+                    )
                     setOnClickListener { colour = c.key; showSwatches() }
-                }, LinearLayout.LayoutParams(dp(context, 36), dp(context, 36)).apply { marginEnd = dp(context, 12) })
+                }, LinearLayout.LayoutParams(dp(context, 48), dp(context, 48)))
             }
         }
         showSwatches()
@@ -184,6 +194,16 @@ object CardDialogs {
                 contentDescription = context.getString(R.string.cards_active)
             }, LinearLayout.LayoutParams(dp(context, 20), dp(context, 20)))
         }
+    }
+
+    /** A cover colour's name in the app's language, for screen readers. */
+    private fun colourName(key: String) = when (key) {
+        "teal" -> R.string.colour_teal
+        "blue" -> R.string.colour_blue
+        "violet" -> R.string.colour_violet
+        "coral" -> R.string.colour_coral
+        "green" -> R.string.colour_green
+        else -> R.string.colour_amber
     }
 
     private fun field(context: Context, hint: Int, type: Int): Pair<TextInputLayout, TextInputEditText> {

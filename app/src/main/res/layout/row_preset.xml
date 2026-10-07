@@ -74,12 +74,11 @@
     <!-- In the picker: star an option to put it in the Share screen's quick-switch row. -->
     <ImageView
         android:id="@+id/star"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="4dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/picker_star"
-        android:padding="9dp"
+        android:padding="13dp"
         android:src="@drawable/ic_star"
         android:visibility="gone"
         app:tint="@color/muted" />
