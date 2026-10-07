@@ -71,8 +71,12 @@ data class Profile(
     val suggestedHandle: String
         get() = handleChars(name).filter { it in 'a'..'z' || it in '0'..'9' }.take(HANDLE_MAX)
 
-    /** The default WhatsApp text: short and neutral, typed in but never sent for them. */
-    val greeting: String get() = if (firstName.isEmpty()) "Hi" else "Hi $firstName"
+    /**
+     * The default WhatsApp text: short and neutral, typed in but never sent for them. `hi` and
+     * `hiName` ("Hi %1${'$'}s") are in the app's language (see Prefs.whatsappGreeting).
+     */
+    fun greeting(hi: String = "Hi", hiName: String = "Hi %1${'$'}s"): String =
+        if (firstName.isEmpty()) hi else String.format(hiName, firstName)
 
     val hasWhatsapp: Boolean get() = whatsappUrl(whatsapp, "") != null
 

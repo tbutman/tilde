@@ -31,7 +31,8 @@ class ProfileTest {
         assertEquals(listOf("mobile" to "+1 555 0100", "work" to "+1 555 0199"), profile.phones)
         assertEquals("https://www.example.com/", profile.siteRoot)
         assertEquals("example.com", profile.siteHost)
-        assertEquals("Hi Jane", profile.greeting)
+        assertEquals("Hi Jane", profile.greeting())
+        assertEquals("Olá Jane", profile.greeting("Olá", "Olá %1${'$'}s"))
         assertEquals(profile, Profile.parse(profile.toText()))
     }
 
@@ -39,7 +40,7 @@ class ProfileTest {
     fun anEmptySeedIsAnEmptyProfile() {
         val profile = Profile.parse("")
         assertFalse(profile.isSet)
-        assertEquals("Hi", profile.greeting)
+        assertEquals("Hi", profile.greeting())
         assertEquals(null, profile.siteHost)
         // With nothing set up, nothing is ready to share (the picker shows the rest greyed out).
         assertEquals(emptyList<String>(), Presets.available(profile).map { it.id })

@@ -293,6 +293,9 @@
     <string name="event_detail">Added to links on your website as ?event=, so its log shows which event a visit came from.</string>
     <string name="whatsapp_same_as_mobile">Same as my mobile</string>
     <string name="whatsapp_invalid">That isn\'t a full number for this country. Check the number and the country code.</string>
+    <!-- The default text typed into a WhatsApp chat: with their first name, or without one. -->
+    <string name="whatsapp_greeting_default">Hi %1$s</string>
+    <string name="whatsapp_greeting_no_name">Hi</string>
     <string name="whatsapp_greeting_hint">Message</string>
     <string name="whatsapp_detail">Typed into the chat, never sent. Leave empty for an empty chat.</string>
     <string name="settings_links">Saved links</string>

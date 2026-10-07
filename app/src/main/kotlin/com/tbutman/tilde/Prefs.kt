@@ -12,6 +12,8 @@ class Prefs(context: Context) {
     private val filesDir = context.filesDir
     private val cacheDir = context.cacheDir
     private val firstLabel = context.getString(R.string.cards_first_label)
+    private val hi = context.getString(R.string.whatsapp_greeting_no_name)
+    private val hiName = context.getString(R.string.whatsapp_greeting_default)
 
     // ---- Cards ----
     // Everything about an identity lives in a Card (see Cards.kt). `profile`, `links`, `share`,
@@ -332,7 +334,7 @@ class Prefs(context: Context) {
 
     /** Text the active card types into a WhatsApp chat for them to send or not; blank for an empty chat. */
     var whatsappGreeting: String
-        get() = activeCard.greeting ?: profile.greeting
+        get() = activeCard.greeting ?: profile.greeting(hi, hiName)
         set(value) = updateActive { it.copy(greeting = value) }
 
     var wifiSsid: String
@@ -357,7 +359,7 @@ class Prefs(context: Context) {
         val profile = card.profile
         val base = when (id) {
             Presets.CUSTOM -> card.links.firstOrNull()?.url.orEmpty()
-            Presets.WHATSAPP -> Profile.whatsappUrl(profile.whatsapp, card.greeting ?: profile.greeting) ?: ""
+            Presets.WHATSAPP -> Profile.whatsappUrl(profile.whatsapp, card.greeting ?: profile.greeting(hi, hiName)) ?: ""
             // The contact card carries a link too, for readers that only act on links (iPhones).
             Presets.CONTACT -> profile.forContactCard(card.hidden).contactLink?.second.orEmpty()
             Presets.WIFI -> profile.website
