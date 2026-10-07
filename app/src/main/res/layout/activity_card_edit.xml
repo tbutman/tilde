@@ -327,7 +327,7 @@
                 android:paddingHorizontal="8dp"
                 android:textColor="@color/text"
                 app:cornerRadius="4dp"
-                app:strokeColor="@color/line_strong" />
+                app:strokeColor="@color/field_outline" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/whatsapp_layout"

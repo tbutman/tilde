@@ -7,6 +7,8 @@
     <color name="panel_raised">#FFFFFF</color>
     <color name="line">#E2E0D9</color>
     <color name="line_strong">#CCC9BF</color>
+    <!-- Outlines that show where to type or tap (empty fields, the country buttons): 3:1 on bg. -->
+    <color name="field_outline">#8E8A7E</color>
     <color name="text">#15181D</color>
     <color name="muted">#545C67</color>
     <color name="dim">#68717C</color>

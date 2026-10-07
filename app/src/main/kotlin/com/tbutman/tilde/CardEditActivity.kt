@@ -314,7 +314,7 @@ class CardEditActivity : AppCompatActivity() {
             setPadding(dp(8), 0, dp(8), 0)
             setTextColor(getColor(R.color.text))
             cornerRadius = dp(4)
-            strokeColor = getColorStateList(R.color.line_strong)
+            strokeColor = getColorStateList(R.color.field_outline)
         }
         view.addView(countryButton, LinearLayout.LayoutParams(dp(96), dp(56)).apply { topMargin = dp(14) })
         val layout = TextInputLayout(this, null, com.google.android.material.R.attr.textInputOutlinedStyle).apply {
