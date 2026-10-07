@@ -24,4 +24,12 @@ class TapGateTest {
         assertFalse(answers(whenClosed = true, locked = true))
         assertFalse(answers(whenClosed = true, enabled = false))
     }
+
+    @Test
+    fun receiveLeftOpenDoesNotStopTapsOnceTildeIsClosed() {
+        // Tilde was left on Receive and closed: "Answer taps when Tilde is closed" still answers.
+        assertTrue(answers(receiving = true, whenClosed = true))
+        assertFalse(answers(receiving = true, whenClosed = true, locked = true))
+        assertFalse(answers(receiving = true))
+    }
 }
