@@ -659,7 +659,7 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private fun explainState(state: Int) {
         val dialog = MaterialAlertDialogBuilder(this).setTitle(state)
         when (state) {
-            R.string.state_ready -> dialog.setMessage(R.string.state_ready_detail)
+            R.string.state_ready -> dialog.setMessage(if (prefs.answerWhenClosed) R.string.state_ready_detail_closed else R.string.state_ready_detail)
                 .setNeutralButton(R.string.state_pause) { _, _ -> prefs.enabled = false }
             R.string.state_nfc_off -> dialog.setMessage(R.string.state_nfc_off_detail)
                 .setNeutralButton(R.string.open_nfc_settings) { _, _ -> runCatching { startActivity(Intent(Settings.ACTION_NFC_SETTINGS)) } }

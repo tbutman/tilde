@@ -25,6 +25,18 @@
 
         <TextView style="@style/Hint" android:text="@string/toggle_detail" />
 
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/answer_when_closed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="@string/answer_when_closed"
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
+        <TextView style="@style/Hint" android:text="@string/answer_when_closed_detail" />
+
         <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/settings_event" />
 
         <com.google.android.material.textfield.TextInputLayout

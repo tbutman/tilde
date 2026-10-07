@@ -92,7 +92,8 @@
     <string name="state_nfc_off">NFC off</string>
     <string name="state_no_nfc">No NFC</string>
     <string name="state_description">Status: %1$s. Tap for details.</string>
-    <string name="state_ready_detail">Hold the back of your phone to theirs and they get what\'s on screen. Keep Tilde open: phones only answer taps with it in front. The code works too.</string>
+    <string name="state_ready_detail">Hold the back of your phone to theirs and they get what\'s on screen. Keep Tilde open: it only answers taps while it\'s in front (you can change that in Settings → Sharing). The code works too.</string>
+    <string name="state_ready_detail_closed">Hold the back of your phone to theirs and they get your active card\'s choice. It works with Tilde closed too, while your phone is unlocked (Settings → Sharing). The code works too.</string>
     <string name="state_nfc_off_detail">NFC is switched off on this phone, so taps can\'t work. Turn it on in Android\'s settings. The code works either way.</string>
     <string name="state_paused_detail">You\'ve paused sharing by tap (Share over NFC, in Settings), so a phone nearby gets nothing. The code still works.</string>
     <string name="state_no_nfc_detail">This phone can\'t act as an NFC tag, so share with the code instead: any phone camera can scan it.</string>
@@ -279,6 +280,8 @@
     <string name="about_delete_confirm_title">Delete everything?</string>
     <string name="about_delete_confirm">All your cards, photos, the Met list and your settings are removed from this phone. This can\'t be undone. Make a backup first if you might want them back.</string>
     <string name="settings_share_screen">Share screen</string>
+    <string name="answer_when_closed">Answer taps when Tilde is closed</string>
+    <string name="answer_when_closed_detail">Off: taps only share while Tilde is open, so nothing is shared from your pocket by accident. On: your phone also shares when Tilde is closed, as long as the screen is on and the phone is unlocked.</string>
     <string name="send_photo">Include your photo when you send your contact card</string>
     <string name="send_photo_detail">Only when you use Send. A tap never includes it, so it stays quick to read.</string>
     <string name="event_auto_clear">Clear it at the end of the day</string>

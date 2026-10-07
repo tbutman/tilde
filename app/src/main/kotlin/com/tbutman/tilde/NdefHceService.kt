@@ -6,14 +6,18 @@ import android.os.Bundle
 /**
  * Host Card Emulation: while the screen is on, Android routes readers that select the NDEF
  * application (AID D2760000850101, see res/xml/apduservice.xml) to this service, and the phone
- * answers as a Type 4 Tag holding what the app is set to share (see Prefs.message).
+ * answers as a Type 4 Tag holding what the app is set to share (see Prefs.message). Whether it
+ * answers at all (Tilde open, or allowed while closed) is TapGate's rule.
  */
 class NdefHceService : HostApduService() {
     private var tag: Type4Tag? = null
 
     override fun processCommandApdu(commandApdu: ByteArray, extras: Bundle?): ByteArray {
         val prefs = Prefs(this)
-        if (!prefs.enabled || prefs.tab == Prefs.TAB_RECEIVE) return Type4Tag.SW_FILE_NOT_FOUND
+        val locked = getSystemService(android.app.KeyguardManager::class.java)?.isDeviceLocked ?: true
+        if (!TapGate.answers(prefs.enabled, prefs.tab == Prefs.TAB_RECEIVE, TildeApp.open, prefs.answerWhenClosed, locked)) {
+            return Type4Tag.SW_FILE_NOT_FOUND
+        }
         // Nothing to answer with: Wi-Fi not set up, a link that's empty or was deleted, no profile.
         if (!prefs.isReady(prefs.share)) return Type4Tag.SW_FILE_NOT_FOUND
         // A fresh tag per tap, so a mode or URL changed in the app applies from the next tap.

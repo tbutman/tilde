@@ -189,6 +189,14 @@ class Prefs(context: Context) {
         get() = store.getBoolean(KEY_VIBRATE, true)
         set(value) = store.edit().putBoolean(KEY_VIBRATE, value).apply()
 
+    /**
+     * Answer taps with Tilde closed (the screen on and the phone unlocked). Off by default: then a
+     * tap only shares while a Tilde screen is open, so nothing goes out from a pocket by accident.
+     */
+    var answerWhenClosed: Boolean
+        get() = store.getBoolean(KEY_ANSWER_WHEN_CLOSED, false)
+        set(value) = store.edit().putBoolean(KEY_ANSWER_WHEN_CLOSED, value).apply()
+
     /** [THEME_DARK] (the default), [THEME_LIGHT], or [THEME_SYSTEM] to follow the phone. */
     var theme: String
         get() = store.getString(KEY_THEME, THEME_DARK) ?: THEME_DARK
@@ -226,6 +234,7 @@ class Prefs(context: Context) {
         settings = mapOf(
             KEY_EVENT_AUTO_CLEAR to eventAutoClear, KEY_FULL_BRIGHTNESS to fullBrightness, KEY_KEEP_SCREEN_ON to keepScreenOn,
             KEY_VIBRATE to vibrate, KEY_MET_ASK_NOTE to metAskNote, KEY_MET_KEEP_MONTHS to metKeepMonths, KEY_SEND_PHOTO to sendPhoto, KEY_THEME to theme,
+            KEY_ANSWER_WHEN_CLOSED to answerWhenClosed,
         ),
     )
 
@@ -386,6 +395,7 @@ class Prefs(context: Context) {
         const val KEY_VIBRATE = "vibrate"
         const val KEY_SEND_PHOTO = "send_photo"
         const val KEY_THEME = "theme"
+        const val KEY_ANSWER_WHEN_CLOSED = "answer_when_closed"
         const val THEME_DARK = "dark"
         const val THEME_LIGHT = "light"
         const val THEME_SYSTEM = "system"

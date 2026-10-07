@@ -87,6 +87,7 @@ class SettingsPageActivity : AppCompatActivity() {
         toggle(R.id.keep_screen_on, prefs.keepScreenOn) { prefs.keepScreenOn = it }
         toggle(R.id.vibrate, prefs.vibrate) { prefs.vibrate = it }
         toggle(R.id.send_photo, prefs.sendPhoto) { prefs.sendPhoto = it }
+        toggle(R.id.answer_when_closed, prefs.answerWhenClosed) { prefs.answerWhenClosed = it }
     }
 
     private fun setUpMet() {

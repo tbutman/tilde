@@ -7,9 +7,6 @@ is picked up, it moves to a spec (docs/specs) or straight to a branch, and off t
 
 ## Bigger features
 
-- **Answer taps without opening Tilde.** Android can let the tap service answer while Tilde is
-  closed (screen on). Convenient, but sharing by accident becomes possible: needs a clear switch
-  (off by default), real-phone testing on a few Android versions, and the Met log still working.
 - **Lock a sticker after writing it.** Makes it read-only so nobody can overwrite it. Permanent, so
   it needs a strong warning and a second confirmation; never the default.
 - **Home-screen widget** showing a card's QR code (choose the card per widget). Good for people who
@@ -23,4 +20,4 @@ is picked up, it moves to a spec (docs/specs) or straight to a branch, and off t
 ## Done (moved out of the backlog)
 
 - Multiple cards, Settings reorganised, contact card choices, company, backup and restore, event tag
-  auto-clear, Delete all data, Share screen and Met settings, logos for saved links, the photo in a sent contact card, a light theme: 1.2.
+  auto-clear, Delete all data, Share screen and Met settings, logos for saved links, the photo in a sent contact card, a light theme, answering taps when closed (needs real-phone testing): 1.2.

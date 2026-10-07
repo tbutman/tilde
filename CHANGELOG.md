@@ -66,6 +66,11 @@ Not released yet. Tested on the emulator.
 - **Light theme:** Settings → Theme: Dark (as before, the default), Light, or follow the phone's
   setting.
 
+- **Answer taps when Tilde is closed** (Settings → Sharing, off by default). Off, taps only share
+  while Tilde is open, so nothing goes out from a pocket by accident; before, Android could route a
+  tap to Tilde with the screen on even when it was closed. On, taps also work with Tilde closed while
+  the phone is unlocked (never from the lock screen).
+
 ### Share screen
 
 - Tap the status badge (Ready, NFC off, Paused, No NFC) to see what it means, with the fix one tap
