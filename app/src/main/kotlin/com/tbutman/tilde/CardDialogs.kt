@@ -30,6 +30,7 @@ object CardDialogs {
         val cards = prefs.cards
         val active = prefs.activeCard
         val (labelLayout, label) = field(context, R.string.cards_new_label, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
+        label.filters = arrayOf(android.text.InputFilter.LengthFilter(Cards.LABEL_MAX))
         label.setText(Cards.nextLabel(cards) { context.getString(R.string.cards_next_label, it) })
         // Typing replaces the suggested "Card 2".
         label.setSelectAllOnFocus(true)
@@ -85,6 +86,7 @@ object CardDialogs {
     /** Rename a card and choose its cover colour. */
     fun edit(context: Context, prefs: Prefs, card: Card, onSaved: () -> Unit) {
         val (labelLayout, label) = field(context, R.string.cards_new_label, InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
+        label.filters = arrayOf(android.text.InputFilter.LengthFilter(Cards.LABEL_MAX))
         label.setText(card.label)
         label.setSelectAllOnFocus(true)
         var colour = card.colour

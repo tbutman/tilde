@@ -967,10 +967,16 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         val active = prefs.activeCard
         findViewById<TextView>(R.id.brand).apply {
             // With more than one card, the card's label follows the handle: "~/janedoe · Work ▾".
-            text = handleLine(profile.handle).apply {
-                val start = length
-                append(if (cards.size > 1) "  ·  ${active.label}  ▾" else "  ▾")
-                setSpan(ForegroundColorSpan(getColor(R.color.dim)), start, length, 0)
+            val suffix = SpannableStringBuilder(if (cards.size > 1) "  ·  ${active.label}  ▾" else "  ▾").apply {
+                setSpan(ForegroundColorSpan(getColor(R.color.dim)), 0, length, 0)
+            }
+            fitBrand(this, handleLine(profile.handle), suffix)
+            // Again once it's laid out, and whenever its width changes (rotation, text size).
+            if (getTag(R.id.brand) == null) {
+                setTag(R.id.brand, true)
+                addOnLayoutChangeListener { view, left, _, right, _, oldLeft, _, oldRight, _ ->
+                    if (right - left != oldRight - oldLeft) view.post { renderShare() }
+                }
             }
             contentDescription = getString(R.string.cards_switch_description, active.label)
         }
@@ -1078,6 +1084,32 @@ class MainActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     /** The picker: what a tap shares, with a note under the options iPhones can only scan. */
     private fun showPicker() {
         rows.showPicker(R.string.picker_title, prefs.share, onSetUp = ::setUpOption) { preset -> prefs.share = preset.id }
+    }
+
+    /**
+     * The Share screen's top line in the room it has: a long handle is shortened first
+     * ("~/maximilianaal… · Web Summit ▾"), then the label, so the ▾ always shows.
+     */
+    private fun fitBrand(view: TextView, handle: CharSequence, suffix: CharSequence) {
+        val room = (view.width - view.paddingStart - view.paddingEnd).toFloat()
+        if (room <= 0) {
+            view.text = SpannableStringBuilder(handle).append(suffix)
+            return
+        }
+        val paint = view.paint
+        val suffixWidth = paint.measureText(suffix, 0, suffix.length)
+        val minHandle = paint.measureText("~/…")
+        view.text = if (room - suffixWidth >= minHandle) {
+            SpannableStringBuilder(android.text.TextUtils.ellipsize(handle, paint, room - suffixWidth, android.text.TextUtils.TruncateAt.END)).append(suffix)
+        } else {
+            // Not even room for the label: keep "~/…" and the ▾, shorten the label between them.
+            val caret = suffix.subSequence(suffix.length - 3, suffix.length)
+            val label = suffix.subSequence(0, suffix.length - 3)
+            val labelRoom = room - minHandle - paint.measureText(caret, 0, caret.length)
+            SpannableStringBuilder(android.text.TextUtils.ellipsize(handle, paint, minHandle, android.text.TextUtils.TruncateAt.END))
+                .append(android.text.TextUtils.ellipsize(label, paint, labelRoom.coerceAtLeast(0f), android.text.TextUtils.TruncateAt.END))
+                .append(caret)
+        }
     }
 
     /** The ~/handle line, with "tilde" standing in for an empty handle. */

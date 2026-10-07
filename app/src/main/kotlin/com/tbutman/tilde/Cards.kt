@@ -40,6 +40,9 @@ object Cards {
 
     fun colour(key: String): Colour = COLOURS.firstOrNull { it.key == key } ?: COLOURS.first()
 
+    /** The longest label, so it fits beside the handle at the top of the Share screen. */
+    const val LABEL_MAX = 20
+
     /** The first card's label, "My card", is a string resource (it's translated); this is the English, for tests. */
     const val FIRST_LABEL = "My card"
 
