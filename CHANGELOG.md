@@ -1,5 +1,136 @@
 # Changelog
 
+## 1.2.0 (unreleased)
+
+More than one card, a reorganised Settings with new options, backup and restore, a light theme, a
+home-screen widget, and Tilde in Portuguese. Installing it over 1.1 keeps everything: your profile,
+photo, links and choices become your first card, "My card".
+
+### More than one card
+
+- **Cards:** keep several, each a different you to share (work, personal, a project, an event).
+  Each has its own name, title, company, photo, handle, phone numbers, links, WhatsApp greeting,
+  what a tap shares, quick-switch row and cover colour. Labels such as "Work" are only for you.
+- **Switching:** tap `~/` at the top of the Share screen (it shows the card's label once you have
+  more than one) or the card itself, or swipe the card sideways to step through your cards.
+- **New card:** copy the current card (photo and links included; then change what differs in Edit
+  card) or start blank with just a name.
+- **Manage cards:** rename, recolour, duplicate, reorder and delete. The last card can't be
+  deleted, and stickers you've already written keep what's on them.
+- **Choose what each card gives away:** untick details a card's contact card should leave out, such
+  as your phone number on a card for events. Taps, the QR code, Send and the link iPhones open all
+  follow it. **Preview** in Edit card shows the contact card as it will be saved.
+- **Add a link** suggests links from your other cards, so you don't have to type them again.
+- **Met** shows which card was shared, and the export has a `card` column.
+- The Quick Settings tile shows the card as well as what it shares ("Work · LinkedIn").
+
+### Settings, reorganised
+
+- Settings is a short list in three groups: **This card** (tap your card to edit it, Your cards),
+  **All cards** (Sharing, Guest Wi-Fi, Met, Write a sticker) and **App** (Backup and restore,
+  Theme, Language, Quick Settings tile, About). Each row shows its current setting.
+- **Edit card** has everything on a card in sections: Card (photo, name, title, company, handle),
+  Contact (emails and phone numbers), Links (website, social profiles, saved links) and WhatsApp.
+  Open it from Settings, with the pencil on your card on the Share screen, or by long-pressing the
+  card.
+- **Links are checked as you type,** here and in the welcome: anything that isn't a link says
+  "That doesn't look like a link". A bare address gets `https://`, and "@janedoe" in a LinkedIn,
+  GitHub, Instagram or X field becomes your profile link.
+- **Phone numbers** in Edit card use the country picker from the welcome, with up to three
+  numbers. Numbers saved before keep their country, and labels you typed yourself stay.
+- **WhatsApp** has its own country picker and **Same as my mobile**, and its default greeting is
+  in the app's language.
+- The keyboard no longer covers the field you're typing in, in Edit card or any Settings page.
+- **Set up** on Guest Wi-Fi or the contact card opens the right page directly.
+- **About** has the version, a privacy note, links to the website, the privacy page, the source
+  code and **Report a problem**, and the open-source licences.
+
+### New settings
+
+- **Tilde in Portuguese** (European Portuguese). Settings → Language chooses the phone's language,
+  English or Português; Android 13 and later also list Tilde in the phone's own language settings.
+  The translation still needs a native speaker's review.
+- **Light theme:** Settings → Theme: Dark (as before, the default), Light, or follow the phone's
+  setting.
+- **Backup and restore:** save everything (cards, photos, Met and settings) to a file you keep, and
+  restore it on a new phone, from Settings or with **Restore a backup** on the first welcome screen.
+  The guest Wi-Fi password is only included if you tick it. The file isn't encrypted, so keep it
+  somewhere private. A damaged file changes nothing. Tilde still has no cloud backup and no storage
+  permission: you choose where the file goes.
+- **Answer taps when Tilde is closed** (Settings → Sharing, off by default). Off, taps only share
+  while Tilde is on screen, so nothing goes out from a pocket by accident; before, Android could
+  route a tap to Tilde with the screen on even when it was closed. On, taps also work with Tilde
+  closed while the phone is unlocked, never from the lock screen.
+- **Share by tap** is the new name for Share over NFC. While it's off, the status badge says
+  **Taps off**.
+- **The event tag is now the event name,** and it clears itself at the end of the day you set it,
+  so yesterday's event doesn't end up in today's links. You can switch that off.
+- **Your photo in a sent contact card,** if you switch it on (Settings → Sharing). A tap or the QR
+  code never includes it.
+- **Share screen switches** (Settings → Sharing): full brightness, keeping the screen on, and
+  vibrating when a tap is read. All on, as before, until you change them.
+- **Met** (Settings → Met): ask for a note after each tap, and delete entries older than 3, 6 or 12
+  months. Choosing a shorter time says how many people that deletes, and asks first.
+- **Delete all data** (Settings → About) removes everything, as uninstalling would.
+
+### Share screen
+
+- What a tap shares and the quick-switch chips stay above the bottom bar, and whatever is being
+  shared always has a chip. The QR code is bigger, and Send and Copy link are icons beside the
+  "Opens …" line.
+- Tap the status badge (Ready, NFC off, Taps off, No NFC) to see what it means, with the fix one
+  tap away: turn on NFC, or turn Share by tap on or off.
+- **Guest Wi-Fi is shared once:** after a tap, or when you leave the Share screen, your card goes
+  back to what it shared before. Its Settings page says plainly that the Wi-Fi code contains the
+  password.
+- A long handle or label is shortened so the card switcher's ▾ always shows, and a code too long
+  for a QR code says "Too long for a QR code. Shorten your link or details."
+
+### Write a sticker
+
+- **Write a card** is now **Write a sticker** (Settings → Write a sticker), now that "card" means
+  one of your cards. It writes the active card, and says which one when you have several.
+- **Lock it after writing** (off unless ticked and confirmed), so nobody can overwrite the sticker.
+  Tilde says so if a sticker can't be locked.
+- It says what anyone who taps the sticker gets ("…gets your phone number and email", "…can join
+  your Wi-Fi"), and says it again before locking.
+
+### Home-screen widget
+
+- **Tilde QR code:** a card's QR code on your home screen. Choose the card when you add it, or "the
+  active card" to follow whichever is active; tap it to open Tilde on that card. It updates
+  whenever you change something in Tilde, and drops the event name just after midnight. Choosing a
+  card whose code is your contact card or guest Wi-Fi reminds you that anyone who sees your home
+  screen can scan it.
+
+### Met and Receive
+
+- **Met keeps everyone:** the 500-entry limit is gone.
+- **One entry per tap:** a phone that reads several times in one tap counts once, and two people
+  who tap one after the other are both listed. **Sent** shows once per tap too, and About's count is
+  now "Shared by tap … times".
+- **Export sends a CSV file** (`tilde-met-YYYY-MM-DD.csv`) that opens in a spreadsheet app.
+- **Receive** says what to do on a phone without NFC (scan their code instead) or with NFC off
+  (with **Turn on**), and empty Met and Receive lists say how to fill them.
+
+### Welcome
+
+- The first screen says Tilde is free, with no account and no internet, and what a tap gives
+  Android phones and iPhones. It also offers **Restore a backup** for moving from another phone.
+- The handle shows as it will appear ("Shown as ~/janedoe at the top of your card"), and the
+  last step says "NFC sticker" and "Tilde card", with **No Tilde card yet? Print your own**.
+
+### Polish
+
+- **Logos for saved links on known sites:** Bluesky, Threads, Facebook, YouTube, TikTok, Mastodon,
+  Medium, Substack, Dribbble, Behance, Calendly, Telegram, Discord, Product Hunt, Stack Overflow,
+  GitLab and Figma (and LinkedIn, GitHub, Instagram, X and WhatsApp links), instead of the first
+  letter of the link's name.
+- The cover colours are easier to tap and are read aloud by name, and the pencil on your card is
+  bigger and easier to see.
+- A card always keeps a name: clearing it in Edit card keeps the last one, with a note.
+- Name, title and company take up to 100 characters, and links and Met notes up to 500.
+
 ## 1.2.0-beta.2 (7 October 2026)
 
 A second 1.2 beta with fixes from a review of 1.2.0-beta.1; everything in 1.2.0-beta.1 below still
