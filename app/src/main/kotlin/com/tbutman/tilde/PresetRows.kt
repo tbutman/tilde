@@ -159,7 +159,7 @@ class PresetRows(private val context: Context, private val prefs: Prefs, private
 
     /** What an option opens, in a few words. Never a phone number or the Wi-Fi password. */
     private fun detail(preset: Presets.Preset): String = when (preset.id) {
-        Presets.CONTACT -> context.getString(R.string.detail_contact)
+        Presets.CONTACT -> contactSummary(context, prefs.contactProfile)
         Presets.WHATSAPP -> context.getString(R.string.detail_whatsapp)
         Presets.WIFI -> prefs.wifiSsid.ifBlank { context.getString(R.string.detail_wifi_missing) }
         else -> bare(prefs.urlFor(preset.id, event = event))
@@ -172,6 +172,23 @@ class PresetRows(private val context: Context, private val prefs: Prefs, private
     companion object {
         /** A link as people read it: no https:// or www., no trailing slash. */
         fun bare(url: String) = url.removePrefix("https://").removePrefix("http://").removePrefix("www.").removeSuffix("/")
+
+        /**
+         * What's on a contact card, from what this card includes and has: "Name, title, email and
+         * links", in the app's language. The name is always there.
+         */
+        fun contactSummary(context: Context, profile: Profile): String {
+            val parts = listOfNotNull(
+                R.string.contact_part_name,
+                R.string.contact_part_title.takeIf { profile.title.isNotBlank() },
+                R.string.contact_part_company.takeIf { profile.company.isNotBlank() },
+                R.string.contact_part_email.takeIf { profile.email.isNotBlank() || profile.email2.isNotBlank() },
+                R.string.contact_part_phones.takeIf { profile.phones.any { it.second.isNotBlank() } },
+                R.string.contact_part_links.takeIf { profile.siteRoot != null || profile.website.isNotBlank() || profile.socials.isNotEmpty() },
+            ).map(context::getString)
+            if (parts.size == 1) return parts.first()
+            return context.getString(R.string.list_and, parts.dropLast(1).joinToString(", "), parts.last())
+        }
 
         /** What an iPhone opens when it taps a contact card ("your website", "LinkedIn"), or null for nothing. */
         fun iphoneOpens(context: Context, profile: Profile): String? =

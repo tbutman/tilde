@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.Locale
@@ -94,6 +95,7 @@ class CardEditActivity : AppCompatActivity() {
         findViewById<View>(R.id.links_add).setOnClickListener { LinkDialogs.editLink(this, prefs, null) { renderLinks() } }
         findViewById<View>(R.id.phone_add).setOnClickListener { addPhoneRow(home, "", "", focus = true) }
         findViewById<View>(R.id.edit_done).setOnClickListener { if (linksAreValid()) finish() }
+        findViewById<View>(R.id.contact_preview).setOnClickListener { previewContactCard() }
 
         // Phone numbers: each saved number back in its country ("+351 912 345 678" → Portugal, 912 345 678).
         for ((label, number) in profile.phones) {
@@ -120,6 +122,24 @@ class CardEditActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    /**
+     * The contact card as the other phone gets it, after this card leaves out what it leaves out:
+     * name, title and company, emails, phone numbers and links.
+     */
+    private fun previewContactCard() {
+        val profile = prefs.contactProfile
+        val links = (listOfNotNull(profile.website.trim().takeIf { it.isNotEmpty() }) + profile.socials.map { it.second }).distinct()
+        val lines = listOf(profile.name, profile.titleLine) +
+            listOf(profile.email, profile.email2).map { it.trim() } +
+            profile.phones.map { (label, number) -> if (label.isBlank()) number else "$number ($label)" } +
+            links.map(PresetRows::bare)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.contact_preview_title)
+            .setMessage(lines.filter { it.isNotBlank() }.joinToString("\n") + "\n\n" + getString(R.string.contact_preview_code))
+            .setPositiveButton(R.string.done, null)
+            .show()
     }
 
     /** The link fields, with the social network each one is for (null: the website). */

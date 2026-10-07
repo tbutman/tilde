@@ -100,7 +100,16 @@
     <string name="iphone_contact_note">iPhone: um toque abre %1$s; o código dá o cartão</string>
     <!-- What an iPhone opens instead of the contact card: "your website", or a network's name ("LinkedIn"). -->
     <string name="iphone_your_website">o teu site</string>
-    <string name="detail_contact">Nome, cargo, email, números de telefone e links</string>
+    <string name="contact_part_name">Nome</string>
+    <string name="contact_part_title">cargo</string>
+    <string name="contact_part_company">empresa</string>
+    <string name="contact_part_email">email</string>
+    <string name="contact_part_phones">números de telefone</string>
+    <string name="contact_part_links">links</string>
+    <string name="list_and">%1$s e %2$s</string>
+    <string name="contact_preview">Pré-visualizar</string>
+    <string name="contact_preview_title">O teu cartão de contacto</string>
+    <string name="contact_preview_code">Ler o código dá o mesmo cartão, só com o primeiro link.</string>
     <string name="detail_whatsapp">Abre uma conversa comigo</string>
     <string name="detail_wifi_missing">Ainda não configurado</string>
     <string name="qr_description">Código QR do que um toque partilha</string>

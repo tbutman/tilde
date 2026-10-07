@@ -386,6 +386,15 @@
             android:orientation="vertical" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/contact_preview"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/contact_preview"
+            app:icon="@drawable/ic_opt_contact" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/edit_done"
             android:layout_width="match_parent"
             android:layout_height="56dp"

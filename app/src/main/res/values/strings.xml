@@ -102,7 +102,17 @@
     <string name="iphone_contact_note">iPhone: tap opens %1$s, scan for the card</string>
     <!-- What an iPhone opens instead of the contact card: "your website", or a network's name ("LinkedIn"). -->
     <string name="iphone_your_website">your website</string>
-    <string name="detail_contact">Name, title, email, phone numbers and links</string>
+    <string name="contact_part_name">Name</string>
+    <string name="contact_part_title">title</string>
+    <string name="contact_part_company">company</string>
+    <string name="contact_part_email">email</string>
+    <string name="contact_part_phones">phone numbers</string>
+    <string name="contact_part_links">links</string>
+    <!-- The last two items of a list: "Name, title, email and links". -->
+    <string name="list_and">%1$s and %2$s</string>
+    <string name="contact_preview">Preview</string>
+    <string name="contact_preview_title">Your contact card</string>
+    <string name="contact_preview_code">Scanning the code gives the same card with only the first link.</string>
     <string name="detail_whatsapp">Opens a chat with me</string>
     <string name="detail_wifi_missing">Not set up yet</string>
     <string name="qr_description">QR code for what a tap shares</string>
