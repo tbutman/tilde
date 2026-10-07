@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Edit card: everything on the active card, in sections. Fields save as they're typed. -->
+<!-- Pads itself for the system bars and the keyboard (see keepFocusAboveKeyboard). -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/edit_scroll"
     style="@style/Panel"
     android:fitsSystemWindows="true">
 
@@ -299,19 +301,53 @@
         <!-- WhatsApp -->
         <TextView style="@style/Label" android:layout_marginTop="28dp" android:text="@string/edit_section_whatsapp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Field"
-            android:hint="@string/profile_whatsapp"
-            android:labelFor="@id/profile_whatsapp">
+        <!-- The number with its country, like the phone numbers above. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profile_whatsapp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="phone" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/whatsapp_country"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="96dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingHorizontal="8dp"
+                android:textColor="@color/text"
+                app:cornerRadius="4dp"
+                app:strokeColor="@color/line_strong" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/whatsapp_layout"
+                style="@style/Field"
+                android:layout_width="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:hint="@string/profile_whatsapp"
+                android:labelFor="@id/profile_whatsapp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/profile_whatsapp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:importantForAutofill="no"
+                    android:inputType="phone" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/whatsapp_same"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:text="@string/whatsapp_same_as_mobile"
+            android:visibility="gone" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Field"

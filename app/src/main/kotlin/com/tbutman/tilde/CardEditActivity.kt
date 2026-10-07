@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.telephony.PhoneNumberFormattingTextWatcher
+import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import android.text.InputType
 import android.text.TextWatcher
@@ -54,6 +55,7 @@ class CardEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card_edit)
+        findViewById<android.widget.ScrollView>(R.id.edit_scroll).keepFocusAboveKeyboard()
         val profile = prefs.profile
         fun profileField(id: Int, value: String, update: Profile.(String) -> Profile) =
             findViewById<TextInputEditText>(id).saveAsYouType(value) { text -> prefs.profile = prefs.profile.update(text.trim()) }
@@ -77,7 +79,7 @@ class CardEditActivity : AppCompatActivity() {
         linkField(R.id.profile_github, profile.github, Presets.GITHUB) { copy(github = it) }
         linkField(R.id.profile_instagram, profile.instagram, Presets.INSTAGRAM) { copy(instagram = it) }
         linkField(R.id.profile_x, profile.x, Presets.X) { copy(x = it) }
-        profileField(R.id.profile_whatsapp, profile.whatsapp) { copy(whatsapp = it) }
+        setUpWhatsapp(profile)
         findViewById<TextInputEditText>(R.id.whatsapp_greeting).saveAsYouType(prefs.whatsappGreeting) { prefs.whatsappGreeting = it }
 
         findViewById<View>(R.id.photo_pick).setOnClickListener {
@@ -99,6 +101,7 @@ class CardEditActivity : AppCompatActivity() {
             addPhoneRow(country ?: home, if (country == null) number else rest, label, focus = false)
         }
         if (phoneRows.isEmpty()) addPhoneRow(home, "", "", focus = false)
+        showWhatsappShortcut()
 
         // What the contact card includes: everything, unless this card leaves something out.
         val labels = mapOf(
@@ -147,11 +150,87 @@ class CardEditActivity : AppCompatActivity() {
         return ok
     }
 
-    /** Before closing: a link field that isn't a link gets its error and the focus, so it's seen. */
+    /**
+     * Before closing: a link that isn't a link, or a WhatsApp number that isn't a number, gets its
+     * error and the focus, so it's seen.
+     */
     private fun linksAreValid(): Boolean {
-        val bad = linkFields.filterNot { (field, network) -> checkLink(field, network) }.map { it.first }
+        val bad = linkFields.filterNot { (field, network) -> checkLink(field, network) }.map { it.first } +
+            listOfNotNull(whatsappField.takeUnless { checkWhatsapp() })
         bad.firstOrNull()?.requestFocus()
         return bad.isEmpty()
+    }
+
+    private lateinit var whatsappCountry: Country
+    private val whatsappField by lazy { findViewById<TextInputEditText>(R.id.profile_whatsapp) }
+    private var whatsappFormatter: TextWatcher? = null
+
+    /**
+     * WhatsApp: a country button and the number, like the phone numbers. It starts in the first
+     * phone number's country, and "Same as my mobile" copies that number. A number is saved in
+     * international form once it's a valid one for its country, so wa.me gets the country code.
+     */
+    private fun setUpWhatsapp(profile: Profile) {
+        val firstPhone = profile.phones.firstOrNull()?.second?.let { Countries.split(it, home.iso).first }
+        val (country, rest) = Countries.split(profile.whatsapp, home.iso)
+        whatsappCountry = country ?: firstPhone ?: home
+        whatsappField.isSaveEnabled = false
+        whatsappField.setText(if (country == null) profile.whatsapp else rest)
+        showWhatsappCountry()
+        whatsappField.addTextChangedListener(afterChange { saveWhatsapp() })
+        whatsappField.setOnFocusChangeListener { _, focused -> if (!focused) checkWhatsapp() }
+        findViewById<View>(R.id.whatsapp_country).setOnClickListener {
+            PhoneUi.pickCountry(this, phoneRows.map { it.country } + whatsappCountry + home) { picked ->
+                whatsappCountry = picked
+                showWhatsappCountry()
+                saveWhatsapp()
+            }
+        }
+        findViewById<View>(R.id.whatsapp_same).setOnClickListener {
+            val (mobileCountry, number) = Countries.split(prefs.profile.phones.firstOrNull()?.second.orEmpty(), home.iso)
+            whatsappCountry = mobileCountry ?: whatsappCountry
+            showWhatsappCountry()
+            whatsappField.setText(number)
+        }
+    }
+
+    private fun showWhatsappCountry() {
+        findViewById<MaterialButton>(R.id.whatsapp_country).apply {
+            text = getString(R.string.welcome_country_code, whatsappCountry.flag, whatsappCountry.dial)
+            contentDescription = getString(R.string.welcome_country, PhoneUi.name(whatsappCountry))
+        }
+        whatsappFormatter?.let(whatsappField::removeTextChangedListener)
+        whatsappFormatter = PhoneNumberFormattingTextWatcher(whatsappCountry.iso).also(whatsappField::addTextChangedListener)
+    }
+
+    /** The number in international form, "" for none, or null when it isn't a valid number for its country. */
+    private fun whatsappNumber(): String? {
+        val typed = whatsappField.text.toString().trim()
+        if (typed.isEmpty()) return ""
+        if (PhoneNumberUtils.formatNumberToE164(typed, whatsappCountry.iso) == null) return null
+        return PhoneUi.international(whatsappCountry, typed)
+    }
+
+    private fun saveWhatsapp() {
+        whatsappNumber()?.let { number ->
+            (findViewById<TextInputLayout>(R.id.whatsapp_layout)).error = null
+            if (number != prefs.profile.whatsapp) prefs.profile = prefs.profile.copy(whatsapp = number)
+        }
+        showWhatsappShortcut()
+    }
+
+    /** Shows the error under a WhatsApp number that isn't one; true when it's fine. */
+    private fun checkWhatsapp(): Boolean {
+        val ok = whatsappNumber() != null
+        findViewById<TextInputLayout>(R.id.whatsapp_layout).error = if (ok) null else getString(R.string.whatsapp_invalid)
+        return ok
+    }
+
+    /** "Same as my mobile", while there's a mobile number and WhatsApp isn't already it. */
+    private fun showWhatsappShortcut() {
+        val mobile = prefs.profile.phones.firstOrNull()?.second
+        val same = mobile != null && mobile.filter { it.isDigit() } == prefs.profile.whatsapp.filter { it.isDigit() }
+        findViewById<View>(R.id.whatsapp_same).visibility = if (mobile != null && !same) View.VISIBLE else View.GONE
     }
 
     override fun onResume() {
@@ -299,6 +378,7 @@ class CardEditActivity : AppCompatActivity() {
         val filled = phoneRows.mapNotNull { row -> PhoneUi.international(row.country, row.field.text.toString())?.let { row to it } }
         val labels = Countries.labelsKeeping(filled.map { it.first.oldLabel }, filled.map { it.first.country.iso })
         prefs.profile = prefs.profile.copy(phones = filled.mapIndexed { i, (_, number) -> labels[i] to number })
+        showWhatsappShortcut()
     }
 
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()

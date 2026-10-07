@@ -76,6 +76,8 @@ class SettingsPageActivity : AppCompatActivity() {
             else -> setUpSharing()
         }
         findViewById<View>(R.id.page_done).setOnClickListener { finish() }
+        // Every page is one scrolling column; Sharing (the event name) and Guest Wi-Fi have fields.
+        (findViewById<android.view.ViewGroup>(android.R.id.content).getChildAt(0) as? android.widget.ScrollView)?.keepFocusAboveKeyboard()
     }
 
     private fun setUpSharing() {

@@ -277,6 +277,8 @@
     <string name="settings_event">Etiqueta de evento</string>
     <string name="event_hint">lisbon-js</string>
     <string name="event_detail">Acrescentada aos links para o teu site como ?event=, para os registos do site mostrarem de que evento veio cada visita.</string>
+    <string name="whatsapp_same_as_mobile">O mesmo que o meu telemóvel</string>
+    <string name="whatsapp_invalid">Isso não é um número completo para este país. Verifica o número e o indicativo.</string>
     <string name="whatsapp_greeting_hint">Mensagem</string>
     <string name="whatsapp_detail">Fica escrita na conversa, nunca é enviada. Deixa em branco para abrir a conversa vazia.</string>
     <string name="settings_links">Links guardados</string>

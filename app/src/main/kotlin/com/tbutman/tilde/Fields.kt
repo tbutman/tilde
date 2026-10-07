@@ -1,6 +1,7 @@
 package com.tbutman.tilde
 
 import android.content.Context
+import android.graphics.Rect
 import android.telephony.PhoneNumberUtils
 import android.text.Editable
 import android.text.InputFilter
@@ -11,7 +12,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.ScrollView
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
@@ -35,6 +39,32 @@ fun TextInputEditText.saveAsYouType(value: String, save: (String) -> Unit) {
     isSaveEnabled = false
     setText(value)
     addTextChangedListener(afterChange(save))
+}
+
+/**
+ * Keeps the field being typed in above the keyboard on a scrolling page. Since Android 15 apps draw
+ * edge to edge and adjustResize no longer shrinks the window for the keyboard, so the page pads
+ * itself by the keyboard's height (or the system bars', when it's closed) and scrolls the focused
+ * field, with its helper or error text, into view as the keyboard opens or the focus moves.
+ */
+fun ScrollView.keepFocusAboveKeyboard() {
+    val gap = (16 * resources.displayMetrics.density).toInt()
+    fun reveal() {
+        val focused = findFocus() ?: return
+        val target = (focused.parent?.parent as? TextInputLayout) ?: focused
+        val rect = Rect().also { target.getDrawingRect(it); offsetDescendantRectToMyCoords(target, it) }
+        val bottom = scrollY + height - paddingBottom - gap
+        val top = scrollY + paddingTop
+        if (rect.bottom > bottom) smoothScrollBy(0, minOf(rect.bottom - bottom, rect.top - top))
+    }
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+        val keyboard = insets.getInsets(WindowInsetsCompat.Type.ime())
+        view.setPadding(bars.left, bars.top, bars.right, maxOf(bars.bottom, keyboard.bottom))
+        if (keyboard.bottom > 0) view.post { reveal() }
+        WindowInsetsCompat.CONSUMED
+    }
+    viewTreeObserver.addOnGlobalFocusChangeListener { _, _ -> post { reveal() } }
 }
 
 /** Typing in a Tilde handle field: lower case and the allowed characters only, up to the maximum length. */
